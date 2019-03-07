@@ -1,0 +1,33 @@
+\section{Motivation}
+\label{sect:background}
+\roselyne{Adjust/shorten since I added text.}
+The complexity of scientific NER is primarily due to the fact that entities,
+both biological~\cite{kim2004introduction} and chemical~\cite{krallinger2015chemdner}, can be described in different ways. 
+Subfields of materials science, including polymer science that we focus on here, involve the same variability in naming conventions.
+In principle, the International Union of Pure and Applied Chemistry (IUPAC) guidelines define two 
+methods for how a polymer should be named~\cite{hiorns2013brief}.
+However, such standards are not always followed in practice~\cite{tamames2006success}.
+Polymer names may be reported as source-based names (based on the monomer name), structure-based names (based on the repeat unit), common names (requiring domain specific knowledge), trade names (based on the manufacturer), and names based on some of chemical groups within the polymer (requiring context to fully specify the chemistry).
+Other naming variations result from typographical variants (e.g., alternative uses of hyphens, brackets, spacing) and alternative component orders.
+The origin of these different naming conventions is closely linked to the desire for clarity within a journal article coupled with the often complicated monomeric structures~\cite{audus2017polymer}.
+For example, sequence-defined polymers, where multiple monomers are chemically bound in a well-defined sequence as in proteins, often defy normal naming practices as it is not possible to concisely list every monomer and the respective position of the monomer~\cite{lutz2014polymer}. 
+%Another class of polymers that often suffer from complicated names are conjugated polymers, which exhibit useful optical and electrical properties. 
+%Conjugated polymers are complex due to the co-polymerization of multiple monomers (donor/acceptor units), the type and position of side chains along the polymer backbone and the coupling between monomer units to control regioregularity~\cite{himmelberger2015engineering}.
+
+In addition to challenges related to the makeup of the scientific entities, the paucity of entities in scientific literature and the lack of training data also empedes the use of recent machine learning based NER techniques.
+Considerable time and manual effort are involved in creating and maintaing the balanced
+Conference on Computational Natural Language Learning (CoNLL) dataset for standard NER~\cite{tjong2003introduction}.
+Example sentences from such corpus include one or more entities per sentence. 
+In our attempt to recognize polymers in full text documents, we face a very imbalance dataset where several sentences do not contain a target entity and there are only a handful of targets per document.
+%(we found less 2\% of words in sample publications are polymers in our test dataset)
+While there has been much interest in machine learned recognition of biochemical entities~\cite{jessop2011oscar4,rocktaschel2012chemspot,leaman2015tmchem,swain2016chemdataextractor}, there has concurrently been significant effort involved in selecting and (often manually) generating quality data for
+trainable statistical NER systems~\cite{krallinger2015chemdner}. 
+Previous work has also found that even state-of-the-art NER systems do
+not typically perform well when applied to different domains~\cite{krallinger2013overview}. 
+Therefore the problem of training machine learning models for recognizing new scientific entities remains a challenging one.
+
+Due to these issues, identifying polymeric names is a non-trivial exercise not only for computers, but also for experts within the field. 
+We expect such a scenario that is not unique to polymer science.
+Our long-term goal is to build a hybrid human-computer system in which we leverage both 
+human and machine capabilities to extract polymer names and their properties. 
+In this work, we focus on the task of identifying polymer names.

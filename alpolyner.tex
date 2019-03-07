@@ -1,0 +1,205 @@
+\documentclass[conference]{IEEEtran}
+
+% my packages
+\usepackage{url}
+\usepackage{textcomp}
+\usepackage{listings}
+\usepackage[T1]{fontenc} % To use quotes in listing
+% \usepackage{fixltx2e}
+\usepackage{subfigure,epsfig,amsfonts}
+\usepackage{caption}
+\usepackage{xspace}
+\usepackage[usenames,dvipsnames,svgnames]{xcolor}
+\usepackage{multicol}
+\usepackage{graphicx}
+\definecolor{codegreen}{rgb}{0,0.6,0}
+\definecolor{codegray}{rgb}{0.5,0.5,0.5}
+\definecolor{codepurple}{rgb}{0.58,0,0.82}
+\definecolor{backcolour}{rgb}{0.95,0.95,0.92}
+\usepackage{siunitx}
+\usepackage{array}
+\newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
+
+\usepackage[font={small,bf}]{caption}
+\usepackage{balance} 
+\usepackage{flexisym}
+\usepackage{varwidth}
+\usepackage{makecell}
+%\usepackage{lipsum}
+\lstdefinestyle{mystyle}{
+    backgroundcolor=\color{backcolour}, 
+    commentstyle=\color{codegreen},
+    keywordstyle=\color{magenta},
+    numberstyle=\tiny\color{codegray},
+    stringstyle=\color{codepurple},
+    basicstyle=\footnotesize\ttfamily,
+    breakatwhitespace=false,         
+    breaklines=true,                 
+    captionpos=b,                    
+    keepspaces=true,                 
+    numbers=left,                    
+    numbersep=5pt,                  
+    showspaces=false,                
+    showstringspaces=false,
+    showtabs=false,                  
+    tabsize=2
+}
+\lstset{style=mystyle}
+
+
+
+\newcommand{\easychair}{\textsf{easychair}}
+\newcommand{\miktex}{MiK{\TeX}}
+\newcommand{\texniccenter}{{\TeX}nicCenter}
+\newcommand{\makefile}{\texttt{Makefile}}
+\newcommand{\latexeditor}{LEd}
+
+\newcommand{\CHIDB}{$\chi$DB\xspace}
+\newcommand{\CHI}{$\chi$\xspace}
+\newcommand{\TG}{\emph{T}$\!_\emph{g}$}
+
+\usepackage[noadjust]{cite}
+\renewcommand{\citepunct}{,\penalty\citepunctpenalty\,}
+\renewcommand{\citedash}{--}% optionally
+
+\newcommand{\veryshortarrow}[1][3pt]{$\mathrel{%
+   \hbox{\rule[\dimexpr\fontdimen22\textfont2-.2pt\relax]{#1}{.4pt}}%
+   \mkern-4mu\hbox{\usefont{U}{lasy}{m}{n}\symbol{41}}}$}
+
+\newif\ifdraft
+%\draftfalse
+\drafttrue
+
+\ifdraft
+  \newcommand{\ian}[1]{\textcolor{Red}{[Ian: #1]}\xspace}
+  \newcommand{\roselyne}[1]{\textcolor{Blue}{[Roselyne: #1]}\xspace}
+  \newcommand{\kyle}[1]{\textcolor{Purple}{[Kyle: #1]}\xspace}
+  \newcommand{\logan}[1]{\textcolor{Green}{[Logan: #1]}\xspace}
+  \newcommand{\debbie}[1]{\textcolor{Brown}{[Debbie: #1]}\xspace}
+  \newcommand{\shrayesh}[1]{\textcolor{BurntOrange}{[Shrayesh: #1]}\xspace}
+  \newcommand{\aswathy}[1]{\textcolor{WildStrawberry}{[Aswathy: #1]}\xspace}
+  \newcommand{\hong}[1]{\textcolor{RoyalPurple}{[Hong: #1]}\xspace}
+\else
+  \newcommand{\ian}[1]{}
+  \newcommand{\roselyne}[1]{}
+  \newcommand{\kyle}[1]{}
+  \newcommand{\logan}[1]{}
+  \newcommand{\debbie}[1]{}
+  \newcommand{\shrayesh}[1]{}
+  \newcommand{\debbie}[1]{}
+  \newcommand{\shrayesh}[1]{}
+  \newcommand{\aswathy}[1]{}
+  \newcommand{\hong}[1]{}
+\fi
+
+\newif\ifnist
+\nistfalse
+%\nisttrue
+
+\ifnist
+  \newcommand\nistnum[1]{\num[group-separator={},mode=text]{#1}}
+\else
+  \newcommand\nistnum[1]{\num[group-minimum-digits=4,group-separator={,},mode=text]{#1}} 
+\fi
+
+% correct bad hyphenation here
+\hyphenation{op-tical net-works semi-conduc-tor}
+
+\begin{document}
+% This line plus the intro lines in the Bib file concatenates author lists.
+\bstctlcite{IEEEexample:BSTcontrol}
+
+%\title{PolyNER: A \textit{word2vec} Approach to Scientific NER}
+\title{Generating Training Data for Scientific Named Entity with Minimal Human Effort}
+
+
+\author{\IEEEauthorblockN{Roselyne B. Tchoua\IEEEauthorrefmark{1},
+Zhi Hong\IEEEauthorrefmark{1}, 
+Logan T. Ward\IEEEauthorrefmark{2}\IEEEauthorrefmark{3}, \\
+Kyle Chard\IEEEauthorrefmark{2}\IEEEauthorrefmark{3},
+Debra J. Audus\IEEEauthorrefmark{4}, 
+Shrayesh N. Patel\IEEEauthorrefmark{5}, 
+Juan J. de Pablo\IEEEauthorrefmark{5} and
+Ian T. Foster\IEEEauthorrefmark{1}\IEEEauthorrefmark{2}\IEEEauthorrefmark{3}}
+\IEEEauthorblockA{\IEEEauthorrefmark{1}Department of Computer Science, University of Chicago, Chicago, IL, USA\\
+Email: roselyne@uchicago.edu}
+\IEEEauthorblockA{\IEEEauthorrefmark{2}Globus, University of Chicago, Chicago, IL, USA\\}
+\IEEEauthorblockA{\IEEEauthorrefmark{3}Data Science and Learning Division, Argonne National Laboratory, Argonne, IL, USA\\}
+\IEEEauthorblockA{\IEEEauthorrefmark{4}Materials Science and Engineering Division, National Institute of Standards and Technology, Gaithersburg, MD, USA\\}
+\IEEEauthorblockA{\IEEEauthorrefmark{5}Institute for Molecular Engineering, University of Chicago, Chicago, IL, USA}
+}
+
+% make the title area
+\maketitle
+
+\begin{abstract}
+
+Despite significant progress in natural language processing, 
+machine learning models require substantial expert-annotated data for training to perform well in tasks such as named entity recognition and entity relations extraction.
+Scientific Named Entity Referent Extraction is often more complicated than traditional Named Entity Recognition (NER). 
+For example, in polymer science, 
+chemical structure may be encoded in a variety of nonstandard
+naming conventions,
+the same concept can be expressed using
+any number of different terms (synonymy),
+and authors may refer to polymers with ad-hoc labels (in lieu of longer names).
+This adds a layer of difficulty when generating training data for new domains as specialized skills are sometimes needed to correctly label text.
+Here we propose polyNER: a semi-automated system for efficient identification of scientific entities in text.
+PolyNER applies word embedding models
+to generate entity-rich corpora for productive expert labeling,
+and then uses the resulting labeled data to 
+bootstrap a context-based word vector classifier.
+We use approximately labeled candidates and active learning to efficiently obtain annotations from experts, a process that is otherwise tedious and expensive.
+With just five hours of expert time, polyNER demonstrates discrimination capacity comparable to state-of-the-art chemical NLP toolkit and
+highlights the potential for human-computer partnership for 
+constructing domain-specific scientific NER systems.
+
+\end{abstract}
+
+\begin{IEEEkeywords}
+Named Entity Recognition, Machine Learning, Word Embedding, Active Learning, Polymers
+\end{IEEEkeywords}
+
+\IEEEpeerreviewmaketitle
+
+%------------------------------------------------------------------------------
+\input{introduction}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\input{background}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\input{related}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\input{architecture}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+%\input{parameter_study}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\input{results}
+%------------------------------------------------------------------------------
+
+%------------------------------------------------------------------------------
+\input{conclusions}
+%------------------------------------------------------------------------------
+
+
+% use section* for acknowledgment
+\section*{Acknowledgments}
+This work was supported in part by NIST contract 60NANB15D077, the Center for Hierarchical Materials Design, and DOE contract DE-AC02-06CH11357, and by computer resources provided by Jetstream~\cite{towns2014xsede,stewart2015jetstream}.
+Official contribution of the National Institute of Standards and Technology; 
+not subject to copyright in the United States.
+
+\balance
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+% that's all folks
+\end{document}
