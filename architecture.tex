@@ -1,13 +1,14 @@
 \label{sect:architecture}
 \section{Design and Implementation}
-As previously mentioned, there has been great interest in scientific named entity recognition (NER), especially in the fields of biomedicine.  
-It is even more challenging for new fields to leverage existing machine learning methods without access to large amounts of labeled training data.
-We develop a framework to efficiently retrieve and classify scientific named
-entities. 
+%As previously mentioned, there has been great interest in scientific named entity recognition (NER), especially in the fields of biomedicine.  
+%It is even more challenging for new fields to leverage existing machine learning methods without access to large amounts of labeled training data.
+%We develop a framework to efficiently retrieve and classify scientific named
+%entities. 
 PolyNER uses word representations and minimal domain knowledge (a few
 seed entities) to produce a small set of candidates for expert labeling;
 labeled candidates are then used to train named entity word vector classifiers.
-We set up an active learning loop to incrementally improve the performance of such classifiers.
+We apply an active learning loop to incrementally improve the performance of the classifiers.
+\kyle{Come back to this. Not sure if it belongs here or in eval yet.}
 In order to explore whether natural language processing, and specifically the use of word vector coordinates as features can accelerate the learning process,
 we use three sampling strategies and two different candidate pools for maximum entropy uncertainty sampling, which we describe in this section.
 The general architecture of polyNER is illustrated in Figure~\ref{fig:architecture}.
@@ -19,7 +20,7 @@ We also describe the labeling process, training and testing set up for the ensem
 }
 \end{figure*}
 
-\subsection{Labeling Strategies}
+\subsection{Preprocessing}
 First, we define an
 NLP filtering preprocessing step that is used to filter out
 words in scientific publications that are unlikely to be polymer referents. 1) We remove numbers. 2)
@@ -33,23 +34,29 @@ candidate, allowing us to recognize, for example, polyethylene; (which fails the
 exact string comparison test against ``polyethylene''). 5) We remove plurals (e.g.,
 polyamides, polynorbornenes), as they can represent polymer family names.
 
-We implement three sampling strategies, which we refer to as \textit{Random}, \textit{AL1} and \textit{AL2}.
-Based on preliminary experiment, we set the size of batches of strings to be labeled to 200 or about an hour of expert time.\\
+
+\subsection{Labeling Strategies}
+\kyle{We should think about how to structure this. It seems like we want to outline
+the normal process and then perhaps introduce some baselines for comparison in the next section.}
+
+We implement three sampling strategies, which we refer to as \textit{Random}, \textit{AL1} and \textit{AL2}, 
+to determine which candidates to label.
+Based on preliminary experiment, we set the size of batches of strings to be labeled to 200 or about an hour of expert time.
 
 \subsubsection{Random Strategy}
-In the first strategy we randomly select 200 out of the pool of unlabeled NLP-filtered candidates. Note that the imbalance between polymers and other \textit{tokens} (words or space separated strings) that do not exist in in this set is still significant (less than 5\% in our test set). \\
+In the first strategy we randomly select 200 out of the pool of unlabeled NLP-filtered candidates \kyle{not known what an unlabeled NLP-filtered candidate is}. Note that the imbalance between polymers and other \textit{tokens} (words or space separated strings) that do not exist in in this set is still significant (less than 5\% in our test set).
 
 \subsubsection{Active Learning using NLP-Filtered Candidates (AL1)}
 In the second strategy we use maximum entropy sampling method using the same pool of NLP-filtered candidates.
 As previously mentioned, maximum entropy selection falls under the category of uncertainty sampling, which identifies data points where a classifier predicts outcome at the decision boundary between two or more classes. 
 For example, in our case, when predicting whether a word vector represents a polymer, or not, the classifier assigns equal probability to either case.
 In the binary case, probabilities range from $0$ to $0.5$ or 50\%. Therefore, we predict outcome for all our NLP-filtered candidates and obtains a probability $p$ for each data point. We compute a list of $0.5-p$ values for all unlabeled data and sort the list in ascending order.
-Points with scores closest to $0$ are most uncertain, we select the first 200 entries from this ordered list to be labeled by experts. \\
+Points with scores closest to $0$ are most uncertain, we select the first 200 entries from this ordered list to be labeled by experts.
 
 
 \subsubsection{Active Learning using NLP-Filtered Distance Candidates (AL2)}
 Finally, the third pool is composed of NLP-filtered candidates deemed to be most similar to seed entities using vector similarity measures.
-The intuition behind generating this pool of candidates is to increase the likelyhood that a candidate is a target referent (name, acronym, synonym, etc.) by comparing its vector to that of a known entity.
+The intuition behind generating this pool of candidates is to increase the likelihood that a candidate is a target referent (name, acronym, synonym, etc.) by comparing its vector to that of a known entity.
 Our goal is to determine whether polymers are used in a consistent context that can be used to detect and classify their corresponding context-aware vectors.
 For example, the polymer name ``polystyrene'' in a sentence ``The
 melting point of polystyrene is ...'' suggests that X may also be a polymer in the
@@ -73,17 +80,19 @@ When dealing with multiple seed entities, we use the highest similarity score fo
 \begin{figure*}[!t]
 \centering
 \scalebox{0.6}{\includegraphics{figures/al_setup.pdf}}
-\caption{\label{fig:current} The active learning process.}
+\caption{\label{fig:current} The active learning process. \kyle{more detail needed here. I think the pic is missing some arrows too. We could make it horizontal to ensure that it uses less space}}
 %{\includegraphics[trim=0in 4.in 0.1in 0,clip,width=\textwidth]{figures/al_setup.pdf}}
 %\caption{\label{fig:current} The active learning process.
 %}
 \end{figure*}
 `
 \subsection{Active Learning Experiment Setup}
+\kyle{Confusing to have AL exp setup here}
+
 Without prior knowledge of the distribution of target entities in the vector space, we use an ensemble of classifiers at each iteration of the active learning process. 
 We save the best performing classifier on the labeled candidates for subsequent maximum entropy-based uncertainty sampling. 
 The requested labels are annotated by humans to serve as addition training data for the next learning iteration. 
-We describes these steps in more details in the following sections.\\
+We describes these steps in more details in the following sections.
 
 \subsubsection{Word Embedding Model}
 We hypothesize that we can implement a classifier, which can detect word vectors for polymers based on their context. 
@@ -91,7 +100,7 @@ This, in turn, implies that word representation for polymers should not change c
 To test this hypothesis and separate our training and testing sets, we train an ensemble of classifiers on vector representations of candidates generated from a word embedding model of a large set of training documents (see step 1 of Figure~\ref{fig:current}); 
 we then update the classifier with our \textemdash smaller\textemdash test corpus and retrain the classifier. 
 This validation step insures that there are no major differences in performance before and after the update (step 2 of Figure~\ref{fig:current}).
-Finally, in step 3, we test our ensemble of classifiers against all the NLP-filtered words from the test corpus, as shown on Figure~\ref{fig:current}.\\
+Finally, in step 3, we test our ensemble of classifiers against all the NLP-filtered words from the test corpus, as shown on Figure~\ref{fig:current}.
 
 \subsubsection{Untrained and Expert Labeling}
 As explained in section~\ref{sect:background}, recognizing polymers can require more or less domain expertise.
@@ -104,13 +113,15 @@ and allows the expert to access the publication(s) in which a particular candida
 appears when desired.
 
 Expert time is costly and we aim to reduce the cost of obtaining labels.
-Therefore for our baseline of randomly sampled NLP-filtered nouns, we experiment with a two-review process. t
+Therefore for our baseline of randomly sampled NLP-filtered nouns, we experiment with a two-review process.
 Tokenization can be a challenge for scientific entities such as polymers which contains characters such as `:', '\textendash', `,' etc. It can also generate other incoherent tokens from text, equations, captions etc.
 For example, an untrained annotators may recognize that `$d\Sigma/d\Omega)(Q$' is not a polymer name and save time for the experts.
 Hence, we assign two graduate student labelers to curate the candidates generated by the random sampling strategy, which is less likely to contain target entities.
 First, the untrained labelers rejects obvious non-candidates via the previously mentioned web interface. 
 Next, one of our expert polymer scientists indicates, for each remaining
-candidate, whether or not it is in fact a polymer referent and submits a final review.\\
+candidate, whether or not it is in fact a polymer referent and submits a final review.
+
+\kyle{Here we might want to think about positioning this as 2-phase review where we combine humans with different expertise levels}
 
 
 \begin{figure}
@@ -123,12 +134,14 @@ Clicking on ``?'' delivers up to 25 more example sentences.
 
 \subsubsection{Ensemble of Classifiers}
 We use an ensemble of classifiers that we concurrently trained and test on the same data in steps 1, 2 and 3 illustrated on Figure~\ref{fig:current}.
-The classifiers include the scikit-Learn implementations of Decision Tree (DT), Gradient Boosting (GB), K-Nearest Neighbor (KNN(uniform and distance weights)), Logistinc Regression (LR), Linear Support Vector Machine (SVM), Naive Bayes (NB), and Random Forest (RF)~\cite{scikit-learn}. 
+The classifiers include the scikit-Learn implementations of Decision Tree (DT), Gradient Boosting (GB), K-Nearest Neighbor (KNN(uniform and distance weights)), Logistic Regression (LR), Linear Support Vector Machine (SVM), Naive Bayes (NB), and Random Forest (RF)~\cite{scikit-learn}. 
 Our goal here is to explore the word embedding space and determine which classifier(s) works best for detecting our scientitic named entities.
 As previously mentioned, we save the \textit{best-performing} classifier on labeled candidates (prior to updating the word embedding model  with test documents in order to clearly separate the training process from the test set, see step 1 in Figure~\ref{fig:current}).
 When defining best performance, we prioritize retrieving a maximum of targets over precise extraction.
 In other words, extracting a higher number of targets potentially requiring additional curation is favored over fewer correct targets.
 In each case, we use the dimensions of the word vector for each string as input features.
+
+\kyle{We should talk about how to structure this section.}
 
 
 
