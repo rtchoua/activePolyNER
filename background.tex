@@ -1,18 +1,18 @@
 \section{Motivation}
 \label{sect:background}
-\roselyne{Adjust/shorten since I added text.}
-\kyle{Sounds similar to previous paper. First paragraph should be re-written.}
-
-The complexity of scientific NER is primarily due to the fact that entities,
-both biological~\cite{kim2004introduction} and chemical~\cite{krallinger2015chemdner}, can be described in different ways. 
-Subfields of materials science, including polymer science that we focus on here, involve the same variability in naming conventions.
-In principle, the International Union of Pure and Applied Chemistry (IUPAC) guidelines define two 
-methods for how a polymer should be named~\cite{hiorns2013brief}.
-However, such standards are not always followed in practice~\cite{tamames2006success}.
-Polymer names may be reported as source-based names (based on the monomer name), structure-based names (based on the repeat unit), common names (requiring domain specific knowledge), trade names (based on the manufacturer), and names based on some of chemical groups within the polymer (requiring context to fully specify the chemistry).
-Other naming variations result from typographical variants (e.g., alternative uses of hyphens, brackets, spacing) and alternative component orders.
+%\roselyne{Adjust/shorten since I added text.}
+%\kyle{Sounds similar to previous paper. First paragraph should be re-written.}
+%\roselyne{Yes, it's exactly the same! Made a note to myself but hadn't come back to it yet.}
+The challenges of chemical NER are similar to those found in the biomedical field~\cite{krallinger2015chemdner,kim2004introduction}. 
+For example, in polymer science, entities can be described with multiple referrents (synonymy).
+Conversely, the same word may refer to different concepts depending on context (polysemy).
+\textit{Polystyrene} is often referred to as \textit{PS}, but \textit{polystyrenes} also describes a family of polymers including \textit{GPPS}, \textit{HIPS}, \textit{EPS}, \textit{SBR}, \textit{SBS}, and \textit{ABS}. 
+\roselyne{Ask Debbie to check previous example.}
+The International Union of Pure and Applied Chemistry (IUPAC~\cite{hiorns2013brief}) naming conventions are not always followed in practice~\cite{tamames2006success}. 
+Instead, polymer names may be reported as source-based names (based on the monomer name), structure-based names (based on the repeat unit), common names (requiring domain specific knowledge), trade names (based on the manufacturer), and names based on some of chemical groups within the polymer (requiring context to fully specify the chemistry) generating variability in naming conventions.
+Typographical variants (e.g., alternative uses of hyphens, brackets, spacing) and alternative component orders cause more variations between polymer names in the literature.
 The origin of these different naming conventions is closely linked to the desire for clarity within a journal article coupled with the often complicated monomeric structures~\cite{audus2017polymer}.
-For example, sequence-defined polymers, where multiple monomers are chemically bound in a well-defined sequence as in proteins, often defy normal naming practices as it is not possible to concisely list every monomer and the respective position of the monomer~\cite{lutz2014polymer}. 
+%For example, sequence-defined polymers, where multiple monomers are chemically bound in a well-defined sequence as in proteins, often defy normal naming practices as it is not possible to concisely list every monomer and the respective position of the monomer~\cite{lutz2014polymer}. 
 %Another class of polymers that often suffer from complicated names are conjugated polymers, which exhibit useful optical and electrical properties. 
 %Conjugated polymers are complex due to the co-polymerization of multiple monomers (donor/acceptor units), the type and position of side chains along the polymer backbone and the coupling between monomer units to control regioregularity~\cite{himmelberger2015engineering}.
 
