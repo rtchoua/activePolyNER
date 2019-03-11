@@ -3,13 +3,20 @@
 NER and other information extraction tasks rely on large amount of training data, which is expensive to obtain.
 Weakly supervised learning methods work with much less training data and aim to address this challenge.
 They generally fall under two categories: semi-supervised learning and active learning~\cite{zhou2017brief}.
-Semi-supervised learning attempts to automatically label data based on a set of labeled data. \kyle{Could be a clearer description of semi-supervised learning}
+Semi-supervised learning attempts to automatically label data using prior knowledge and a set of labeled data. 
+For example, it assumes that if $x$ and $x\prime$ are similar, they probably have the same label (cluster and label algorithms).
+%\kyle{Could be a clearer description of semi-supervised learning}
 Active learning assumes there is a source of knowledge, such as a human expert, that can be queried 
 to label a selected batch of unlabeled data. 
 
+
 \subsection{Semi-supervised Approaches}
 \textit{Bootstrapping} is a semi-supervised technique, which starts from a small set of seed relation instances and iteratively learns more relation instances and extraction patterns.
-Snowball~\cite{agichtein2000snowball} which improved the DIPRE \kyle{Expand} system~\cite{brin1998extracting}, used an intuitive idea to collect new entity relations using a set of seed entity pairs.
+Snowball~\cite{agichtein2000snowball} which improved the DIPRE system~\cite{brin1998extracting}, used an intuitive idea to collect new entity relations using a set of seed entity pairs.
+In the DIPRE system, the intuitive assumption is that, given a few seed entity relations, the text between two known target entities in close proximity of each other describes and consistutes a \textit{pattern} of the relation between the two. 
+Since that is not the case in practice, the system uses a limited set of regular expression to limit useful patterns, hence decreasing the number of false positives.
+A key improvement of Snowball
+is that Snowball's patterns include named-entity tags ({PERSON}, {LOCATION}, \textit{ORAGNIZATION} etc.).
 The authors start with a handful of seed tuples of \textit{ORGANIZATION} and \textit{LOCATION}, Snowball attempts to learn the relation \textit{HeadquarteredIn} by assuming that every time the tuples appear in close proximity to each other, the text in between illustrates the desired relation.
 This text can then be used to discover new tuples, which can in turn be used as seed for the next discovery iteration.
 Of course, organizations may be located but not headquartered in multiple cities, hence it is important to inspect the quality of extraction patters to reduce noise in the generated output.
@@ -30,15 +37,14 @@ PaleoDeepDive uses PaleoDB~\cite{PaleoDB}.
 The system labels any entity pair that appears in the database as \textit{True}.
 The user defines features (e.g. entity pairs that are too far apart are marked \textit{False} \kyle{I don't get how this is an example feature. Seems like its more labels.}), the system then uses statistical inference to determine the probability that each newly discovered pair of interest is \textit{True}.
 
-\textit{Data programming} uses
-\textit{labeling functions} (user-defined programs that provide labels for subsets of data)~\cite{ratner2016data}. 
+\textit{Data programming} used in the Snorkel system, users define 
+\textit{labeling functions} to provide labels for subsets of data~\cite{ratner2016data}. 
 Errors due to differences in accuracy and conflicts between labeling functions are 
 addressed by learning and modeling the accuracies of the labeling functions. 
 Under certain conditions, data programming achieves results on par with those of supervised learning methods.
 While writing concise scripts to define rules may seem to be a more reasonable task for annotators 
 than exhaustively annotating text, it still requires expert guidance.  
 In data programming as in boostrapping and distant supervision it is important to evaluate the quality of functions and extraction patters to decrease noisy patterns.
-\kyle{Add snorkel?}
 
 \subsection{Active Learning}
 Active learning~\cite{zhou2017brief} assumes that the gold standard labels of unlabeled instances can be queried from an oracle (domain expert or source of knowledge). 
