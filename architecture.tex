@@ -33,6 +33,8 @@ unwanted characters (e.g. `:', `.', `,', `:', `-') from the beginning and the en
 candidate, allowing us to recognize, for example, polyethylene; (which fails the
 exact string comparison test against ``polyethylene''). 5) We remove plurals (e.g.,
 polyamides, polynorbornenes), as they can represent polymer family names.
+We refer to these pre-processed words (output of step 1 in Figure~\ref{fig:architecture}) as NLP-filtered candidates.
+
 
 
 \subsection{Labeling Strategies}
@@ -44,7 +46,9 @@ to determine which candidates to label.
 Based on preliminary experiment, we set the size of batches of strings to be labeled to 200 or about an hour of expert time.
 
 \subsubsection{Random Strategy}
-In the first strategy we randomly select 200 out of the pool of unlabeled NLP-filtered candidates \kyle{not known what an unlabeled NLP-filtered candidate is}. Note that the imbalance between polymers and other \textit{tokens} (words or space separated strings) that do not exist in in this set is still significant (less than 5\% in our test set).
+In the first strategy we randomly select 200 out of the pool of unlabeled NLP-filtered candidates.
+%\kyle{not known what an unlabeled NLP-filtered candidate is}. 
+Note that the imbalance between polymers and other \textit{tokens} (words or space separated strings) that do not exist in in this set is still significant (less than 5\% in our test set).
 
 \subsubsection{Active Learning using NLP-Filtered Candidates (AL1)}
 In the second strategy we use maximum entropy sampling method using the same pool of NLP-filtered candidates.

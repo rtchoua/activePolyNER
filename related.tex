@@ -35,7 +35,9 @@ paleontological data from text, tables, and figures in scientific publications.
 For good performance, such approaches often rely on and extend large databases: for example,
 PaleoDeepDive uses PaleoDB~\cite{PaleoDB}. 
 The system labels any entity pair that appears in the database as \textit{True}.
-The user defines features (e.g. entity pairs that are too far apart are marked \textit{False} \kyle{I don't get how this is an example feature. Seems like its more labels.}), the system then uses statistical inference to determine the probability that each newly discovered pair of interest is \textit{True}.
+The user defines features (e.g. if a specific keyword appears between two entities, that pair a certain attribute is labeled \textit{True}, but if the entity pairs are too far apart, another attribute is marked \textit{False}, 
+%\kyle{I don't get how this is an example feature. Seems like its more labels.}), \roselyne{Hope it's clarified, they're more like user defined functions and rules - this is Snorkel's ancestor}
+the system then uses statistical inference to determine the probability that each newly discovered pair of interest is \textit{True}.
 
 \textit{Data programming} used in the Snorkel system, users define 
 \textit{labeling functions} to provide labels for subsets of data~\cite{ratner2016data}. 
@@ -62,8 +64,7 @@ Specifically, we address two challenges: (1) lack of (expensive) training data i
 For these reasons, our approach is similar to bootstrapping but applied to named entities rather than entity pairs. 
 We generate approximate labels by extracting targets similar to a few seed entities using word representations and vector similarity measures.
 To address noise in the output, expert label small batches of candidates, which can be used to train a word vector classifier and propose final scientific named entities.
-
-\kyle{Somewhat hesitant to include the next sentences. Doesnt feel like it belongs here}
-PolyNER will provide a basis via which distant supervision and data programming can be applied to extract polymer properties.
+%\kyle{Somewhat hesitant to include the next sentences. Doesnt feel like it belongs here}\roselyne{I think it's ok here if we're trying to emphasize how it is different, but I guess you want to phrase it as a contribution and it may need to be repeated in the intro/conclusion. Making a note for tomorrow}
+PolyNER will provide a scientific entity tagger (i.e. recognizer) to be used with data programming to extract polymer properties.
 An example rule could be defined as: \textit{if a sentence contains a polymer name and the words ``glass transition'', then extract number(s) in the sentence as potential glass transition temperature(s) for that polymer.}
 We discuss the architecture of our system in more details in the next section.
