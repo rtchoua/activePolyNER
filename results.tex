@@ -20,21 +20,25 @@ positives that labeled correctly.
 We explore how the choice of seed entities, the internal parameters \textit{vector} and \textit{window_size}  impact the number of target entities retrieved using similarity measures.
 In order to estimate the entity-richness of our large pool of distance candidates and since we do not have manually extracted data for the entire corpus, we create a list of \nistnum{10000} distance candidate vectors most similar to our seed entity vectors and report the fraction of gold standard polymer extracted. 
 Based on our experience of $\sim$ 5 polymers per document (\nistnum{8450} polymers for \nistnum{1690} documents), we can expect a fraction of the polymers found in the 100 gold standard documents to be extracted in the \nistnum{10000} candidates most similar to our seed entities.
-\kyle{This text implies we know that there are 8450 polymers in our documents}
-\kyle{Are you trying to say by setting to 10K we are going well beyond what is likely to be polys? Given earlier
-we said there are 467 polys 10K is clearly a lot larger. Maybe better to frame this around the percentage of total tokens?}
+We evaluate the entity-richness of polymers in this pool of candidates by measuring the percentage of the 467 manually extracted polymer names that it yields;
+we use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.
+%\kyle{This text implies we know that there are 8450 polymers in our documents}
+%\kyle{Are you trying to say by setting to 10K we are going well beyond what is likely to be polys? Given earlier
+%we said there are 467 polys 10K is clearly a lot larger. Maybe better to frame this around the percentage of total tokens?}\roselyne{You got exactly what I was trying to say, 10k is a lot larger but it should also contain polys from the other papers, this number is just to "ensure" a certain percentage of our polys are in that pool. I'll try and rephrase.}
 
 \subsubsection{Candidate Generation}
-Based on previous work using the same corpus~\cite{tchoua2016hybrid,tchoua2016hybridi}, we select frequently occurring polymers as seed entities, assuming that frequent polymers provide a large number of example sentences that illustrate context in which polymers are commonly used.
-\kyle{Might need to be more specific about what we use from our prior work. We can say we used a rule-based method and found 
-the top N polymers?}
+In previous work using the same corpus~\cite{tchoua2016hybrid,tchoua2016hybridi}, we build a dictionary of polymer names using a rule-based approach and aggregating synonyms across ChemDataExtractor records\textemdash a record consists of all information found about a chemical entity in a document.  
+Having built this dictionary, we can identify the 10 most frequently occurring polymers in our corpus and their acronyms.
+We assume that frequent polymers provide a large number of example sentences that illustrate context in which polymers are commonly used.
+%\kyle{Might need to be more specific about what we use from our prior work. We can say we used a rule-based method and found the top N polymers?}
 Hence, we first test the most common, the three most common and the ten most common polymers as seed entities.
 We experiment with including and excluding their acronyms as corresponding additional seed entities.
 (Note that this modest set of 1, 3 and 10 seed entities could also be suggested by an expert.)
 Figure~\ref{fig:cand_generation1} shows the results for this set of experiments.
-\kyle{need to say how we determine if the results are polymers or not}
-\kyle{might be clearer to state first that Polystytene gets to 35\%.. then by adding extra bits we can increase by XX etc.}
-We note a 2 \% increase in the fraction of polymers retrieved when using \textit{polystyrene} (the most commonly used polymer in our corpus), and its acronym compared to using \textit{polystyrene} alone (35.55 \% to 37.69 \%).
+%\kyle{need to say how we determine if the results are polymers or not}\roselyne{fixed a little earlier}
+%\kyle{might be clearer to state first that Polystytene gets to 35\%.. then by adding extra bits we can increase by XX etc.}
+When using \textit{polystyrene} (the most commonly used name) as a seed entity, the pool of candidates contained 33.55 \% of the 467 gold standard polymers.
+We note a 2 \% increase in the fraction of polymers retrieved when using \textit{polystyrene} and its acronym compared to using \textit{polystyrene} alone (37.69 \%).
 The fraction of polymers increases by 10 \% when using the three most frequent polymers as seed entities (from 33.55 \% to 46.9 \% and 47.97 \% with acronyms). 
 Using ten instead of three entities however, only slightly increases the yield of polymers by less than 1 \%, from 47.97 \% for three frequent polymers with acronyms to 48.39 \% for ten frequent polymers with acronyms.
 
@@ -81,10 +85,11 @@ These results confirm using more entities does not increase the yield of polymer
 For the remainder of the experiments, we use the three most frequent polymers and their acronyms. 
 We measure the impact of the \textit{window} and \textit{size} on the fraction of polymers extracted from the gold standard in the list of \nistnum{10000} candidates.
 The \textit{window} represents the maximum distance between the current and predicted word within a sentence. In other words, it represents the number of words before and after each word considered by the neural network to generate a vector representation for that word. 
+For each parameter setting, we measure the yield of polymers ten times for each window and vector size setting.
 We observe slightly higher fraction of polymers retrieved for window sizes of 1 and 2. The yield subsequently decreases and more noticeably with window size larger than 5 (see Figure~\ref{fig:window_size}).
-\kyle{Interesting that it is consistently decreasing. Except 8 seems to jump up. Any idea what the average sentence length is?}
+\kyle{Interesting that it is consistently decreasing. Except 8 seems to jump up. Any idea what the average sentence length is?}\roselyne{no but can find out, increase is not too noticeable though is it? still less than 4}
 The \textit{size} simply determines the size of the word vector (features for our classifier)).
-We varied this parameter between 100 and 500 and did not observe a change to the fraction of polymers extracted (see Figure~\ref{fig:vector_size}). \kyle{Maybe can say what the total difference was here}
+We varied this parameter between 100 and 500 and did not observe a maximum change of 1.05\% from the average fraction of polymers extracted (see Figure~\ref{fig:vector_size}). %\kyle{Maybe can say what the total difference was here}
 
 
 \begin{figure*}
@@ -116,16 +121,17 @@ We varied this parameter between 100 and 500 and did not observe a change to the
 %\end{figure}
 
 \subsection{Active Learning}
-Having explored the parameters for distance candidate generation, we generate a pool of \nistnum{10000} candidates from our test corpus of \nistnum{1590} (this time excluding our 100 gold standard documents) using the three most frequent polymers and their acronyms for seed entities, a window size of 2 and a vector size of 200.  
+Having explored the parameters for distance candidate generation, we generate a pool of \nistnum{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \nistnum{1590} (this time excluding our 100 gold standard documents). 
+The candidates are arranged in decreasing order of similarity scores and we use a window size of 2 and a vector size of 200.  
 
 \subsubsection{Initial Classifier}
-In order to increase the number of target entities in the initial classifier is trained and tested using the first 200 entities from the list of \nistnum{10000} candidates are ordered in decreasing similarity scores.
-\kyle{Don't completely understand previous sentence}
+In order to blance the initial training set (increase the potential number of target entities),
+we initially train the classifier using the first
+200 entities from the above mentioned list of \nistnum{10000}.
+%\kyle{Don't completely understand previous sentence}\roselyne{Hopefully cleared this out above}
 Recall that the batch size of 200 was set based on an estimate of 30-60 minutes of expert time.
 As described on Figure~\ref{fig:current}, in the first step, we train and test on candidates generated from a word embedding model generated using only the training documents. 
-We update the word embedding model to include the 100 documents from which experts extracted our gold standard polymer names and retrain the ensemble of classifiers before testing it on all NLP-filtered nouns from the 100 test documents.
-
-\kyle{might need to mention again that you apply several classifiers}
+We update the word embedding model to include the 100 documents from which experts extracted our gold standard polymer names and retrain multiple classifiers, before testing the best performing classifier on all NLP-filtered nouns from the 100 test documents.
 Figure~\ref{fig:roc_init} shows the Receiver Operating Curve (ROC) for the initial classifier with highest recall when evaluating on the test corpus. 
 The ROC plot is an evaluation measure that is based on two basic evaluation measures: specificity (true positive rate) and sensitivity (true negative rate).
 Sensitivity is the same as recall. Specificity is a measure of the true negative rate (the proportion of actual negatives that are correctly identified as such).
@@ -136,8 +142,7 @@ The area under the curve (AUC) measures the area under the ROC.
 Ideally the AUC of a learning algorithm is above 0.5. 
 Since AUC takes into account true negatives or correctly predicted non-polymers and our dataset is imbalanced containing more non-polymers than polymers, we also plot the Precision Recall Curve (PRC) to visualize the tradeoff between precision and recall.
 
-\kyle{This first one is for the results of active learning? or the base model?}
-While AUC is above random performance in Figure~\ref{fig:roc_init}, the initial PRC shows poor precision regardless of recall (see Figure~\ref{fig:prc_init}).
+While the AUC for the initial base KNN classifier is above random performance in Figure~\ref{fig:roc_init}, the initial PRC shows poor precision regardless of recall (see Figure~\ref{fig:prc_init}).
 In this round of labeling KNN is selected as the model with best recall in all three steps of Figure~\ref{fig:current}.\\
 
 \begin{figure*}
@@ -183,10 +188,8 @@ In this round of labeling KNN is selected as the model with best recall in all t
 \subsubsection{Discrimination Phase}
 After the first round, we experiment with the three strategies mentioned in \S\ref{sect:architecture}: random sampling (Random), active learning using pool of NLP-filtered nouns from training corpus (AL1), and active learning using pool of \nistnum{10000} distance candidates deemed closest to our seed entities(AL2) \textemdash minus 200 used in initial round).
 Given the relatively small batch size, we see no improvement for two rounds of active learning or first three rounds of labeling. 
-Precision remains under 6\% for all classifiers in our ensemble. 
-\kyle{its not really an ensemble as you arent combining the classifiers}
-Another sign of poor performance was the inconsistency of classifier choices across number of runs, 
-\kyle{What is meant by number of runs?}
+Precision remains under 6\% across all used classifiers. 
+Another sign of poor performance was the inconsistency of classifier choices across active learning iterations, 
 as well as in steps 1, 2 and 3 of Figure~\ref{fig:current}.
 However in the third iteration of active learning, we notice an increase in precision across strategies as shown in Figure~\ref{fig:rocs_prcs_round5} and a more consistent choice of classifiers.
 By the fourth iteration of active learning, the random strategy still does not show signs of learning. 
@@ -194,8 +197,8 @@ The selected decision tree classifier has only learned two probabilities and the
 This learning is sustained in the following iteration as illustrated on Figures~\ref{fig:rocs_prcs_round5}. 
 The AUC for AL1 is 0.74 and that of AL2 is 0.70. The PRCs are improved over the first round with AL1 showing better tradeoff than AL2 and Random.\\
 
-\kyle{what does it look like if we put all iterations for a particular method on one graph}
-\kyle{IF we went beyond 5 rounds do you think performance would continue to improve? Or is it leveling off?}
+%\kyle{what does it look like if we put all iterations for a particular method on one graph}\roselyne{terrible and I don't think we should do this because it highlights that we were trying different algorithms and saving classifiers that maybe can't be directly compared to each other. Also, it just all looks random}.
+%\kyle{IF we went beyond 5 rounds do you think performance would continue to improve? Or is it leveling off?}\roselyne{I think it should improve. We stop here because we detect learning and we now have "enough" labels. Or we stop here because we've used 4 hours of expert time for each strategy or 8 total... either way, this is enough to reach CDE with all labels.}
 
 At this point we observe predictive ability in our classifier and try to combine all labels in two experiments:
 first using the most commonly selected classifier from our ensemble: KNN and second using a word representation enriched with character-level information using FastText.
@@ -226,7 +229,7 @@ at 74.5\% but its precision is, as expected, low at 8.7\%.
 We have previously enhanced CDE with
 manually defined polymer identification rules~\ref{tchoua2017towards},
 and our polymer-enhanced version of the software (CDE+) achieved 42.2\% precision and 68.3\% recall on the same test set. 
-We achieve higher recall in both cases and intermediate precision with only $\sim$ four hours of expert labeling with an additional hour of completing untrained users' reviews of randomly sampled candidates.
+We achieve higher recall in both cases and intermediate precision with only $\sim$ ten hours of expert labeling with an additional hour of completing untrained users' reviews of randomly sampled candidates.
 
 \begin{figure*}
 \centering
