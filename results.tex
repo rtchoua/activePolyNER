@@ -5,8 +5,10 @@ We then discuss the results of five rounds of active learning using our ensemble
 Finally, we experiment with word representations enhanced with character-level information using FastText~\cite{bojanowski2016enriching,joulin2016bag}.
 
 \subsection{Dataset}
-We work with a test set of full-text publications in HTML format from the journal \textit{Macromolecules} comprising 100 documents with  \nistnum{22664} sentences and \nistnum{508391} (\nistnum{36293} unique) words or ``tokens,'' out of a total \nistnum{1690} documents with  \nistnum{381947} sentences and \nistnum{9229417} (\nistnum{253195} unique tokens).
-\kyle{Prob should reverse this to instead describe the entire dataset and then the test set for initial training}
+We work with a corpus composed of \nistnum{1690} full-text publications in HTML format downloaded from \textit{Macromolecules}, a relevant journal in polymer science.
+These documents comprise \nistnum{381947} sentences and \nistnum{9229417} (\nistnum{253195} unique words or ``tokens'').
+We set aside a test set of  100 documents with  \nistnum{22664} sentences and \nistnum{508391} (\nistnum{36293} unique) tokens. 
+%\kyle{Prob should reverse this to instead describe the entire dataset and then the test set for initial training}\roselyne{done.}
 We engaged six experts to identify one-word polymer names from our test set.
 They extracted 467 unique one-word polymer names, which we use as gold standard.
 We evaluate extraction accuracy in terms of precision and recall.
@@ -38,7 +40,7 @@ Using ten instead of three entities however, only slightly increases the yield o
 
 In a second experiment, we further explore the idea of using multiple seed entities to increase the fraction of polymers retrieved in the pool of candidates.
 We have built a small database of polymer properties ($\chi$DB) in previous work~\cite{choua2016hybrid,tchoua2016hybridi}. 
-Our corpus included 111 our of 175 $\chi$DB polymers. \kyle{What corpus?}
+The $\chi$DB corpus included 111 our of 175 $\chi$DB polymers. 
 We also scraped CrowDB, which lists some polymers and their properties at \url{http://polymerdatabase.com/} for polymer names.  
 In this case, 32 out of 295 polymer names were found in our corpus.
 We experiment using these 111 and 32 seed entities to extract polymers. The fraction of polymers from our gold standard is shown on Figure~\ref{fig:cand_generation2}.
