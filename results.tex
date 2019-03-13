@@ -200,36 +200,11 @@ The AUC for AL1 is 0.74 and that of AL2 is 0.70. The PRCs are improved over the 
 %\kyle{what does it look like if we put all iterations for a particular method on one graph}\roselyne{terrible and I don't think we should do this because it highlights that we were trying different algorithms and saving classifiers that maybe can't be directly compared to each other. Also, it just all looks random}.
 %\kyle{IF we went beyond 5 rounds do you think performance would continue to improve? Or is it leveling off?}\roselyne{I think it should improve. We stop here because we detect learning and we now have "enough" labels. Or we stop here because we've used 4 hours of expert time for each strategy or 8 total... either way, this is enough to reach CDE with all labels.}
 
-At this point we observe predictive ability in our classifier and try to combine all labels in two experiments:
-first using the most commonly selected classifier from our ensemble: KNN and second using a word representation enriched with character-level information using FastText.
-In both cases, we train using annotated candidates and test NLP-filtered nouns from our 100-document test set.
-FastText word embedding method that considers sub-word information as well as
-context, allowing it to consider word morphology differences, such as prefixes
-and suffixes. Sub-word information is especially useful for words for which
-context information is lacking, as words can still be compared to morphologically similar
-existing words. We set the length of the sub-word used for comparison\textemdash
-FastText's n_gram parameter\textemdash to five characters, based on our intuition that
-many polymers begin with the prefixes ``poly'' or ``poly(.'' \\
-
-\textbf{\underline{Training using Labels}}
-For this experiment, we train using labels generated through our initial 200 candidates and all iterations of active learning. 
+At this point we observe predictive ability and combine all labels (from the three strategies: Random, AL1 and AL2) for training a KNN classifier (most frequently selected classifier during the active learning phase).
+We test NLP-filtered nouns from our 100-document test set.
 While Figure~\ref{fig:all_rocs} shows an AUC of 0.74 and Figure~\ref{fig:all_prcs} shows an improved precision-recall curve, precision is generally low.
 When tested against our gold standard of 467 one-word polymer names the KNN classifier achieves 19.0\% precision and  29.9\% recall.	
-
-\textbf{\underline{Adding character-level information}}
-Therefore, we generate a FastText word embedding mode, and use our labeled candidates to train this different word vectors enhanced with character level information.
-The KNN classifier performance improves when using these word vectors as shown in Figures~\ref{fig:all_rocs_fasttext} and~\ref{fig:all_prcs_fasttext}.
-In this case, the classifier achieves 31.7\% precision and 82.3\% recall. 
-These numbers are comparable to those achieved by ChemDataExtractor (CDE), a state-of-the-art chemical NLP tool.
-As CDE aims to extract all
-chemical compounds, not just polymers, it serves only as a demonstration of an
-alternative approach in the absence of a polymer NER system (Note that CDE also extracts properties). 
-Its recall is high
-at 74.5\% but its precision is, as expected, low at 8.7\%. 
-We have previously enhanced CDE with
-manually defined polymer identification rules~\ref{tchoua2017towards},
-and our polymer-enhanced version of the software (CDE+) achieved 42.2\% precision and 68.3\% recall on the same test set. 
-We achieve higher recall in both cases and intermediate precision with only $\sim$ ten hours of expert labeling with an additional hour of completing untrained users' reviews of randomly sampled candidates.
+It is worth noting that with limited training data and based solely on context, the classifiers retreives about one third of the gold standard polymers after about ten hours of expert labeleing.
 
 \begin{figure*}
 \centering
@@ -242,6 +217,34 @@ We achieve higher recall in both cases and intermediate precision with only $\si
 \caption{Precision Recall Curve for KNN model trained using all annotated labels.}\label{fig:all_prcs}
 \end{minipage}
 \end{figure*}
+
+
+\subsection{Using polyNER's labels}
+Next, we train a different word embedding model using polyNER's labels.
+FastText uses word representations enriched with character-level information using FastText.
+This word embedding method considers sub-word information as well as
+context, allowing it to consider word morphology differences, such as prefixes
+and suffixes. Sub-word information is especially useful for words for which
+context information is lacking, as words can still be compared to morphologically similar
+existing words. We set the length of the sub-word used for comparison\textemdash
+FastText's n_gram parameter\textemdash to five characters, based on our intuition that
+many polymers begin with the prefixes ``poly'' or ``poly(.'' \\
+
+Therefore, we generate a FastText word embedding mode, and use our labeled candidates to train this different word vectors enhanced with character level information.
+Once again, we train a KNN classifier using all labels (generated through all 3 strategies)
+ and test NLP-filtered nouns from our 100-document test set.
+The KNN classifier performance improves when using these word vectors as shown in Figures~\ref{fig:all_rocs_fasttext} and~\ref{fig:all_prcs_fasttext}.
+In this case, the classifier achieves 31.7\% precision and 82.3\% recall. 
+These numbers are comparable to those achieved by ChemDataExtractor (CDE), a state-of-the-art chemical NLP tool.
+As CDE aims to extract all
+chemical compounds, not just polymers, it serves only as a demonstration of an
+alternative approach in the absence of a polymer NER system (Note that CDE also extracts properties). 
+Its recall is high
+at 74.5\% but its precision is, as expected, low at 8.7\%. 
+We have previously enhanced CDE with
+manually defined polymer identification rules~\cite{tchoua2017towards},
+and our polymer-enhanced version of the software (CDE+) achieved 42.2\% precision and 68.3\% recall on the same test set. 
+We achieve higher recall in both cases and intermediate precision with only $\sim$ ten hours of expert labeling including an hour of completing untrained users' reviews of randomly sampled candidates.
 
 \begin{figure*}
 \centering
