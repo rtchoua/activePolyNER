@@ -200,11 +200,11 @@ The AUC for AL1 is 0.74 and that of AL2 is 0.70. The PRCs are improved over the 
 %\kyle{what does it look like if we put all iterations for a particular method on one graph}\roselyne{terrible and I don't think we should do this because it highlights that we were trying different algorithms and saving classifiers that maybe can't be directly compared to each other. Also, it just all looks random}.
 %\kyle{IF we went beyond 5 rounds do you think performance would continue to improve? Or is it leveling off?}\roselyne{I think it should improve. We stop here because we detect learning and we now have "enough" labels. Or we stop here because we've used 4 hours of expert time for each strategy or 8 total... either way, this is enough to reach CDE with all labels.}
 
-At this point we observe predictive ability and combine all labels (from the three strategies: Random, AL1 and AL2) for training a KNN classifier (most frequently selected classifier during the active learning phase).
+At this point we observe predictive ability and combine all labels (from the three strategies: Random, AL1 and AL2 for a total of 2542 labels) for training a KNN classifier (most frequently selected classifier during the active learning phase).
 We test NLP-filtered nouns from our 100-document test set.
 While Figure~\ref{fig:all_rocs} shows an AUC of 0.74 and Figure~\ref{fig:all_prcs} shows an improved precision-recall curve, precision is generally low.
-When tested against our gold standard of 467 one-word polymer names the KNN classifier achieves 19.0\% precision and  29.9\% recall.	
-It is worth noting that with limited training data and based solely on context, the classifiers retreives about one third of the gold standard polymers after about ten hours of expert labeleing.
+When tested against our gold standard of 467 one-word polymer names the KNN classifier achieves 25.0\% precision and  42.5\% recall.	
+It is worth noting that with limited training data and based solely on context, the classifiers retreives more than one third of the gold standard polymers with a precision of one in four candidates being a polymer; this after about ten hours of expert labeleing.
 
 \begin{figure*}
 \centering
