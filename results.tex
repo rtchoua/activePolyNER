@@ -22,7 +22,7 @@ We explore how the choice of seed entities, the internal parameters \textit{vect
 In order to estimate the entity-richness of our large pool of distance candidates and since we do not have manually extracted data for the entire corpus, we create a list of \nistnum{10000} distance candidate vectors most similar to our seed entity vectors and report the fraction of gold standard polymer extracted. 
 Based on our experience of $\sim$ 5 polymers per document (\nistnum{8450} polymers for \nistnum{1690} documents), we can expect a fraction of the polymers found in the 100 gold standard documents to be extracted in the \nistnum{10000} candidates most similar to our seed entities.
 We evaluate the entity-richness of polymers in this pool of candidates by measuring the percentage of the 467 manually extracted polymer names that it yields;
-we use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.
+we use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.\\
 %\kyle{This text implies we know that there are 8450 polymers in our documents}
 %\kyle{Are you trying to say by setting to 10K we are going well beyond what is likely to be polys? Given earlier
 %we said there are 467 polys 10K is clearly a lot larger. Maybe better to frame this around the percentage of total tokens?}\roselyne{You got exactly what I was trying to say, 10k is a lot larger but it should also contain polys from the other papers, this number is just to "ensure" a certain percentage of our polys are in that pool. I'll try and rephrase.}
@@ -82,7 +82,7 @@ The $\chi$DB corpus included 111 our of 175 $\chi$DB polymers.
 We also scraped CrowDB, which lists some polymers and their properties at \url{http://polymerdatabase.com/} for polymer names.  
 In this case, 32 out of 295 polymer names were found in our corpus.
 We experiment using these 111 and 32 seed entities to extract polymers. The fraction of polymers from our gold standard is shown on rows seven and eight in Table~\ref{tab:candidate_generation}.
-These results confirm using more entities does not increase the yield of polymers, as some polymers have low frequency in the corpus, words that are most similar are less likely to be targets.
+These results confirm using more entities does not increase the yield of polymers, as some polymers have low frequency in the corpus, words that are most similar are less likely to be targets.\\
 
 %\kyle{perhaps better as a table. The long labels are hard to read}\roselyne{ok}
 %\begin{figure*}
@@ -171,7 +171,7 @@ We varied this parameter between 100 and 500 and did not observe a maximum chang
 
 \subsection{Active Learning}
 Having explored the parameters for distance candidate generation, we generate a pool of \nistnum{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \nistnum{1590} (this time excluding our 100 gold standard documents). 
-The candidates are arranged in decreasing order of similarity scores and we use a window size of 2 and a vector size of 200.  
+The candidates are arranged in decreasing order of similarity scores and we use a window size of 2 and a vector size of 200.  \\
 
 \subsubsection{Initial Classifier}
 In order to blance the initial training set (increase the potential number of target entities),
