@@ -207,17 +207,17 @@ In this round of labeling KNN is selected as the model with best recall in all t
 %\end{figure*}
 
 %\begin{figure*}
-\centering
-\begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/rocs_round4.png}
-\captionsetup{labelformat=empty}
-\caption{Receiver Operating Curve for iteration 3.}\label{fig:roc_round4}
-\end{minipage}\qquad
-\begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prcs_round4.png}
-\captionsetup{labelformat=empty}
-\caption{Precision Recall Curves for iteration 3.}\label{fig:prcs_round4}
-\end{minipage}
+%\centering
+%\begin{minipage}[b]{.4\textwidth}
+%\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/rocs_round4.png}
+%\captionsetup{labelformat=empty}
+%\caption{Receiver Operating Curve for iteration 3.}\label{fig:roc_round4}
+%\end{minipage}\qquad
+%\begin{minipage}[b]{.4\textwidth}
+%\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prcs_round4.png}
+%\captionsetup{labelformat=empty}
+%\caption{Precision Recall Curves for iteration 3.}\label{fig:prcs_round4}
+%\end{minipage}
 
 \centering
 \begin{minipage}[b]{.4\textwidth}
@@ -265,6 +265,17 @@ It is worth noting that with limited training data and based solely on context, 
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prc_all_gensim.png}
 \caption{Precision Recall Curve for KNN model trained using all annotated labels.}\label{fig:all_prcs}
 \end{minipage}
+%\end{figure*}
+%\begin{figure*}
+\centering
+\begin{minipage}[b]{.4\textwidth}
+\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/roc_all.png}
+\caption{Receiver Operating Curve for KNN model trained using all annotated labels and word representations enriched with character-level information.}\label{fig:all_rocs_fasttext}
+\end{minipage}\qquad
+\begin{minipage}[b]{.4\textwidth}
+\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prc_all.png}
+\caption{Precision Recall Curve for KNN model trained using all annnotated labels and word representations enriched with character-level information.}\label{fig:all_prcs_fasttext}
+\end{minipage}
 \end{figure*}
 
 
@@ -294,18 +305,19 @@ We have previously enhanced CDE with
 manually defined polymer identification rules~\cite{tchoua2017towards},
 and our polymer-enhanced version of the software (CDE+) achieved 42.2\% precision and 68.3\% recall on the same test set. 
 We achieve higher recall in both cases and intermediate precision with only $\sim$ ten hours of expert labeling including an hour of completing untrained users' reviews of randomly sampled candidates.
+We attribute the increased performance to the character embedding enhancement, which not only recognizes ``poly'' (and yields more names based on this n-gram comparison), but also filters out more anomalous candidates (preceeding or following polymer names) generated during tokenization and missed by the filtering steps such as ``\textit{$A_mB_n$}'', or ``\textit{Mw/Mn=1.36}''.  
 
-\begin{figure*}
-\centering
-\begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/roc_all.png}
-\caption{Receiver Operating Curve for KNN model trained using all annotated labels and word representations enriched with character-level information.}\label{fig:all_rocs_fasttext}
-\end{minipage}\qquad
-\begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prc_all.png}
-\caption{Precision Recall Curve for KNN model trained using all annnotated labels and word representations enriched with character-level information.}\label{fig:all_prcs_fasttext}
-\end{minipage}
-\end{figure*}
+%\begin{figure*}
+%\centering
+%\begin{minipage}[b]{.4\textwidth}
+%\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/roc_all.png}
+%\caption{Receiver Operating Curve for KNN model trained using all annotated labels and word representations enriched with character-level information.}\label{fig:all_rocs_fasttext}
+%\end{minipage}\qquad
+%\begin{minipage}[b]{.4\textwidth}
+%\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prc_all.png}
+%\caption{Precision Recall Curve for KNN model trained using all annnotated labels and word representations enriched with character-level information.}\label{fig:all_prcs_fasttext}
+%\end{minipage}
+%\end{figure*}
 
 
 
