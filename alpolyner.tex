@@ -2,6 +2,7 @@
 
 % my packages
 \usepackage{url}
+\usepackage{array}
 \usepackage{textcomp}
 \usepackage{listings}
 \usepackage[T1]{fontenc} % To use quotes in listing
@@ -61,6 +62,10 @@
 \usepackage[noadjust]{cite}
 \renewcommand{\citepunct}{,\penalty\citepunctpenalty\,}
 \renewcommand{\citedash}{--}% optionally
+
+\newcolumntype{C}[1]{>{\centering\arraybackslash}m{#1}}
+\newcolumntype{L}[1]{>{\raggedleft\arraybackslash}m{#1}}
+\newcolumntype{R}[1]{>{\raggedright\arraybackslash}m{#1}}
 
 \newcommand{\veryshortarrow}[1][3pt]{$\mathrel{%
    \hbox{\rule[\dimexpr\fontdimen22\textfont2-.2pt\relax]{#1}{.4pt}}%

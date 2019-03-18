@@ -35,7 +35,7 @@ We assume that frequent polymers provide a large number of example sentences tha
 Hence, we first test the most common, the three most common and the ten most common polymers as seed entities.
 We experiment with including and excluding their acronyms as corresponding additional seed entities.
 (Note that this modest set of 1, 3 and 10 seed entities could also be suggested by an expert.)
-Figure~\ref{fig:cand_generation1} shows the results for this set of experiments.
+Table~\ref{tab:candidate_generation} shows the results for this set of experiments on rows one through six.
 %\kyle{need to say how we determine if the results are polymers or not}\roselyne{fixed a little earlier}
 %\kyle{might be clearer to state first that Polystytene gets to 35\%.. then by adding extra bits we can increase by XX etc.}
 When using \textit{polystyrene} (the most commonly used name) as a seed entity, the pool of candidates contained 33.55 \% of the 467 gold standard polymers.
@@ -43,30 +43,64 @@ We note a 2 \% increase in the fraction of polymers retrieved when using \textit
 The fraction of polymers increases by 10 \% when using the three most frequent polymers as seed entities (from 33.55 \% to 46.9 \% and 47.97 \% with acronyms). 
 Using ten instead of three entities however, only slightly increases the yield of polymers by less than 1 \%, from 47.97 \% for three frequent polymers with acronyms to 48.39 \% for ten frequent polymers with acronyms.
 
+\begin{table}[ht!]
+\centering
+\caption{Fraction of gold standard polymer names extracted from pool of \nistnum{10000} \textit{distance} candidates using different candidate generation methods.\label{tab:candidate_generation}
+}
+\vspace{2ex}
+%[35.55, 37.69, 46.9, 47.97, 46.47, 48.39, 46.68, 36.4]
+\setlength\tabcolsep{3pt}
+\begin{tabular}{|C{0.1in}|C{2.4in}|C{0.6in}|}
+%\begin{tabular}{|c|>{\raggedright}p{1.2in}|r|c|r|c|c|c|c|}
+ \hline
+\textbf{\#} & \textbf{Candidate Generation Method} & \textbf{Fraction of polymers extracted}  \\
+\end{tabular}
+\begin{tabular}{|C{0.1in}|R{2.4in}|L{0.6in}|}
+\hline
+ 1 &    Polystyrene & 35.55\%  \\
+\hline
+ 2 &    Polystyrene with acronym (PS) & 37.69\%\\
+\hline
+ 3 &    3 most frequent polymer names & 46.90\%\\
+\hline
+ 4 &    3 most frequent polymer names with acronyms &  47.97\%\\
+\hline
+ 5 &    10 most frequent polymer names & 46.47\%\\
+\hline
+ 6 &    3 most frequent polymer names with acronyms & 48.39\%\\
+\hline
+ 7 &    $\chi$DB polymer names & 46.68\%\\
+\hline
+  8 &  crowDB polymer names    & 36.40\%\\
+\hline
+\end{tabular}
+\end{table}
+
 In a second experiment, we further explore the idea of using multiple seed entities to increase the fraction of polymers retrieved in the pool of candidates.
 We have built a small database of polymer properties ($\chi$DB) in previous work~\cite{choua2016hybrid,tchoua2016hybridi}. 
 The $\chi$DB corpus included 111 our of 175 $\chi$DB polymers. 
 We also scraped CrowDB, which lists some polymers and their properties at \url{http://polymerdatabase.com/} for polymer names.  
 In this case, 32 out of 295 polymer names were found in our corpus.
-We experiment using these 111 and 32 seed entities to extract polymers. The fraction of polymers from our gold standard is shown on Figure~\ref{fig:cand_generation2}.
+We experiment using these 111 and 32 seed entities to extract polymers. The fraction of polymers from our gold standard is shown on rows seven and eight in Table~\ref{tab:candidate_generation}.
 These results confirm using more entities does not increase the yield of polymers, as some polymers have low frequency in the corpus, words that are most similar are less likely to be targets.
 
-\kyle{perhaps better as a table. The long labels are hard to read}
-
-\begin{figure*}
-\centering
-\begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/candidate_generation_method1.png}
-\caption{\label{fig:cand_generation1} Fraction of polymer retrieved for various candidate generation methods using most common, three most common and ten most common polymer names as seed entities.
-}
-\end{minipage}\qquad
-\begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/candidate_generation_method2.png}
-\caption{\label{fig:cand_generation2} Fraction of polymer retrieved for various candidate generation methods using three most common (with and without acronymss), $\chi$DB and CrowDB polymer names as seed entities.  \kyle{Not sure this needs to be a separate graph?}
-}
-\end{minipage}
-\end{figure*}
-
+%\kyle{perhaps better as a table. The long labels are hard to read}\roselyne{ok}
+%\begin{figure*}
+%\centering
+%\begin{minipage}[b]{.4\textwidth}
+%\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/candidate_generation_method1.png}
+%\caption{\label{fig:cand_generation1} Fraction of polymer retrieved for various candidate generation methods using most common, three most common and ten most common polymer names as seed entities.
+%}
+%\end{minipage}\qquad
+%\begin{minipage}[b]{.4\textwidth}
+%\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/candidate_generation_method2.png}
+%\caption{\label{fig:cand_generation2} Fraction of polymer retrieved for various candidate generation methods using three most common (with and without acronymss), $\chi$DB and CrowDB polymer names as seed entities.  
+%%\kyle{Not sure this needs to be a separate graph?}
+%}
+%\end{minipage}
+%\end{figure*}
+%Together
+%[35.55, 37.69, 46.9, 47.97, 46.47, 48.39, 46.68, 36.4]
 %[35.55, 37.69, 46.9, 47.97, 46.47, 48.39]
 %\begin{figure}[!t]
 %\centering
@@ -88,9 +122,9 @@ We measure the impact of the \textit{window} and \textit{size} on the fraction o
 The \textit{window} represents the maximum distance between the current and predicted word within a sentence. In other words, it represents the number of words before and after each word considered by the neural network to generate a vector representation for that word. 
 For each parameter setting, we measure the yield of polymers ten times for each window and vector size setting.
 We observe slightly higher fraction of polymers retrieved for window sizes of 1 and 2. The yield subsequently decreases and more noticeably with window size larger than 5 (see Figure~\ref{fig:window_size}).
-\kyle{Interesting that it is consistently decreasing. Except 8 seems to jump up. Any idea what the average sentence length is?}\roselyne{no but can find out, increase is not too noticeable though is it? still less than 4}
+%\kyle{Interesting that it is consistently decreasing. Except 8 seems to jump up. Any idea what the average sentence length is?}\roselyne{I added the numbers below, I agree it's interesting but really 1,2,3 and 4 are still noticeable larger.}
 The \textit{size} simply determines the size of the word vector (features for our classifier)).
-We varied this parameter between 100 and 500 and did not observe a maximum change of 1.05\% from the average fraction of polymers extracted (see Figure~\ref{fig:vector_size}). %\kyle{Maybe can say what the total difference was here}
+We varied this parameter between 100 and 500 and did not observe a maximum change of 1.05\% from the average fraction of polymers extracted (see Figure~\ref{fig:vector_size}). %\kyle{Maybe can say what the total difference was here}\roselyne{done, thanks!}
 
 
 \begin{figure*}
@@ -101,9 +135,23 @@ We varied this parameter between 100 and 500 and did not observe a maximum chang
 \end{minipage}\qquad
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/vector_size.png}
-\caption{Impact of varying vector size on fraction of polymers retrieved. \kyle{Not sure this fig is worth including}}\label{fig:vector_size}
+\caption{Impact of varying vector size on fraction of polymers retrieved.}\label{fig:vector_size}
 \end{minipage}
 \end{figure*}
+ %\kyle{Not sure this fig is worth including}\roselyne{Agreed that it's not so interesting but i think it goes with the windows one and i will combine the two figures you think should be together.}
+%window size yields
+%yield          error
+%53.28	11.22941066
+%52.81	10.25052192
+%51.48	7.473903967
+%50.03	4.446764092
+%48.36	0.960334029
+%45.7	4.592901879
+%44.54	7.014613779
+%46.21	3.528183716
+%43.13	9.958246347
+%43.47	9.248434238
+% average 47.9
 
 
 %\begin{figure}[!t]

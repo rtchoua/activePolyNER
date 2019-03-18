@@ -84,7 +84,8 @@ When dealing with multiple seed entities, we use the highest similarity score fo
 \begin{figure*}[!t]
 \centering
 \scalebox{0.6}{\includegraphics{figures/al_setup.pdf}}
-\caption{\label{fig:current} The active learning process. \kyle{more detail needed here. I think the pic is missing some arrows too. We could make it horizontal to ensure that it uses less space}}
+\caption{\label{fig:current} The active learning experiment set up; we generate an unsupervised word embedding model using training documents in 1), we propose NLP-filtered candidate entities to untrained and expert annotators in 2) before classifying their word vectors in 3). The word embedding model is updated to include test documents in 4) and we verify results from step 3 using updated word vectors. Finally, we test this word vector classifier on all NLP-filtered words from the test documents in 6).}
+%\kyle{more detail needed here. I think the pic is missing some arrows too. We could make it horizontal to ensure that it uses less space}\roselyne{I think addressed}.
 %{\includegraphics[trim=0in 4.in 0.1in 0,clip,width=\textwidth]{figures/al_setup.pdf}}
 %\caption{\label{fig:current} The active learning process.
 %}
