@@ -12,7 +12,7 @@ We apply an active learning loop to incrementally improve the performance of the
 In order to explore whether natural language processing, and specifically the use of word vector coordinates as features can accelerate the learning process,
 we use three sampling strategies and two different candidate pools for maximum entropy uncertainty sampling, which we describe in this section.
 The general architecture of polyNER is illustrated in Figure~\ref{fig:architecture}.
-We also describe the labeling process, training and testing set up for the ensemble of word vector classifiers in the active learning loop. 
+We also describe the labeling process, training and testing set up for our word vector classifiers in the active learning loop. 
 
 \begin{figure*}[!t]
 {\includegraphics[width=\textwidth]{figures/architecture.pdf}}
@@ -94,7 +94,7 @@ When dealing with multiple seed entities, we use the highest similarity score fo
 \subsection{Active Learning Experiment Setup}
 \kyle{Confusing to have AL exp setup here}
 
-Without prior knowledge of the distribution of target entities in the vector space, we use an ensemble of classifiers at each iteration of the active learning process. 
+Without prior knowledge of the distribution of target entities in the vector space, we use multiple of classifiers at each iteration of the active learning process. 
 We save the best performing classifier on the labeled candidates for subsequent maximum entropy-based uncertainty sampling. 
 The requested labels are annotated by humans to serve as addition training data for the next learning iteration. 
 We describes these steps in more details in the following sections.
@@ -102,10 +102,10 @@ We describes these steps in more details in the following sections.
 \subsubsection{Word Embedding Model}
 We hypothesize that we can implement a classifier, which can detect word vectors for polymers based on their context. 
 This, in turn, implies that word representation for polymers should not change considerably with small changes in corpora.
-To test this hypothesis and separate our training and testing sets, we train an ensemble of classifiers on vector representations of candidates generated from a word embedding model of a large set of training documents (see step 1 of Figure~\ref{fig:current}); 
+To test this hypothesis and separate our training and testing sets, we train our classifiers on vector representations of candidates generated from a word embedding model of a large set of training documents (see step 1 of Figure~\ref{fig:current}); 
 we then update the classifier with our \textemdash smaller\textemdash test corpus and retrain the classifier. 
 This validation step insures that there are no major differences in performance before and after the update (step 2 of Figure~\ref{fig:current}).
-Finally, in step 3, we test our ensemble of classifiers against all the NLP-filtered words from the test corpus, as shown on Figure~\ref{fig:current}.
+Finally, in step 3, we test our classifiers against all the NLP-filtered words from the test corpus, as shown on Figure~\ref{fig:current}.
 
 \subsubsection{Untrained and Expert Labeling}
 As explained in section~\ref{sect:background}, recognizing polymers can require more or less domain expertise.
@@ -137,8 +137,8 @@ Clicking on ``?'' delivers up to 25 more example sentences.
 }
 \end{figure}
 
-\subsubsection{Ensemble of Classifiers}
-We use an ensemble of classifiers that we concurrently trained and test on the same data in steps 1, 2 and 3 illustrated on Figure~\ref{fig:current}.
+\subsubsection{Classification or Candidate Discrimination}
+We use multiple of classifiers that we concurrently trained and test on the same data in steps 1, 2 and 3 illustrated on Figure~\ref{fig:current}.
 The classifiers include the scikit-Learn implementations of Decision Tree (DT), Gradient Boosting (GB), K-Nearest Neighbor (KNN(uniform and distance weights)), Logistic Regression (LR), Linear Support Vector Machine (SVM), Naive Bayes (NB), and Random Forest (RF)~\cite{scikit-learn}. 
 Our goal here is to explore the word embedding space and determine which classifier(s) works best for detecting our scientitic named entities.
 As previously mentioned, we save the \textit{best-performing} classifier on labeled candidates (prior to updating the word embedding model  with test documents in order to clearly separate the training process from the test set, see step 1 in Figure~\ref{fig:current}).

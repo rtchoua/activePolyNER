@@ -1,7 +1,7 @@
 \section{Evaluation}
 \label{sect:results}
 We first report on a study in which we evaluate the generation of distance candidates using the vector similarity measures and seed entities. 
-We then discuss the results of five rounds of active learning using our ensemble of classifiers and our three sampling strategies: random, AL1 and AL2.
+We then discuss the results of five rounds of active learning using multiple word vector classifiers and our three sampling strategies: random, AL1 and AL2.
 Finally, we experiment with word representations enhanced with character-level information using FastText~\cite{bojanowski2016enriching,joulin2016bag}.
 
 \subsection{Dataset}
@@ -77,7 +77,7 @@ Using ten instead of three entities however, only slightly increases the yield o
 \end{table}
 
 In a second experiment, we further explore the idea of using multiple seed entities to increase the fraction of polymers retrieved in the pool of candidates.
-We have built a small database of polymer properties ($\chi$DB) in previous work~\cite{choua2016hybrid,tchoua2016hybridi}. 
+We have built a small database of polymer properties ($\chi$DB) in previous work~\cite{tchoua2016hybrid,tchoua2016hybridi}. 
 The $\chi$DB corpus included 111 our of 175 $\chi$DB polymers. 
 We also scraped CrowDB, which lists some polymers and their properties at \url{http://polymerdatabase.com/} for polymer names.  
 In this case, 32 out of 295 polymer names were found in our corpus.
