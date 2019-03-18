@@ -253,7 +253,8 @@ At this point we observe predictive ability and combine all labels (from the thr
 We test NLP-filtered nouns from our 100-document test set.
 While Figure~\ref{fig:all_rocs} shows an AUC of 0.74 and Figure~\ref{fig:all_prcs} shows an improved precision-recall curve, precision is generally low.
 When tested against our gold standard of 467 one-word polymer names the KNN classifier achieves 25.0\% precision and  42.5\% recall.	
-It is worth noting that with limited training data and based solely on context, the classifiers retreives more than one third of the gold standard polymers with a precision of one in four candidates being a polymer; this after about ten hours of expert labeleing.
+It is worth noting that with limited training data and based solely on context, the classifiers retreives more than one third of the gold standard polymers with a precision of one in four candidates being a polymer; this after about ten hours of expert labeleing. 
+For comparison, an attempt to extract polymer names using the rule: \textit{if the name contains ``poly'' extract it as a polymer}, would score a precision of 34\% and a recall of 41\% on the same dataset. %\roselyne{I think it helps. yes/no?} 
 
 \begin{figure*}
 \centering
