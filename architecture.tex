@@ -1,9 +1,5 @@
-\label{sect:architecture}
+\label{sect:apner_architecture}
 \section{Design and Implementation}
-%As previously mentioned, there has been great interest in scientific named entity recognition (NER), especially in the fields of biomedicine.  
-%It is even more challenging for new fields to leverage existing machine learning methods without access to large amounts of labeled training data.
-%We develop a framework to efficiently retrieve and classify scientific named
-%entities. 
 PolyNER uses word representations and minimal domain knowledge (a few
 seed entities) to produce a small set of candidates for expert labeling;
 labeled candidates are then used to train named entity word vector classifiers.
@@ -84,16 +80,10 @@ When dealing with multiple seed entities, we use the highest similarity score fo
 \begin{figure*}[!t]
 \centering
 \scalebox{0.6}{\includegraphics{figures/al_setup.pdf}}
-\caption{\label{fig:current} The active learning experiment set up; we generate an unsupervised word embedding model using training documents in 1), we propose NLP-filtered candidate entities to untrained and expert annotators in 2) before classifying their word vectors in 3). The word embedding model is updated to include test documents in 4) and we verify results from step 3 using updated word vectors. Finally, we test this word vector classifier on all NLP-filtered words from the test documents in 6).}
-%\kyle{more detail needed here. I think the pic is missing some arrows too. We could make it horizontal to ensure that it uses less space}\roselyne{I think addressed}.
-%{\includegraphics[trim=0in 4.in 0.1in 0,clip,width=\textwidth]{figures/al_setup.pdf}}
-%\caption{\label{fig:current} The active learning process.
-%}
+\caption{\label{fig:current} The active learning experiment set up; we generate an unsupervised word embedding model using our entire corpus in 1), we propose NLP-filtered candidate entities to untrained and expert annotators in 2) before classifying their word vectors in 3). We save this classifier for uncertainty-based selection of labels for the next round of active learning. In 4), we test this word vector classifier on all NLP-filtered words from the test documents.}
 \end{figure*}
-`
-\subsection{Active Learning Loop}
-%\kyle{Confusing to have AL exp setup here}\roselyne{What if I change the name, I think I do have to put it here before the evaluation?}
 
+\subsection{Active Learning Loop}
 Without prior knowledge of the distribution of target entities in the vector space, we use multiple of classifiers at each iteration of the active learning process. 
 We save the best performing classifier on the labeled candidates for subsequent maximum entropy-based uncertainty sampling. 
 The requested labels are annotated by humans to serve as addition training data for the next learning iteration. 
@@ -101,10 +91,7 @@ We describes these steps in more details in the following sections.\\
 
 \subsubsection{Word Embedding Model}
 We hypothesize that we can implement a classifier, which can detect word vectors for polymers based on their context. 
-This, in turn, implies that word representation for polymers should not change considerably with small changes in corpora.
-To test this hypothesis and separate our training and testing sets, we train our classifiers on vector representations of candidates generated from a word embedding model of a large set of training documents (see step 1 of Figure~\ref{fig:current}); 
-we then update the classifier with our \textemdash smaller\textemdash test corpus and retrain the classifier. 
-This validation step insures that there are no major differences in performance before and after the update (step 2 of Figure~\ref{fig:current}).
+We generate an unsupervised word embedding model using out entire corpus and train classifiers on vector representations using labels generated via the active learning(step 3 of Figure~\ref{fig:current}).
 Finally, in step 3, we test our classifiers against all the NLP-filtered words from the test corpus, as shown on Figure~\ref{fig:current}.\\
 
 \subsubsection{Untrained and Expert Labeling}

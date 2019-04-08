@@ -1,5 +1,5 @@
 \section{Introduction}
-\label{sect:introduction}
+\label{sect:apner_introduction}
 
 %\kyle{readers will be confused of which domain you mean here? I think this first paragraph
 %can be clearer and to the point.}
@@ -24,11 +24,11 @@ The goal is
 to substitute the labor-intensive processes of assembling a large
 manually annotated corpus (and reduce costs) by using small numbers of carefully selected candidates to be labeled via focused expert input. 
 We use active learning with maximum entropy uncertainty sampling and two different pools of unlabeled data to train classifiers and compare their learning rate after 5 iterations. 
-Using all generated labels we train word vector classifiers and achieve NER performance comparable to 
+Using labels generated via active learning we train word vector classifiers and achieve NER performance comparable to 
 a state-of-the art rule-based chemical entity extraction
 system, ChemDataExtractor (CDE)~\cite{swain2016chemdataextractor}, which we have previously enhanced
 with dictionary- and rule-based methods for identifying polymers~\cite{tchoua2017towards}.
-Our system however, took less than ten hours of expert time to achieve this result.
+Our system however, took less than five hours of expert time to achieve this result.
 %\kyle{We talk here about identifying polymers but that specific problem hasnt been introduced}
 %\roselyne{Thanks fixed it, right before challlenge.}
 The rest of this paper is as follows. 
