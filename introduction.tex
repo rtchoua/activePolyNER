@@ -19,7 +19,8 @@ For example, in the subfield of polymer science, scientists and engineers lack a
 To address these challenges, we propose polyNER, a system for generating training data for scientific NER using semi-supervised and active learning. 
 PolyNER uses natural language processing to produce sets of candidate entities;
 experts then iteratively approve or reject candidates in small batches selected using an active learning approach;
-the labels are used to train a series of word vector classifiers after each iteration.
+the labels are used to train a series of context-based word vector classifiers after each iteration.
+PolyNER's labels can also be used to train other machine learning models to leverage features beyond their context to recognize target entities.
 The goal is
 to substitute the labor-intensive processes of assembling a large
 manually annotated corpus (and reduce costs) by using small numbers of carefully selected candidates to be labeled via focused expert input. 
