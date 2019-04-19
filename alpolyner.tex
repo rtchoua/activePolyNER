@@ -142,12 +142,12 @@ Despite significant progress in natural language processing,
 machine learning models require substantial expert-annotated data for training to perform well in tasks such as named entity recognition and entity relations extraction.
 Scientific Named Entity Referent Extraction is often more complicated than traditional Named Entity Recognition (NER). 
 For example, in polymer science, 
-chemical structure may be encoded in a variety of nonstandard
+chemical structure may be encoded using nonstandard
 naming conventions,
-the same concept can be expressed using
-any number of different terms (synonymy),
+the same concept can be expressed using many different terms (synonymy),
 and authors may refer to polymers with ad-hoc labels (in lieu of longer names).
-This adds a layer of difficulty when generating training data for new domains as specialized skills are sometimes needed to correctly label text.
+These challenges make it difficult to generate training data as specialized skills are needed to correctly label text.
+\kyle{We've proposed polyner a few times now.. I think likely better to focus on what is new this paper}
 Here we propose polyNER: a semi-automated system for efficient identification of scientific entities in text.
 PolyNER applies word embedding models
 to generate entity-rich corpora for productive expert labeling,
