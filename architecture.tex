@@ -1,18 +1,19 @@
 \label{sect:apner_architecture}
 \section{Design and Implementation}
+
 PolyNER uses word representations and minimal domain knowledge (a few
 seed entities) to produce a small set of candidates for expert labeling;
 labeled candidates are then used to train named entity word vector classifiers.
 We implement an active learning loop in order to incrementally improve the performance of the classifiers.
-\kyle{Come back to this. Not sure if it belongs here or in eval yet.}
 In order to explore whether natural language processing, and specifically the use of word vector coordinates as features can accelerate the learning process,
 we use three sampling strategies and two different candidate pools for maximum entropy uncertainty sampling, which we describe in this section.
 The general architecture of polyNER is illustrated in Figure~\ref{fig:architecture}.
-We also describe the labeling process, training and testing set up for our word vector classifiers in the active learning loop. 
+We also describe the labeling process, and training and testing configuration for our word vector classifiers in the active learning loop. 
 
 \begin{figure*}[!t]
 {\includegraphics[width=\textwidth]{figures/architecture.pdf}}
 \caption{\label{fig:architecture} PolyNER system showing NLP-filtering in (1), candidate sampling strategies in (2), and actie learning loop between expert labeling (3) and classification of scientific named entities (4). 
+\kyle{Would be good to have some more padding on the NL filtering step. Also not sure ``cut numbers, vocab'' is meaningful? Sampling strategies has the m from random on the second box. Again, maybe some padding there would be clearer.}
 }
 \end{figure*}
 
@@ -24,7 +25,7 @@ Hypothesizing that names of scientific entities will not, in general, be English
 vocabulary words, we remove words found in the SpaCy dictionaries
 of commonly used English words~\cite{choi2015depends}. (We manually remove common polymer
 names, such as polystyrene and polyethylene, from the dictionaries.) 3) We use
-SpaCy's part-of-speech tagging functionality to remove non-nouns. 4)We remove
+SpaCy's part-of-speech tagging functionality to remove non-nouns. 4) We remove
 unwanted characters (e.g. `:', `.', `,', `:', `-') from the beginning and the end of each
 candidate, allowing us to recognize, for example, polyethylene; (which fails the
 exact string comparison test against ``polyethylene''). 5) We remove plurals (e.g.,
@@ -37,24 +38,31 @@ We refer to these pre-processed words (output of step 1 in Figure~\ref{fig:archi
 %\kyle{We should think about how to structure this. It seems like we want to outline
 %the normal process and then perhaps introduce some baselines for comparison in the next section.}\roselyne{I'll leave this here and make a note to talk but I think we don't have much to gain comparing these since we started them all with th distance candidates. Hope it still makes sense this way.}
 
-We implement three sampling strategies, which we refer to as \textit{Random}, \textit{AL1} and \textit{AL2}, 
+\kyle{I feel like some linkage is needed here. You should define what the purpose of these labeling strategies are. 
+The idea being that from the large pool of potential candidates we have to pick a set of candidates for labeling
+that we hope will give us a broad training set for improving accuracy of the classifier. }
+\kyle{Should define how we do the first selections when we have no information.}
+\kyle{Also is the figure wrong. Aren't the sampling strategies part of the active learning loop?}
+
+
+We implement three sampling strategies, which we refer to as \textit{Random}, \textit{Active Learning 1 (AL1)} and \textit{Active Learning 2 (AL2)}, 
 to determine which candidates to label.
-Based on preliminary experiment, we set the size of batches of strings to be labeled to 200 or about an hour of expert time.\\
+Based on preliminary experiments, we set the size of batches of strings to be labeled to 200 or about an hour of expert time.
 
 \subsubsection{Random Strategy}
 In the first strategy we randomly select 200 out of the pool of unlabeled NLP-filtered candidates.
-%\kyle{not known what an unlabeled NLP-filtered candidate is}. 
-Note that the imbalance between polymers and other \textit{tokens} (words or space separated strings) that do not exist in in this set is still significant (less than 5\% in our test set).\\
+Note that the imbalance between polymers and other \textit{tokens} (words or space separated strings) that 
+do not exist in in this set is still significant (less than 5\% in our test set).
 
 \subsubsection{Active Learning using NLP-Filtered Candidates (AL1)}
-In the second strategy we use maximum entropy sampling method using the same pool of NLP-filtered candidates.
+In the second strategy we use maximum entropy sampling method using the same pool of unlabeled NLP-filtered candidates.
 As previously mentioned, maximum entropy selection falls under the category of uncertainty sampling, which identifies data points where a classifier predicts outcome at the decision boundary between two or more classes. 
 For example, in our case, when predicting whether a word vector represents a polymer, or not, the classifier assigns equal probability to either case.
-In the binary case, probabilities range from $0$ to $0.5$ or 50\%. Therefore, we predict outcome for all our NLP-filtered candidates and obtains a probability $p$ for each data point. We compute a list of $0.5-p$ values for all unlabeled data and sort the list in ascending order.
-Points with scores closest to $0$ are most uncertain, we select the first 200 entries from this ordered list to be labeled by experts.\\
-
+In the binary case, probabilities range from $0$ to $0.5$. Therefore, we predict outcome for all our NLP-filtered candidates and obtains a probability $p$ for each data point. We compute a list of $0.5-p$ values for all unlabeled data and sort the list in ascending order.
+Points with scores closest to $0$ are most uncertain, we select the first 200 entries from this ordered list to be labeled by experts.
 
 \subsubsection{Active Learning using NLP-Filtered Distance Candidates (AL2)}
+\kyle{Calling them AL1 and 2, is hiding the fact that they are quite different. Could we instead do something like Prediction Certainty and Context Similarity? I'm sure we can come up with a better name even.}
 Finally, the third pool is composed of NLP-filtered candidates deemed to be most similar to seed entities using vector similarity measures.
 The intuition behind generating this pool of candidates is to increase the likelihood that a candidate is a target referent (name, acronym, synonym, etc.) by comparing its vector to that of a known entity.
 Our goal is to determine whether polymers are used in a consistent context that can be used to detect and classify their corresponding context-aware vectors.
@@ -87,12 +95,12 @@ When dealing with multiple seed entities, we use the highest similarity score fo
 Without prior knowledge of the distribution of target entities in the vector space, we use multiple of classifiers at each iteration of the active learning process. 
 We save the best performing classifier on the labeled candidates for subsequent maximum entropy-based uncertainty sampling. 
 The requested labels are annotated by humans to serve as addition training data for the next learning iteration. 
-We describes these steps in more details in the following sections.\\
+We describes these steps in more details in the following sections.
 
 \subsubsection{Word Embedding Model}
 We hypothesize that we can implement a classifier, which can detect word vectors for polymers based on their context. 
 We generate an unsupervised word embedding model using out entire corpus and train classifiers on vector representations using labels generated via the active learning(step 3 of Figure~\ref{fig:current}).
-Finally, in step 3, we test our classifiers against all the NLP-filtered words from the test corpus, as shown on Figure~\ref{fig:current}.\\
+Finally, in step 3, we test our classifiers against all the NLP-filtered words from the test corpus, as shown on Figure~\ref{fig:current}.
 
 \subsubsection{Untrained and Expert Labeling}
 As explained in section~\ref{sect:background}, recognizing polymers can require more or less domain expertise.
@@ -112,7 +120,7 @@ Hence, we assign two graduate student labelers to curate the candidates generate
 First, the untrained labelers rejects obvious non-candidates via the previously mentioned web interface. 
 Next, one of our expert polymer scientists indicates, for each remaining
 candidate, whether or not it is in fact a polymer referent and submits a final review.
-While we first used this two-phase review process for the random strategy, we envision generalizing and leveraging humans with different expertise through multi-phase reviews for all strategies to further save future costs.\\
+While we first used this two-phase review process for the random strategy, we envision generalizing and leveraging humans with different expertise through multi-phase reviews for all strategies to further save future costs.
 %\kyle{Here we might want to think about positioning this as 2-phase review where we combine humans with different expertise levels}\roselyne{That's what I try to write about, I will specify that we did this for the random strategy but it could be applied to all strategies}
 
 

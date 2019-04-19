@@ -1,9 +1,6 @@
 \section{Introduction}
 \label{sect:apner_introduction}
 
-%\kyle{readers will be confused of which domain you mean here? I think this first paragraph
-%can be clearer and to the point.}
-%\roselyne{I added the field right away, I thought this was the most to the point way of going into the motivation?}
 
 Despite the large number of publications in materials science, the process of designing new materials is still one of trial and error.
 The field of materials informatics aims to address this problem by combining large datasets and computational models to achieve targeted materials design and reduce time-to-market and development costs of new materials.
@@ -16,6 +13,8 @@ Instead, attempts to extract a new type of materials rely  on large, carefully a
 data tailored for this new target, often requiring some amount of in-depth domain knowledge.
 For example, in the subfield of polymer science, scientists and engineers lack access to a freely available large database of polymers and their properties.
 
+\kyle{should cite our previous papers about polyNER. ANd change phrasing here to make it sound like polyner is now well established
+and what we are doing here is enhancing it with active learning. }
 To address these challenges, we propose polyNER, a system for generating training data for scientific NER using semi-supervised and active learning. 
 PolyNER uses natural language processing to produce sets of candidate entities;
 experts then iteratively approve or reject candidates in small batches selected using an active learning approach;
@@ -30,8 +29,8 @@ a state-of-the art rule-based chemical entity extraction
 system, ChemDataExtractor (CDE)~\cite{swain2016chemdataextractor}, which we have previously enhanced
 with dictionary- and rule-based methods for identifying polymers~\cite{tchoua2017towards}.
 Our system however, took less than five hours of expert time to achieve this result.
-%\kyle{We talk here about identifying polymers but that specific problem hasnt been introduced}
-%\roselyne{Thanks fixed it, right before challlenge.}
+
+
 The rest of this paper is as follows. 
 In Section~\ref{sect:background}, we motivate the need for identifying polymer names in
 text. 
