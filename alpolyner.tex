@@ -147,13 +147,14 @@ naming conventions,
 the same concept can be expressed using many different terms (synonymy),
 and authors may refer to polymers with ad-hoc labels (in lieu of longer names).
 These challenges make it difficult to generate training data as specialized skills are needed to correctly label text.
-\kyle{We've proposed polyner a few times now.. I think likely better to focus on what is new this paper}
-Here we propose polyNER: a semi-automated system for efficient identification of scientific entities in text.
+%\kyle{We've proposed polyner a few times now.. I think likely better to focus on what is new this paper}\roselyne{only once was accepted, except the short paper at BNL and I didn't know it yet for sure when I was writing but I see your point. I'll rephrase and I think we can cite an accepted paper.}.
+We have previously designed polyNER: a semi-automated system for efficient identification of scientific entities in text.
 PolyNER applies word embedding models
 to generate entity-rich corpora for productive expert labeling,
 and then uses the resulting labeled data to 
-bootstrap a context-based word vector classifier.
-We use approximately labeled candidates and active learning to efficiently obtain annotations from experts, a process that is otherwise tedious and expensive.
+bootstrap a context-based word vector classifier.%~\roselyne{cite in intro}.
+Here, we use approximately labeled candidates and active learning to efficiently obtain more annotations from experts and improve performance.
+This process that is otherwise tedious and expensive.
 With under five hours of expert time, polyNER demonstrates discrimination capacity comparable to state-of-the-art chemical NLP toolkit and
 highlights the potential for human-computer partnership for 
 constructing domain-specific scientific NER systems.

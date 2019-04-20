@@ -13,9 +13,9 @@ Instead, attempts to extract a new type of materials rely  on large, carefully a
 data tailored for this new target, often requiring some amount of in-depth domain knowledge.
 For example, in the subfield of polymer science, scientists and engineers lack access to a freely available large database of polymers and their properties.
 
-\kyle{should cite our previous papers about polyNER. ANd change phrasing here to make it sound like polyner is now well established
-and what we are doing here is enhancing it with active learning. }
-To address these challenges, we propose polyNER, a system for generating training data for scientific NER using semi-supervised and active learning. 
+%\kyle{should cite our previous papers about polyNER. ANd change phrasing here to make it sound like polyner is now well established
+%and what we are doing here is enhancing it with active learning. }
+To address these challenges, we have designed polyNER, a system for generating training data for scientific NER using semi-supervised and active learning. 
 PolyNER uses natural language processing to produce sets of candidate entities;
 experts then iteratively approve or reject candidates in small batches selected using an active learning approach;
 the labels are used to train a series of context-based word vector classifiers after each iteration.
@@ -23,7 +23,8 @@ PolyNER's labels can also be used to train other machine learning models to leve
 The goal is
 to substitute the labor-intensive processes of assembling a large
 manually annotated corpus (and reduce costs) by using small numbers of carefully selected candidates to be labeled via focused expert input. 
-We use active learning with maximum entropy uncertainty sampling and two different pools of unlabeled data to train classifiers and compare their learning rate after 5 iterations. 
+In this paper, we seek to improve polyNER's performance in both the generation of candidate entities and the labeling process.
+We experiment with different seed entities to generate candidates and tune the word embedding model parameters to increase the yield of actual scientific entities among candidates; we use active learning with maximum entropy uncertainty sampling and two different pools of unlabeled data to train classifiers and compare their learning rate after 5 iterations. 
 Using labels generated via active learning we train word vector classifiers and achieve NER performance comparable to 
 a state-of-the art rule-based chemical entity extraction
 system, ChemDataExtractor (CDE)~\cite{swain2016chemdataextractor}, which we have previously enhanced
