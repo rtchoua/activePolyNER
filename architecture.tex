@@ -36,15 +36,16 @@ We refer to these pre-processed words (output of step 1 in Figure~\ref{fig:archi
 
 \subsection{Labeling Strategies}
 %\kyle{We should think about how to structure this. It seems like we want to outline
-%the normal process and then perhaps introduce some baselines for comparison in the next section.}\roselyne{I'll leave this here and make a note to talk but I think we don't have much to gain comparing these since we started them all with th distance candidates. Hope it still makes sense this way.}
-
-\kyle{I feel like some linkage is needed here. You should define what the purpose of these labeling strategies are. 
-The idea being that from the large pool of potential candidates we have to pick a set of candidates for labeling
-that we hope will give us a broad training set for improving accuracy of the classifier. }
-\kyle{Should define how we do the first selections when we have no information.}
+%the normal process and then perhaps introduce some baselines for comparison in the next section.}\roselyne{I'll leave this here and make a note to talk but I think we don't have much to gain comparing these since we started them all with the distance candidates. Hope it still makes sense this way.}
+While the previous steps reduces the numbers of candidates and the imbalance of the dataset (target vs. non-target entity ration), there still remains a relatively large pool of potential candidates to select entities from.
+In order to achieve higher classification accuracy\textemdash
+by decreasing the number of potential false positives (candidates incorrectly identified as targets by our classifier)
+\textemdash we want to carefully select examples to be labeled by experts.
+%\kyle{I feel like some linkage is needed here. You should define what the purpose of these labeling strategies are. 
+%The idea being that from the large pool of potential candidates we have to pick a set of candidates for labeling
+%that we hope will give us a broad training set for improving accuracy of the classifier. }
+%\kyle{Should define how we do the first selections when we have no information.}\roselyne{I think this is hard to do without first describing the AL2 strategy. I think I mention it in the results section.}
 %\kyle{Also is the figure wrong. Aren't the sampling strategies part of the active learning loop?}\roselyne{yes they are part of the loop, I've added that so that there is a link between this and the next figure}
-
-
 We implement three sampling strategies, which we refer to as \textit{Random}, \textit{Active Learning 1 (AL1)} and \textit{Active Learning 2 (AL2)}, 
 to determine which candidates to label.
 Based on preliminary experiments, we set the size of batches of strings to be labeled to 200 or about an hour of expert time.
@@ -100,7 +101,7 @@ We describes these steps in more details in the following sections.
 \subsubsection{Word Embedding Model}
 We hypothesize that we can implement a classifier, which can detect word vectors for polymers based on their context. 
 We generate an unsupervised word embedding model using out entire corpus and train classifiers on vector representations using labels generated via the active learning(step 3 of Figure~\ref{fig:current}).
-Finally, in step 3, we test our classifiers against all the NLP-filtered words from the test corpus, as shown on Figure~\ref{fig:current}.
+Finally, in step 4, we test our classifiers against all the NLP-filtered words from the test corpus, as shown on Figure~\ref{fig:current}.
 
 \subsubsection{Untrained and Expert Labeling}
 As explained in section~\ref{sect:background}, recognizing polymers can require more or less domain expertise.
