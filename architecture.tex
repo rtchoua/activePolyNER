@@ -137,7 +137,8 @@ Clicking on ``?'' delivers up to 25 more example sentences.
 
 \subsubsection{Classification or Candidate Discrimination}
 We use multiple of classifiers that we concurrently trained and test on the same data in steps 1, 2 and 3 illustrated on Figure~\ref{fig:current}.
-The classifiers include the scikit-Learn~\cite{scikit-learn} implementations of Decision Tree (DT), Gradient Boosting (GB), K-Nearest Neighbor (KNN(uniform and distance weights))\kyle{odd to have parentheses in parentheses. DO we need to say this?}}, Logistic Regression (LR), Linear Support Vector Machine (SVM), Naive Bayes (NB), and Random Forest (RF). 
+The classifiers include the scikit-Learn~\cite{scikit-learn} implementations of Decision Tree (DT), Gradient Boosting (GB), K-Nearest Neighbor (KNN), Logistic Regression (LR), Linear Support Vector Machine (SVM), Naive Bayes (NB), and Random Forest (RF). 
+%\kyle{odd to have parentheses in parentheses. DO we need to say this?}\roselyne{removed the two types of KNN}
 Our goal here is to explore the word embedding space and determine which classifier(s) works best for detecting our scientific named entities.
 As previously mentioned, we save the \textit{best-performing} classifier on labeled candidates (prior to updating the word embedding model  with test documents in order to clearly separate the training process from the test set, see step 1 in Figure~\ref{fig:current}).
 When defining best performance, we prioritize retrieving a maximum of targets over precise extraction.
