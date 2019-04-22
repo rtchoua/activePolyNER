@@ -27,7 +27,7 @@ we use lower-case exact string matching between the gold standard polymer names 
 %\kyle{Are you trying to say by setting to 10K we are going well beyond what is likely to be polys? Given earlier
 %we said there are 467 polys 10K is clearly a lot larger. Maybe better to frame this around the percentage of total tokens?}\roselyne{You got exactly what I was trying to say, 10k is a lot larger but it should also contain polys from the other papers, this number is just to "ensure" a certain percentage of our polys are in that pool. I'll try and rephrase.}
 
-\subsubsection{Candidate Generation}
+\subsubsection{Seed Candidates}
 \kyle{Before describing the previous work you should mention what the goal of this part is. I.e., 
 describe that we are first going to look how the choice of seed entities affects recall}
 In previous work using the same corpus~\cite{tchoua2016hybrid,tchoua2016hybridi}, we build a dictionary of polymer names using a rule-based approach and aggregating synonyms across ChemDataExtractor records\textemdash a record consists of all information found about a chemical entity in a document.  
@@ -120,7 +120,7 @@ These results confirm using more entities does not increase the yield of polymer
 %}
 %\end{figure}
 
-\subsubsection{Word Embedding Parameters}
+\subsubsection{Word Embedding Window and Size Parameters}
 \kyle{This first sentence might be better at the end of previous subsection}
 For the remainder of the experiments, we use the three most frequent polymers and their acronyms. 
 We measure the impact of the \textit{window} and \textit{size} on the fraction of polymers extracted from the gold standard in the list of \nistnum{10000} candidates.
@@ -151,13 +151,13 @@ The average yield of polymer names was measured at 49.3 with a standard deviatio
 
 \subsubsection{Initial Classifier}
 Having explored the parameters for distance candidate generation, we generate a pool of \nistnum{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \nistnum{1690}, excluding any token found in our test documents. 
-The candidates are arranged in decreasing order of similarity scores and we use a window size of 2 and a vector size of 200.  \\
+The candidates are arranged in decreasing order of similarity scores and we use a window size of 2 and a vector size of 200. 
+
 In order to balance the initial training set (increase the potential number of target entities),
 we initially train the classifier using the first
 200 entities from the above mentioned list of \nistnum{10000}.
 Recall that the batch size of 200 was set based on an estimate of 30-60 minutes of expert time.
 As described on Figure~\ref{fig:current}, in the first step, we train and test on candidates generated from a word embedding model generated using only the training documents. 
-
 
 Figure~\ref{fig:roc_init} shows the Receiver Operating Curve (ROC) for the initial classifier with highest recall when evaluating on the test corpus. 
 The ROC plot is an evaluation measure that is based on two basic evaluation measures: specificity (true positive rate) and sensitivity (true negative rate).
@@ -170,7 +170,7 @@ Ideally the AUC of a learning algorithm is above 0.5.
 Since AUC takes into account true negatives or correctly predicted non-polymers and our dataset is imbalanced containing more non-polymers than polymers, we also plot the Precision Recall Curve (PRC) to visualize the tradeoff between precision and recall.
 
 While the AUC for the initial base KNN classifier is above random performance in Figure~\ref{fig:roc_init}, the initial PRC shows poor precision regardless of recall (see Figure~\ref{fig:prc_init}).
-In this round of labeling KNN is selected as the model with best recall in all three steps of Figure~\ref{fig:current}.\\
+In this round of labeling KNN is selected as the model with best recall in all three steps of Figure~\ref{fig:current}.
 
 \begin{figure*}
 \centering
@@ -208,32 +208,35 @@ However in the third iteration of active learning, we notice an increase in prec
 By the fourth iteration of active learning, the random strategy still does not show signs of learning. 
 The selected decision tree classifier has only learned two probabilities and the precision for higher recall remains close to random sampling ($\sim 6\%$).
 This learning is sustained in the following iteration as illustrated on Figures~\ref{fig:rocs_prcs_round5}. 
-The AUC for AL1 is 0.74 and that of AL2 is 0.70. The PRCs are improved over the first round with AL1 showing better tradeoff than AL2 and Random.\\
+The AUC for AL1 is 0.74 and that of AL2 is 0.70. The PRCs are improved over the first round with AL1 showing better tradeoff than AL2 and Random.
+
+\kyle{I think including a table that shows P/R and classifier chosen at each round would be helpful. Here you mention
+how it doesnt increase in round 2 and 3, but people like to be able to see that for themselves}
 
 %\kyle{what does it look like if we put all iterations for a particular method on one graph}\roselyne{terrible and I don't think we should do this because it highlights that we were trying different algorithms and saving classifiers that maybe can't be directly compared to each other. Also, it just all looks random}.
 %\kyle{IF we went beyond 5 rounds do you think performance would continue to improve? Or is it leveling off?}\roselyne{I think it should improve. We stop here because we detect learning and we now have "enough" labels. Or we stop here because we've used 4 hours of expert time for each strategy or 8 total... either way, this is enough to reach CDE with all labels.}
 
-After round 4 and 5,  we observe and confirm some, albeit moderate, level context-based predictive ability.
+After round 4 and 5, we observe and confirm some, albeit moderate, level context-based predictive ability.
 We also determine that the classifier, which uses AL1 is performing better than with the two other strategies.
 When tested against our gold standard of 467 one-word polymer names the KNN classifier achieves 25.0\% precision and  42.5\% recall. 
-It is worth noting that with limited training data and based solely on context, the classifiers retreives more than one third of the gold standard polymers with a precision of one in four candidates being a polymer; this after about five hours of expert labeleing. 
+It is worth noting that with limited training data and based solely on context, the classifiers retrieves more than one third of the gold standard polymers with a precision of one in four candidates being a polymer; this after about five hours of expert labeling. 
 For comparison, an attempt to extract polymer names using the rule: \textit{if the name contains ``poly'' extract it as a polymer}, would score a precision of 34\% and a recall of 41\% on the same dataset.
 
+\kyle{You dont really say too much about the difference between AL1 vs 2 here}
 
 \subsection{Using Active Learning Labels with Character-Level Enhanced Embeddings}
 Next, we train a different word embedding model using polyNER's labels.
-FastText uses word representations enriched with character-level information using FastText.
+FastText uses word representations enriched with character-level information.
 This word embedding method considers sub-word information as well as
 context, allowing it to consider word morphology differences, such as prefixes
 and suffixes. Sub-word information is especially useful for words for which
 context information is lacking, as words can still be compared to morphologically similar
 existing words. We set the length of the sub-word used for comparison\textemdash
 FastText's n_gram parameter\textemdash to five characters, based on our intuition that
-many polymers begin with the prefixes ``poly'' or ``poly(.'' \\
+many polymers begin with the prefixes ``poly'' or ``poly(.'' 
 Therefore, we generate a FastText word embedding mode, and use our labeled candidates to train this different word vectors enhanced with character level information.
 Once again, we train a KNN classifier using all labels (generated through all 3 strategies)
  and test NLP-filtered nouns from our 100-document test set.
-
 
 The KNN classifier performance improves when using these word vectors as shown in Figures~\ref{fig:al1_rocs_fasttext} and~\ref{fig:al1_prcs_fasttext}.
 In this case, the classifier achieves 29.7\% precision and 81.9\% recall. 
@@ -247,9 +250,14 @@ We have previously enhanced CDE with
 manually defined polymer identification rules~\cite{tchoua2017towards},
 and our polymer-enhanced version of the software (CDE+) achieved 42.2\% precision and 68.3\% recall on the same test set. 
 We achieve higher recall in both cases and intermediate precision with only $\sim$ five hours of expert labeling.
-We attribute the increased performance to the character embedding enhancement, which not only recognizes ``poly'' (and yields more names based on this n-gram comparison), but also filters out more anomalous candidates (preceeding or following polymer names) generated during tokenization and missed by the filtering steps such as ``\textit{$A_mB_n$}'', or ``\textit{Mw/Mn=1.36}''.  
-While the classifiers of character and word (or context) embedding vectors performs better than classifiers of only context-based embedding, using the former relies on character more heavily for words with little to no context.
+We attribute the increased performance to the character embedding enhancement, which not only recognizes ``poly'' (and yields more names based on this n-gram comparison), but also filters out more anomalous candidates (preceding or following polymer names) generated during tokenization and missed by the filtering steps such as ``\textit{$A_mB_n$}'', or ``\textit{Mw/Mn=1.36}''.  
+While the classifiers of character and word (or context) embedding vectors performs better than classifiers of only context-based embedding, using the former relies on characters more heavily for words with little to no context.
 As a result, the expert is presented with several nearly identical candidates (e.g. \textit{PS13k/PMMA12k}, \textit{PS214k/PMMA12k}, and \textit{PS31.6k/PMMA12k}) hindering the learning process.
+\kyle{I dont think this is very clear that you are now moving to using AL with this approach}
+\kyle{This last AL with Fasttext is a little confusing. It might be best to separate paragraphs that outline various
+things. 1) what fasttext is; 2) what CDE+ is (although maybe this could come earlier?); 3) how we use
+PolyNER labels to train and how that does well; 4) how we tried using fasttext in our AL process and it did poorly}
+
 %\begin{figure}[H]
 \begin{figure}
 \centering
