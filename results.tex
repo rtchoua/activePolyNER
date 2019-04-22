@@ -197,7 +197,7 @@ In this round of labeling KNN is selected as the model with best recall in all t
 \end{figure*}
 
 \subsubsection{Discrimination}
-After the first round, we experiment with the three strategies mentioned in \S\ref{sect:architecture}: random sampling (Random), active learning using pool of NLP-filtered nouns from training corpus (AL1), and active learning using pool of \nistnum{10000} distance candidates deemed closest to our seed entities(AL2) \textemdash minus 200 used in initial round).
+After the first round, we experiment with the three strategies mentioned in \S\ref{sect:pner_architecture}: random sampling (Random), active learning using pool of NLP-filtered nouns from training corpus (AL1), and active learning using pool of \nistnum{10000} distance candidates deemed closest to our seed entities(AL2) \textemdash minus 200 used in initial round).
 Given the relatively small batch size, we see no improvement for two rounds of active learning or first three rounds of labeling. 
 Precision remains under 6\% across all used classifiers. 
 Another sign of poor performance was the inconsistency of classifier choices across active learning iterations, 
@@ -248,8 +248,8 @@ We achieve higher recall in both cases and intermediate precision with only $\si
 We attribute the increased performance to the character embedding enhancement, which not only recognizes ``poly'' (and yields more names based on this n-gram comparison), but also filters out more anomalous candidates (preceeding or following polymer names) generated during tokenization and missed by the filtering steps such as ``\textit{$A_mB_n$}'', or ``\textit{Mw/Mn=1.36}''.  
 While the classifiers of character and word (or context) embedding vectors performs better than classifiers of only context-based embedding, using the former relies on character more heavily for words with little to no context.
 As a result, the expert is presented with several nearly identical candidates (e.g. \textit{PS13k/PMMA12k}, \textit{PS214k/PMMA12k}, and \textit{PS31.6k/PMMA12k}) hindering the learning process.
-
-\begin{figure}[H]
+%\begin{figure}[H]
+\begin{figure}
 \centering
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/fasttext_roc_al_corpus_round5_100}
