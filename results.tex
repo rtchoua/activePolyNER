@@ -28,8 +28,9 @@ we use lower-case exact string matching between the gold standard polymer names 
 %we said there are 467 polys 10K is clearly a lot larger. Maybe better to frame this around the percentage of total tokens?}\roselyne{You got exactly what I was trying to say, 10k is a lot larger but it should also contain polys from the other papers, this number is just to "ensure" a certain percentage of our polys are in that pool. I'll try and rephrase.}
 
 \subsubsection{Seed Candidates}
-\kyle{Before describing the previous work you should mention what the goal of this part is. I.e., 
-describe that we are first going to look how the choice of seed entities affects recall}
+%\kyle{Before describing the previous work you should mention what the goal of this part is. I.e., 
+%describe that we are first going to look how the choice of seed entities affects recall}\roselyne{Had done it above but good to restate here explicitely}
+Here, we focus on how the choice of seed entities affects recall, which we take as a measure of the entity-richness of the pool of candidates.
 In previous work using the same corpus~\cite{tchoua2016hybrid,tchoua2016hybridi}, we build a dictionary of polymer names using a rule-based approach and aggregating synonyms across ChemDataExtractor records\textemdash a record consists of all information found about a chemical entity in a document.  
 Having built this dictionary, we can identify the 10 most frequently occurring polymers in our corpus and their acronyms.
 We assume that frequent polymers provide a large number of example sentences that illustrate context in which polymers are commonly used.
