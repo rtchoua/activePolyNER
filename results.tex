@@ -80,14 +80,16 @@ Using ten instead of three entities however, only slightly increases the yield o
 \end{tabular}
 \end{table}
 
-In a second experiment, we further explore the idea of using multiple seed entities to increase the fraction of polymers retrieved in the pool of candidates.
+In a second set of experiments, we explore the idea of using larger numbers of seed entities to increase the fraction of polymers retrieved in the pool of candidates.
 We have built a small database of polymer properties ($\chi$DB) in previous work~\cite{tchoua2016hybrid,tchoua2016hybridi}. 
-The $\chi$DB corpus included 111 our of 175 $\chi$DB polymers.  \kyle{should one of these not be chi?}
+Our corpus of \nistnum{1690} publications included 111 our of 175 $\chi$DB polymers.  
+%\kyle{should one of these not be chi?}\roselyne{Thanks!}
 We also scraped CrowDB, which lists some polymers and their properties at \url{http://polymerdatabase.com/} for polymer names.
-\kyle{I'm not sure exactly what the following means?  is this we have 295 unique polymers in our 100 docs and only 32 overlap with this db?}
-In this case, 32 out of 295 polymer names were found in our corpus.
+%\kyle{I'm not sure exactly what the following means?  is this we have 295 unique polymers in our 100 docs and only 32 overlap with this db?}\roselyne{Hopefully clarified with comment above as well}
+In this case, 32 out of 295 scraped polymer names were found in our corpus.
 We experiment using these 111 and 32 seed entities to extract polymers. The fraction of polymers from our gold standard is shown on rows seven and eight in Table~\ref{tab:candidate_generation}.
 These results confirm using more entities does not increase the yield of polymers, as some polymers have low frequency in the corpus, words that are most similar are less likely to be targets.
+For the remainder of the experiments, we use the three most frequent polymers and their acronyms. 
 
 %\kyle{perhaps better as a table. The long labels are hard to read}\roselyne{ok}
 %\begin{figure*}
@@ -122,8 +124,7 @@ These results confirm using more entities does not increase the yield of polymer
 %\end{figure}
 
 \subsubsection{Word Embedding Window and Size Parameters}
-\kyle{This first sentence might be better at the end of previous subsection}
-For the remainder of the experiments, we use the three most frequent polymers and their acronyms. 
+%\kyle{This first sentence might be better at the end of previous subsection}\roselyne{Done!}
 We measure the impact of the \textit{window} and \textit{size} on the fraction of polymers extracted from the gold standard in the list of \nistnum{10000} candidates.
 The \textit{window} represents the maximum distance between the current and predicted word within a sentence. In other words, it represents the number of words before and after each word considered by the neural network to generate a vector representation for that word. 
 For each parameter setting, we measure the yield of polymers ten times for each window and vector size setting.
