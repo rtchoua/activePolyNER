@@ -4,7 +4,7 @@
 PolyNER uses word representations and minimal domain knowledge (a few
 seed entities) to produce a small set of candidates for expert labeling;
 labeled candidates are then used to train named entity word vector classifiers.
-We implement an active learning loop in order to incrementally improve the performance of the classifiers.
+We integrate an active learning loop into polyNER to incrementally improve the performance of the classifiers.
 In order to explore whether natural language processing, and specifically the use of word vector coordinates as features can accelerate the learning process,
 we use three sampling strategies and two different candidate pools for maximum entropy uncertainty sampling, which we describe in this section.
 The general architecture of polyNER is illustrated in Figure~\ref{fig:architecture}.
