@@ -13,7 +13,6 @@ We also describe the labeling process, and training and testing configuration fo
 \begin{figure*}[!t]
 {\includegraphics[width=\textwidth]{figures/architecture.pdf}}
 \caption{\label{fig:architecture} PolyNER system showing NLP-filtering in (1), candidate sampling strategies in (2), and actie learning loop between expert labeling (3) and classification of scientific named entities (4). 
-%\kyle{Would be good to have some more padding on the NL filtering step. Also not sure ``cut numbers, vocab'' is meaningful? Sampling strategies has the m from random on the second box. Again, maybe some padding there would be clearer.}\roselyne{shrank some text and fixed the vocab term.}
 }
 \end{figure*}
 
@@ -35,17 +34,10 @@ We refer to these pre-processed words (output of step 1 in Figure~\ref{fig:archi
 
 
 \subsection{Labeling Strategies}
-%\kyle{We should think about how to structure this. It seems like we want to outline
-%the normal process and then perhaps introduce some baselines for comparison in the next section.}\roselyne{I'll leave this here and make a note to talk but I think we don't have much to gain comparing these since we started them all with the distance candidates. Hope it still makes sense this way.}
 While the previous steps reduces the numbers of candidates and the imbalance of the dataset (target vs. non-target entity ration), there still remains a relatively large pool of potential candidates to select entities from.
 In order to achieve higher classification accuracy\textemdash
 by decreasing the number of potential false positives (candidates incorrectly identified as targets by our classifier)
 \textemdash we want to carefully select examples to be labeled by experts.
-%\kyle{I feel like some linkage is needed here. You should define what the purpose of these labeling strategies are. 
-%The idea being that from the large pool of potential candidates we have to pick a set of candidates for labeling
-%that we hope will give us a broad training set for improving accuracy of the classifier. }
-%\kyle{Should define how we do the first selections when we have no information.}\roselyne{I think this is hard to do without first describing the AL2 strategy. I think I mention it in the results section.}
-%\kyle{Also is the figure wrong. Aren't the sampling strategies part of the active learning loop?}\roselyne{yes they are part of the loop, I've added that so that there is a link between this and the next figure}
 We implement three sampling strategies, which we refer to as \textit{Random}, \textit{Active Learning 1 (AL1)} and \textit{Active Learning 2 (AL2)}, 
 to determine which candidates to label.
 Based on preliminary experiments, we set the size of batches of strings to be labeled to 200 or about an hour of expert time.
@@ -128,7 +120,6 @@ First, the untrained labelers reject obvious non-candidates via the previously m
 Next, one of our expert polymer scientists indicates, for each remaining
 candidate, whether or not it is in fact a polymer referent and submits a final review.
 While we first used this two-phase review process for the random strategy, we envision generalizing and leveraging humans with different expertise through multi-phase reviews for all strategies to further save future costs.
-%\kyle{Here we might want to think about positioning this as 2-phase review where we combine humans with different expertise levels}\roselyne{That's what I try to write about, I will specify that we did this for the random strategy but it could be applied to all strategies}
 
 
 \begin{figure}
@@ -142,7 +133,6 @@ Clicking on ``?'' delivers up to 25 more example sentences.
 \subsubsection{Classification or Candidate Discrimination}
 We use multiple of classifiers that we concurrently trained and test on the same data in steps 1, 2 and 3 illustrated on Figure~\ref{fig:current}.
 The classifiers include the scikit-Learn~\cite{scikit-learn} implementations of Decision Tree (DT), Gradient Boosting (GB), K-Nearest Neighbor (KNN), Logistic Regression (LR), Linear Support Vector Machine (SVM), Naive Bayes (NB), and Random Forest (RF). 
-%\kyle{odd to have parentheses in parentheses. DO we need to say this?}\roselyne{removed the two types of KNN}
 Our goal here is to explore the word embedding space and determine which classifier(s) works best for detecting our scientific named entities.
 As previously mentioned, we save the \textit{best-performing} classifier on labeled candidates (prior to updating the word embedding model  with test documents in order to clearly separate the training process from the test set, see step 1 in Figure~\ref{fig:current}).
 When defining best performance, we prioritize retrieving a maximum of targets over precise extraction.
