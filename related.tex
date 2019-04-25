@@ -56,7 +56,7 @@ In the case of multiple learners, query-by-committee requests labels for unlabel
 Uncertainty sampling and query-by-committee are representative approaches based on informativeness, where informativeness measure show well an unlabeled instance helps reduce the uncertainty. 
 Another selection criterion addresses representativeness, which measures how well an instance helps represent the structure of input patterns; in this case selection is made by querying data from unlabeled clusters of data~\cite{nguyen2004active,dasgupta2008hierarchical}.
 
-\subsection{PolyNER}
+%\subsection{PolyNER}
 PolyNER extends previous work to create a low-cost scientific fact extraction system. 
 %We ask: how can we quickly generate annotated data for scientific named entity recognition?
 Specifically, we address two challenges: (1) lack of (expensive) training data in some fields, including our own polymer science application which lacks free access to large polymer databases; and (2) the need for domain expert curators, which impedes the use of crowdsourcing platforms such as Amazon Mechanical Turk~\cite{buhrmester2011amazon} or Figure8~(\url{https://www.figure-eight.com/}).
@@ -65,5 +65,5 @@ We generate approximate labels by extracting targets similar to a few seed entit
 To address noise in the output, expert label small batches of candidates, which can be used to train a word vector classifier and propose final scientific named entities.
 %\kyle{Somewhat hesitant to include the next sentences. Doesnt feel like it belongs here}\roselyne{I think it's ok here if we're trying to emphasize how it is different, but I guess you want to phrase it as a contribution and it may need to be repeated in the intro/conclusion. Making a note for tomorrow}
 PolyNER could provide a scientific entity tagger (i.e. recognizer) to be used with data programming to extract polymer properties.
-An example rule could be defined as: \textit{if a sentence contains a polymer name and the words ``glass transition'', then extract number(s) in the sentence as potential glass transition temperature(s) for that polymer.}
-We discuss the architecture of our system in more details in the next section.
+%An example rule could be defined as: \textit{if a sentence contains a polymer name and the words ``glass transition'', then extract number(s) in the sentence as potential glass transition temperature(s) for that polymer.}
+%We discuss the architecture of our system in more details in the next section.
