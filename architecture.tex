@@ -63,7 +63,8 @@ In the binary case, probabilities range from $0$ to $0.5$. Therefore, we predict
 Points with scores closest to $0$ are most uncertain, we select the first 200 entries from this ordered list to be labeled by experts.
 
 \subsubsection{Active Learning using NLP-Filtered Distance Candidates (AL2)}
-\kyle{Calling them AL1 and 2, is hiding the fact that they are quite different. Could we instead do something like Prediction Certainty and Context Similarity? I'm sure we can come up with a better name even.}
+%\kyle{Calling them AL1 and 2, is hiding the fact that they are quite different. Could we instead do something like Prediction Certainty and Context Similarity? I'm sure we can come up with a better name even.}
+%\roselyne{Agree and making a note to discuss, however calling them a longer name makes it hard to refer back to them, and definitely harder to name in the figure, the are both prediction certainty, it's the pool that is different, so it would be something like context-based similarity active learning, and just actice learning...}
 Finally, the third pool is composed of NLP-filtered candidates deemed to be most similar to seed entities using vector similarity measures.
 The intuition behind generating this pool of candidates is to increase the likelihood that a candidate is a target referent (name, acronym, synonym, etc.) by comparing its vector to that of a known entity.
 Our goal is to determine whether polymers are used in a consistent context that can be used to detect and classify their corresponding context-aware vectors.
