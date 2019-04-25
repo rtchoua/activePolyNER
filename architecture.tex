@@ -33,12 +33,12 @@ We refer to these pre-processed words (output of step 1 in Figure~\ref{fig:archi
 
 
 
-\subsection{Labeling Strategies}
+\subsection{Sampling Strategies}
 While the previous steps reduces the numbers of candidates and the imbalance of the dataset (target vs. non-target entity ration), there still remains a relatively large pool of potential candidates to select entities from.
 In order to achieve higher classification accuracy\textemdash
 by decreasing the number of potential false positives (candidates incorrectly identified as targets by our classifier)
 \textemdash we want to carefully select examples to be labeled by experts.
-We implement three sampling strategies, which we refer to as \textit{Random}, \textit{Active Learning 1 (AL1)} and \textit{Active Learning 2 (AL2)}, 
+We implement three sampling strategies, which we refer to as \textit{Random}, \textit{Active Learning 1 (UBS)} and \textit{Active Learning 2 (Distance UBS)}, 
 to determine which candidates to label.
 Based on preliminary experiments, we set the size of batches of strings to be labeled to 200 or about an hour of expert time.
 
@@ -47,14 +47,14 @@ In the first strategy we randomly select 200 out of the pool of unlabeled NLP-fi
 Note that the imbalance between polymers and other \textit{tokens} (words or space separated strings) that 
 do not exist in in this set is still significant (less than 5\% in our test set).
 
-\subsubsection{Active Learning using NLP-Filtered Candidates (AL1)}
+\subsubsection{Uncertainty-Based Sampling using NLP-Filtered Candidates (UBS)}
 In the second strategy we use maximum entropy sampling method using the same pool of unlabeled NLP-filtered candidates.
 As previously mentioned, maximum entropy selection falls under the category of uncertainty sampling, which identifies data points where a classifier predicts outcome at the decision boundary between two or more classes. 
 For example, in our case, when predicting whether a word vector represents a polymer, or not, the classifier assigns equal probability to either case.
 In the binary case, probabilities range from $0$ to $0.5$. Therefore, we predict outcome for all our NLP-filtered candidates and obtains a probability $p$ for each data point. We compute a list of $0.5-p$ values for all unlabeled data and sort the list in ascending order.
 Points with scores closest to $0$ are most uncertain, we select the first 200 entries from this ordered list to be labeled by experts.
 
-\subsubsection{Active Learning using NLP-Filtered Distance Candidates (AL2)}
+\subsubsection{Uncertainty-Based Sampling using NLP-Filtered Distance Candidates (Distance UBS)}
 %\kyle{Calling them AL1 and 2, is hiding the fact that they are quite different. Could we instead do something like Prediction Certainty and Context Similarity? I'm sure we can come up with a better name even.}
 %\roselyne{Agree and making a note to discuss, however calling them a longer name makes it hard to refer back to them, and definitely harder to name in the figure, the are both prediction certainty, it's the pool that is different, so it would be something like context-based similarity active learning, and just actice learning...}
 Finally, the third pool is composed of NLP-filtered candidates deemed to be most similar to seed entities using vector similarity measures.
@@ -98,7 +98,7 @@ Finally, in step 4, we test our classifiers against all the NLP-filtered words f
 
 \subsubsection{Untrained and Expert Labeling}
 As explained in section~\ref{sect:background}, recognizing polymers can require more or less domain expertise.
-We assign two domain experts to annotated candidates generated using our two maximum entropy-based uncertainty sampling (\textit{AL1} and \textit{AL2}). 
+We assign two domain experts to annotated candidates generated using our two maximum entropy-based uncertainty sampling (\textit{UBS} and \textit{Distance UBS}). 
 Each expert annotates one strategy but we perform crosschecking for 10\% of the first batch of labels. We confirm agreement between labels for all but 1 of the set of 20 candidates or an agreement of 95\%.
 Experts simply approve or reject candidates using a simple web interface shown on Figure~\ref{fig:polyner}; a task that is more efficient than reading and annotating words in text.
 The interface

@@ -9,7 +9,6 @@ For example, it assumes that if $x$ and $x\prime$ are similar, they probably hav
 Active learning assumes there is a source of knowledge, such as a human expert, that can be queried 
 to label a selected batch of unlabeled data. 
 
-
 \subsection{Semi-supervised Approaches}
 \textit{Bootstrapping} is a semi-supervised technique, which starts from a small set of seed relation instances and iteratively learns more relation instances and extraction patterns.
 Snowball~\cite{agichtein2000snowball} which improved the DIPRE system~\cite{brin1998extracting}, used an intuitive idea to collect new entity relations using a set of seed entity pairs.
@@ -65,6 +64,6 @@ For these reasons, our approach is similar to bootstrapping but applied to named
 We generate approximate labels by extracting targets similar to a few seed entities using word representations and vector similarity measures.
 To address noise in the output, expert label small batches of candidates, which can be used to train a word vector classifier and propose final scientific named entities.
 %\kyle{Somewhat hesitant to include the next sentences. Doesnt feel like it belongs here}\roselyne{I think it's ok here if we're trying to emphasize how it is different, but I guess you want to phrase it as a contribution and it may need to be repeated in the intro/conclusion. Making a note for tomorrow}
-PolyNER will provide a scientific entity tagger (i.e. recognizer) to be used with data programming to extract polymer properties.
+PolyNER could provide a scientific entity tagger (i.e. recognizer) to be used with data programming to extract polymer properties.
 An example rule could be defined as: \textit{if a sentence contains a polymer name and the words ``glass transition'', then extract number(s) in the sentence as potential glass transition temperature(s) for that polymer.}
 We discuss the architecture of our system in more details in the next section.
