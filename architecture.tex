@@ -58,8 +58,6 @@ In the binary case, probabilities range from $0$ to $0.5$. Therefore, we predict
 Points with scores closest to $0$ are most uncertain, we select the first 200 entries from this ordered list to be labeled by experts.
 
 \subsubsection{Uncertainty-Based Sampling using NLP-Filtered Distance Candidates (Distance UBS)}
-%\kyle{Calling them AL1 and 2, is hiding the fact that they are quite different. Could we instead do something like Prediction Certainty and Context Similarity? I'm sure we can come up with a better name even.}
-%\roselyne{Agree and making a note to discuss, however calling them a longer name makes it hard to refer back to them, and definitely harder to name in the figure, the are both prediction certainty, it's the pool that is different, so it would be something like context-based similarity active learning, and just actice learning...}
 Finally, the third pool is composed of NLP-filtered candidates deemed to be most similar to seed entities using vector similarity measures.
 The intuition behind generating this pool of candidates is to increase the likelihood that a candidate is a target referent (name, acronym, synonym, etc.) by comparing its vector to that of a known entity.
 Our goal is to determine whether polymers are used in a consistent context that can be used to detect and classify their corresponding context-aware vectors.
@@ -112,9 +110,6 @@ appears when desired.
 Expert time is costly and we aim to reduce the cost of obtaining labels.
 Therefore for our baseline of randomly sampled NLP-filtered nouns, we experiment with a two-phase review process.
 Tokenization is one of the largest sources of error for scientific entities such as polymers, which contain characters such as `:', `(',
-%\kyle{I think some linkage is missing here. I think what you want to say is that tokenization is one of the biggest
-%sources for error, and thats something that can be fairly easily detected by non experts.}
-%Tokenization can be a challenge for scientific entities such as polymers which contain characters such as `:', 
 '\textendash', `,' etc. It can also generate other incoherent tokens from text, equations, captions and more.
 Such obvious non-candidates can be fairly easily detected by non experts (and save cost).
 For example, an untrained annotators may recognize that `$d\Sigma/d\Omega)(Q$' is not a polymer name and save time for the experts.
