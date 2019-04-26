@@ -1,10 +1,14 @@
 \section{Design and Implementation}
 \label{sect:apner_architecture}
-
+As previously mentioned, our main goal is designing polyNER is to slash labeling costs by reducing the time and effort spent by experts to generate training data. 
+Rather than labeling entire documents and phrases, annotators label proposed candidate entities to be classified downstream.
+Earlier results show that with two hours of labeling we can 
+tradeoff precision and recall on par with state-of-the-art domain specific software by selecting ensemble of classifiers for discrimination~\cite{tchoua2019polyner}.
+Here, we further tune some of polyNER's component and incorporate active learning with different sampling strategies in order to further improve performance.
 PolyNER uses word representations and minimal domain knowledge (a few
 seed entities) to produce a small set of candidates for expert labeling;
 labeled candidates are then used to train named entity word vector classifiers.
-We integrate an active learning loop into polyNER to incrementally improve the performance of the classifiers.
+We integrate an active learning loop into polyNER'architecture to incrementally improve the performance of the classifiers.
 In order to explore whether natural language processing, and specifically the use of word vector coordinates as features can accelerate the learning process,
 we use three sampling strategies and two different candidate pools for maximum entropy uncertainty sampling, which we describe in this section.
 The general architecture of polyNER is illustrated in Figure~\ref{fig:architecture}.
@@ -30,7 +34,6 @@ candidate, allowing us to recognize, for example, polyethylene; (which fails the
 exact string comparison test against ``polyethylene''). 5) We remove plurals (e.g.,
 polyamides, polynorbornenes), as they can represent polymer family names.
 We refer to these pre-processed words (output of step 1 in Figure~\ref{fig:architecture}) as NLP-filtered candidates.
-
 
 
 \subsection{Sampling Strategies}
