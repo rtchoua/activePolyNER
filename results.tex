@@ -188,8 +188,6 @@ After the initial round of labeling, we experiment with the three strategies men
 Given the relatively small batch size, we see no improvement in the precision recall curve for two rounds of active learning or first three rounds of labeling. 
 Precision remains under 5\% across all used classifiers as shown in Table~\ref{tab:prtable}. 
 
-
-
 \begin{table}[ht!]
 \centering
 \caption{Precision and recall when tested against ground truth documents for classifiers at each round of the active learning process.\label{tab:pr_table}
@@ -263,7 +261,7 @@ Therefore, we generate a FastText word embedding model, and generate character-e
 
 Next, we train a KNN classifier using vectors for these candidates labeled through UBS or active learning using a pool of NLP-filtered candidates (identified as best-performing in previous experiments).
 We test the classifier against NLP-filtered nouns from our 100-document test set.
-The KNN classifier performance improves when using these word vectors as shown in Figures~\ref{fig:al1_rocs_fasttext} and~\ref{fig:al1_prcs_fasttext}.
+The KNN classifier performance improves when using these word vectors as shown in Figures~\ref{fig:UBS_rocs_fasttext} and~\ref{fig:UBS_prcs_fasttext}.
 In this case, the classifier achieves 29.7\% precision and 81.9\% recall. 
 These numbers are comparable to those achieved by ChemDataExtractor (CDE), a state-of-the-art chemical NLP tool.
 As CDE aims to extract all
@@ -299,11 +297,11 @@ One solution to explore in the future, would be to impose a diversity constraint
 \centering
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/fasttext_roc_al_corpus_round5_100}
-\caption{Receiver Operating Curve for KNN model trained using active learning labels and word representations enriched with character-level information.}\label{fig:al1_rocs_fasttext}
+\caption{Receiver Operating Curve for KNN model trained using active learning labels and word representations enriched with character-level information.}\label{fig:UBS_rocs_fasttext}
 \end{minipage}\qquad
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/fasttext_prc_al_corpus_round5_100}
-\caption{Precision Recall Curve for KNN model trained using active learning labels and word representations enriched with character-level information.}\label{fig:al1_prcs_fasttext}
+\caption{Precision Recall Curve for KNN model trained using active learning labels and word representations enriched with character-level information.}\label{fig:UBS_prcs_fasttext}
 \end{minipage}
 \end{figure}
 
