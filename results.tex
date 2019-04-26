@@ -1,6 +1,8 @@
 \section{Evaluation}
 \label{sect:apner_results}
 We first report on a study in which we evaluate the generation of distance candidates using the vector similarity measures and seed entities. 
+\logan{Would using "candidate entities" rather than "distance candidates" make more sense?}
+\logan{If F\ref{fig:current} describes your setup. Why not reference it here?}
 We then discuss the results of four rounds of active learning using multiple word vector classifiers and our three sampling strategies: random, UBS, and Distance UBS.
 Finally, we experiment with word representations enhanced with character-level information using FastText~\cite{bojanowski2016enriching,joulin2016bag}.
 
@@ -15,25 +17,33 @@ We evaluate extraction accuracy in terms of precision and recall.
 Recall refers to the fraction of actual positives that
 are labeled correctly and precision to the fraction of predicted
 positives that labeled correctly.
+\logan{What part of this data can we release, if any?}
 
 \subsection{Word Embedding Settings}
+\logan{Needs better topic sentence. Say why you are doing this more clearly, less about the "what"}
 We explore how the choice of seed entities, the internal parameters \textit{vector} and \textit{window_size}  impact the number of target entities retrieved using similarity measures.
 In order to estimate the entity-richness of our large pool of distance candidates and since we do not have manually extracted data for the entire corpus, we create a list of \nistnum{10000} distance candidate vectors most similar to our seed entity vectors and report the fraction of gold standard polymer extracted. 
 Based on our experience of $\sim$ 5 polymers per document (\nistnum{8450} polymers for \nistnum{1690} documents), we can expect a fraction of the polymers found in the 100 gold standard documents to be extracted in the \nistnum{10000} candidates most similar to our seed entities.
+\logan{This is confusing. Why are we using a model to estimate the total population of the polymers and not just assuming the gold-standard is a representative sample?}
 We evaluate the entity-richness of polymers in this pool of candidates by measuring the percentage of the 467 manually extracted polymer names that it yields;
 we use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.
 
 \subsubsection{Seed Candidates}
 Here, we focus on how the choice of seed entities affects recall, which we take as a measure of the entity-richness of the pool of candidates.
+\logan{This is confusing. Is the fraction of polymers in the candidate pool not the recall?}
 In previous work using the same corpus~\cite{tchoua2016hybrid,tchoua2016hybridi}, we build a dictionary of polymer names using a rule-based approach and aggregating synonyms across ChemDataExtractor records\textemdash a record consists of all information found about a chemical entity in a document.  
 Having built this dictionary, we can identify the 10 most frequently occurring polymers in our corpus and their acronyms.
 We assume that frequent polymers provide a large number of example sentences that illustrate context in which polymers are commonly used.
+\logan{Do you think it would be better to use the gold standard, where we have certainty of the labels, to estimate the most-frequent polymers?}
 Hence, we first test the most common, the three most common and the ten most common polymers as seed entities.
+\logan{The circularness of this strategy makes me uncomfortable. We use an NER model to determine the initial training set for the NER model? How would you address this criticism?}
 We experiment with including and excluding their acronyms as corresponding additional seed entities.
 (Note that this modest set of 1, 3 and 10 seed entities could also be suggested by an expert.)
 Table~\ref{tab:candidate_generation} shows the results for this set of experiments on rows one through six.
 When using \textit{polystyrene} (the most commonly used name) as a seed entity, the pool of candidates contained 33.55 \% of the 467 gold standard polymers.
+\logan{Another potential criticism: Would I need a gold standard to build the NER method? I thought your method is supposed to help me avoid having to do the work for generating a gold standard?}
 We note a 2 \% increase in the fraction of polymers retrieved when using \textit{polystyrene} and its acronym compared to using \textit{polystyrene} alone (37.69 \%).
+\logan{Is this an important detail? Why does it need to stay [I think this section is a little dense]}
 The fraction of polymers increases by 10 \% when using the three most frequent polymers as seed entities (from 33.55 \% to 46.9 \% and 47.97 \% with acronyms); the three most frequent polymers in our datasets are \textit{polystyrene},\textit{poly(methyl methacrylate)},\textit{polyethylene} and their acronyms (\textit{PS}, \textit{PMMA} and \textit{PE})
 Using ten instead of three entities however, only slightly increases the yield of polymers by less than 1 \%, from 47.97 \% for three frequent polymers with acronyms to 48.39 \% for ten frequent polymers with acronyms.
 
@@ -77,6 +87,7 @@ In this case, 32 out of 295 scraped polymer names were found in our corpus.
 We experiment using these 111 and 32 seed entities to extract polymers. The fraction of polymers from our gold standard is shown on rows seven and eight in Table~\ref{tab:candidate_generation}.
 These results confirm using more entities does not increase the yield of polymers, as some polymers have low frequency in the corpus, words that are most similar are less likely to be targets.
 For the remainder of the experiments, we use the three most frequent polymers and their acronyms. 
+\logan{I think the metric we use for choosing an algorithm here (fraction of entries in the training set) is too indirect. Why not use the performance of the initial ML model to rate how good the training set is? A hypothetical concern with the metric as well: Does your current metric mean a pool with 100\% polymers would be the best? Wouldn't that lead to the same problem of imbalance as having no polymers?}
 
 
 %\kyle{perhaps better as a table. The long labels are hard to read}\roselyne{ok}
@@ -112,7 +123,8 @@ For the remainder of the experiments, we use the three most frequent polymers an
 %\end{figure}
 
 \subsubsection{Word Embedding Window and Size Parameters}
-We measure the impact of the \textit{window} and \textit{size} on the fraction of polymers extracted from the gold standard in the list of \nistnum{10000} candidates.
+We measure the impact of the \textit{window} and \textit{size} on the fraction of polymers extracted from the gold standard in the list of \nistnum{10000} candidates. \logan{Where are the 10k candidates from again? Could we reference this set by its purpose rather than its size?}
+\logan{Need a reason why this is important? Also, this statement again raises my concern about using "fraction extracted from gold standard" as a metric for quality of the initial training set?}
 The \textit{window} represents the maximum distance between the current and predicted word within a sentence. In other words, it represents the number of words before and after each word considered by the neural network to generate a vector representation for that word. 
 For each parameter setting, we measure the yield of polymers ten times for each window and vector size setting.
 We observe slightly higher fraction of polymers retrieved for window sizes of 1 and 2. The yield subsequently decreases and more noticeably with window size larger than 5 (see Figure~\ref{fig:window_size}).
@@ -120,6 +132,7 @@ The \textit{size} determines the size of the word vector (features for our class
 We varied this parameter between 100 and 500.
 The average yield of polymer names was measured at 49.3 with a standard deviation of less than 1\% (see Figure~\ref{fig:vector_size}).
 %[49.67880085653105, 49.25053533190578, 49.46466809421842, 49.46466809421842, 48.82226980728051]
+\logan{Need a concluding sentence?}
 
 
 \begin{figure*}
@@ -130,32 +143,41 @@ The average yield of polymer names was measured at 49.3 with a standard deviatio
 \end{minipage}\qquad
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/vector_size.png}
-\caption{Impact of varying vector size on fraction of polymers retrieved.}\label{fig:vector_size}
+\caption{Impact of varying vector size on fraction of polymers retrieved. \logan{Can we combine this with F\ref{fig:window_size}? (If we keep it) }}\label{fig:vector_size}
 \end{minipage}
 \end{figure*}
  %\kyle{Not sure this fig is worth including}\roselyne{Agreed that it's not so interesting but i think it goes with the windows one and i will combine the two figures you think should be together.}\roselyne{May remove as paper gets longer}
 
 \subsubsection{Initial Classifier}
 Having explored the parameters for distance candidate generation, we generate a pool of \nistnum{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \nistnum{1690}, excluding any token found in our test documents. 
+\logan{Is the 10k entries mentioned in the previous section this set? If so, we need to revise the order of these sections?}
 The candidates are arranged in decreasing order of similarity scores and we use a window size of 2 and a vector size of 200. 
 
 In order to balance the initial training set (increase the potential number of target entities),
 we initially train the classifier using the first
 200 entities from the above mentioned list of \nistnum{10000}.
 Recall that the batch size of 200 was set based on an estimate of 30-60 minutes of expert time.
+\logan{Maybe we can be specific here about how much time it took. "We found that a batch of 200 required ..."}
 As described on Figure~\ref{fig:current}, in the first step, we train and test on candidates generated from a word embedding model generated using only the training documents. 
 
-Figure~\ref{fig:roc_init} shows the Receiver Operating Curve (ROC) for the initial classifier with highest recall when evaluating on the test corpus. 
+Figure~\ref{fig:roc_init} shows the Receiver Operating Curve (ROC) for the initial classifier with highest recall when evaluating on the test corpus.
+\logan{I do not like this as a topic sentence because it doesn't offer any indication of what to draw from the figure. I prefer ones that are "We found that X, as shown in Figure Y." Topic sentences with some editorial comments worked in help keep the narrative of the purpose of your study alive.}
 The ROC plot is an evaluation measure that is based on two basic evaluation measures: specificity (true positive rate) and sensitivity (true negative rate).
 Sensitivity is the same as recall. Specificity is a measure of the true negative rate (the proportion of actual negatives that are correctly identified as such).
 A classifier with the random performance level always has the same 0.5 true positive rate and false negative rate.
+\logan{Not true. The TPR depends on how many points you sample, and is always equal to the FPR}
 A classifier with the perfect performance level shows a combination of two straight lines immediately showing a true positive rate of 1.0 and remaining there as recall increases.
-Classifiers with meaningful performance levels usually lie in the area between the random ROC curve (baseline) and the perfect ROC curve. 
+Classifiers with meaningful performance levels usually lie in the area between the random ROC curve (baseline) and the perfect ROC curve.
+\logan{Also not quite correct. All classifiers with better-than-random performance lie between random and perfect. Maybe just skip the notion of betweenness and talk about the AUC}
 The area under the curve (AUC) measures the area under the ROC.
 Ideally the AUC of a learning algorithm is above 0.5. 
-Since AUC takes into account true negatives or correctly predicted non-polymers and our dataset is imbalanced containing more non-polymers than polymers, we also plot the Precision Recall Curve (PRC) to visualize the tradeoff between precision and recall.
+Since AUC takes into account true negatives or correctly predicted non-polymers and our dataset is imbalanced containing more non-polymers than polymers, we also plot the Precision Recall Curve (PRC) to visualize the tradeoff between precision and recall.\logan{A little wordy, can you streamline this sentence?}
+\logan{This paragraph contains no conclusions, it just explains the ROC. Add something about the results.}
 
 While the AUC for the initial base KNN classifier is above random performance in Figure~\ref{fig:roc_init}, the initial PRC shows poor precision regardless of recall (see Figure~\ref{fig:prc_init}).
+\logan{Better topic sentence. It provides a hit of what to look for. But, you do not follow it up with any details supporting this claim}
+
+\logan{This is a long section for just describing how you made the classifier and that it is pretty bad. Do we need this section?}
 
 \begin{figure*}
 \centering
@@ -172,7 +194,7 @@ While the AUC for the initial base KNN classifier is above random performance in
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/rocs_round5.png}
 \captionsetup{labelformat=empty}
-\caption{Receiver Operating Curve for iteration 4.}\label{fig:rocs_round5}
+\caption{Receiver Operating Curve for iteration 4.\logan{I think we could benefit from easier-to-remember labels than AL1 and AL2. I don't remember which is which. Also why does the file say Round 5 and the text iterating curves? If we say ROC is a worse plot, why even show it?}}\label{fig:rocs_round5}
 \end{minipage}\qquad
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prcs_round5.png}
@@ -180,13 +202,15 @@ While the AUC for the initial base KNN classifier is above random performance in
 \caption{Precision Recall Curves for iteration 4.}\label{fig:prcs_round5}
 \end{minipage}
 \setcounter{figure}{8}  
-\caption{Receiver Operation and Precision Recall Curves for iterations 4 and 5. AL - 1 refers to active learning using NLP-filtered nouns. AL - 2 refers to active learning using candidates deemed similar to seed entities.}\label{fig:rocs_prcs_round5}
+\caption{Receiver Operation and Precision Recall Curves for iterations 4 and 5. AL - 1 refers to active learning using NLP-filtered nouns. AL - 2 refers to active learning using candidates deemed similar to seed entities.  \logan{<soapbox>Is it standard practice to use such uninformativ figure captions in CS? I was taught to make the captions almost standalone from the text</soapbox>}}\label{fig:rocs_prcs_round5}
 \end{figure*}
 
 \subsubsection{Discrimination}
 After the initial round of labeling, we experiment with the three strategies mentioned in Section~\ref{sect:apner_architecture}: random sampling (Random), active learning using pool of NLP-filtered nouns from training corpus (UBS), and active learning using pool of \nistnum{10000} distance candidates deemed closest to our seed entities(Distance UBS) \textemdash minus 200 used in initial round).
 Given the relatively small batch size, we see no improvement in the precision recall curve for two rounds of active learning or first three rounds of labeling. 
-Precision remains under 5\% across all used classifiers as shown in Table~\ref{tab:prtable}. 
+Precision remains under 5\% across all used classifiers as shown in Table~\ref{tab:pr_table}. 
+\logan{I think the table would be better suited as a plot}
+\loganfussingaboutrecallandprecision
 
 \begin{table}[ht!]
 \centering
@@ -244,9 +268,11 @@ Instead, this observation suggests that we could also study how the choice of se
 We revisit this concept of \textit{diversity} of labels in more details in the Section~\ref{sec:discussion}. 
 It is worth noting that with limited training data and based solely on context, the classifiers retrieves 45.64\% (more than one third) of the gold standard polymers with a precision of 18.21\%; this after about five hours of expert labeling. 
 For comparison, an attempt to extract polymer names using the rule: \textit{if the name contains ``poly'' extract it as a polymer}, would score a precision of 34\% and a recall of 41\% on the same dataset.
+\logan{I think we should show this point on the plot for context. Also, state what you conclude from the comparison. Don't leave it up to the reader to state the conclusion.}
 
 \subsection{Using Active Learning Labels with Character-Level Enhanced Embeddings}
 Next, we train a word embedding model enhanced with sub-word information using polyNER's labels. 
+\logan{Why are you doing this? You need some motivation for this section, otherwise it kinds of jumps out of nowhere and begs the question: Why did you not use this through the entire study? Maybe you can say this section is devoted to "further tuning the model now that you have a large-enough pool of data to make selections statistically-reasonable"?}
 We compare the performance to a state-of-the-art chemistry-aware NLP toolkit. %and we end with a discussion of the results.
 FastText uses word representations enriched with character-level information.
 This word embedding method considers sub-word information as well as
@@ -260,8 +286,10 @@ Therefore, we generate a FastText word embedding model, and generate character-e
 
 
 Next, we train a KNN classifier using vectors for these candidates labeled through UBS or active learning using a pool of NLP-filtered candidates (identified as best-performing in previous experiments).
+\logan{Confusing. Is UBS not active learning?}
 We test the classifier against NLP-filtered nouns from our 100-document test set.
 The KNN classifier performance improves when using these word vectors as shown in Figures~\ref{fig:UBS_rocs_fasttext} and~\ref{fig:UBS_prcs_fasttext}.
+\logan{Why sow both figures if you say PRC is better.}
 In this case, the classifier achieves 29.7\% precision and 81.9\% recall. 
 These numbers are comparable to those achieved by ChemDataExtractor (CDE), a state-of-the-art chemical NLP tool.
 As CDE aims to extract all
@@ -269,6 +297,7 @@ chemical compounds, not just polymers, it serves only as a demonstration of an
 alternative approach in the absence of a polymer NER system (Note that CDE also extracts properties). 
 Its recall is high
 at 74.5\% but its precision is, as expected, low at 8.7\%. 
+\loganfussingaboutrecallandprecision
 We have previously modified CDE with
 manually defined polymer identification rules~\cite{tchoua2017towards},
 and our polymer-enhanced version of the software (CDE+) achieved 42.2\% precision and 68.3\% recall on the same test set. 
@@ -276,11 +305,12 @@ We achieve higher recall than CDE and CDE+ using labels from UBS and FastText ve
 
 \subsection{Discussion}
 \label{sec:discussion}
+\logan{The discussion starts out with your last part of the Results section, skipping over anything else you learned. }
 We attribute the increased performance to the character embedding enhancement, which not only recognizes ``poly'' (and yields more names based on this n-gram comparison), but also filters out more anomalous candidates (preceding or following polymer names) generated during tokenization and missed by the filtering steps such as ``\textit{$A_mB_n$}'', or ``\textit{Mw/Mn=1.36}''.  
 In other words, the classifiers of character and (context-based) word embedding vectors performs better than classifiers of only context-based word embedding.
 Given this result, one may wonder whether the active learning process itself could benefit from using this enhanced vector embedding. 
 We repeated the active learning experiment using the entire corpus of NLP-filtered candidates and classifying FastText (enhanced) vectors instead of Gensim vectors at each iteration. 
-The classifier's ROC curve did not achieve CDE performance after 5 iterations.
+The classifier's ROC curve did not achieve CDE performance after 5 iterations.\logan{Wasn't it also worse than the randomly-selected words?}
 Theese results suggest that the character-level information enhances the classifier's performance only once a certain threshold of context information has been captured by the embedding.
 In FastText, the portion of the word embedding vector generated using context varies depending on how much context is available in the entire corpus. 
 For words deemed to have \textit{enough} context, vectors do not include any character-level information. 
@@ -289,7 +319,8 @@ During the active learning process, candidates to be labeled by experts are sele
 these are also more likely to be candidates which lack context and for which vectors have been generated using character-level information. 
 As a result, the expert is presented with several nearly identical candidates (e.g. \textit{PS13k/PMMA12k}, \textit{PS214k/PMMA12k}, and \textit{PS31.6k/PMMA12k}) hindering the learning process as they are located in close vicinity in terms of the full (character and context) word embedding space.
 In other words, in this full space, while their uncertainty measure is comparable, these examples are not \textit{diverse}, where diversity is a measure of the distance of the examples to each other or previously labeled instances~\cite{brinker2003incorporating}.
-One solution to explore in the future, would be to impose a diversity constraint on the candidates using batch active learning for example.
+One solution to explore in the future, would be to impose a diversity constraint on the candidates using batch active learning for example.\logan{There are batch active learning papers, and surely a review. Cite one so that people do not think you're planning to reinvent such methods.}
+\logan{This seem more like a "Future Work/Can we do even better!?" section than an actual discussion. Should we rename the section accordingly}
 
 
 %\begin{figure}[H]

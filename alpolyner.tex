@@ -85,6 +85,7 @@
   \newcommand{\shrayesh}[1]{\textcolor{BurntOrange}{[Shrayesh: #1]}\xspace}
   \newcommand{\aswathy}[1]{\textcolor{WildStrawberry}{[Aswathy: #1]}\xspace}
   \newcommand{\hong}[1]{\textcolor{RoyalPurple}{[Hong: #1]}\xspace}
+  \newcommand{\loganfussingaboutrecallandprecision}{\logan{<Usual noise about trading off of P for R being an artifact of meaningless thresholds. Suggestion that we need a more meaningful metric>}}
 \else
   \newcommand{\ian}[1]{}
   \newcommand{\roselyne}[1]{}
@@ -94,6 +95,7 @@
   \newcommand{\debbie}[1]{}
   \newcommand{\aswathy}[1]{}
   \newcommand{\hong}[1]{}
+  \newcommand{\loganfussingaboutrecallandprecision}{}
 \fi
 
 \newif\ifnist
@@ -119,18 +121,18 @@
 
 \author{\IEEEauthorblockN{Roselyne B. Tchoua\IEEEauthorrefmark{1},
 Zhi Hong\IEEEauthorrefmark{1}, 
-Logan T. Ward\IEEEauthorrefmark{2}\IEEEauthorrefmark{3}, \\
+Logan T. Ward\IEEEauthorrefmark{1}\IEEEauthorrefmark{3}, \\
 Kyle Chard\IEEEauthorrefmark{2}\IEEEauthorrefmark{3},
 Debra J. Audus\IEEEauthorrefmark{4}, 
 Shrayesh N. Patel\IEEEauthorrefmark{5}, 
 Juan J. de Pablo\IEEEauthorrefmark{5} and
 Ian T. Foster\IEEEauthorrefmark{1}\IEEEauthorrefmark{2}\IEEEauthorrefmark{3}}
 \IEEEauthorblockA{\IEEEauthorrefmark{1}Department of Computer Science, University of Chicago, Chicago, IL, USA\\
-Email: roselyne@uchicago.edu}
 \IEEEauthorblockA{\IEEEauthorrefmark{2}Globus, University of Chicago, Chicago, IL, USA\\}
 \IEEEauthorblockA{\IEEEauthorrefmark{3}Data Science and Learning Division, Argonne National Laboratory, Argonne, IL, USA\\}
 \IEEEauthorblockA{\IEEEauthorrefmark{4}Materials Science and Engineering Division, National Institute of Standards and Technology, Gaithersburg, MD, USA\\}
 \IEEEauthorblockA{\IEEEauthorrefmark{5}Institute for Molecular Engineering, University of Chicago, Chicago, IL, USA}
+Email: roselyne@uchicago.edu}
 }
 
 % make the title area
@@ -141,6 +143,7 @@ Email: roselyne@uchicago.edu}
 Despite significant progress in natural language processing, 
 machine learning models require substantial expert-annotated data for training to perform well in tasks such as named entity recognition and entity relations extraction.
 Scientific Named Entity Referent Extraction is often more complicated than traditional Named Entity Recognition (NER). 
+\logan{Perhaps move the characteristics you mention for polymers to this sentence, make them sound more general, and then say polymers is a perfect case for exploring these challenges. This will make your paper seem less polymer-y from the start}
 For example, in polymer science, 
 chemical structure may be encoded using nonstandard
 naming conventions,
@@ -154,7 +157,7 @@ to generate entity-rich corpora for productive expert labeling,
 and then uses the resulting labeled data to 
 bootstrap a context-based word vector classifier.%~\roselyne{cite in intro}.
 Here, we use approximately labeled candidates and active learning to efficiently obtain more annotations from experts and improve performance.
-This process that is otherwise tedious and expensive.
+This process that is otherwise tedious and expensive.\logan{Not sure what "This" refers too}
 With under five hours of expert time, polyNER demonstrates discrimination capacity comparable to state-of-the-art chemical NLP toolkit and
 highlights the potential for human-computer partnership for 
 constructing domain-specific scientific NER systems.

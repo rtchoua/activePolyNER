@@ -5,9 +5,10 @@ Weakly supervised learning methods work with much less training data and aim to 
 They generally fall under two categories: semi-supervised learning and active learning~\cite{zhou2017brief}.
 Semi-supervised learning attempts to automatically label data using prior knowledge and a set of labeled data. 
 For example, it assumes that if $x$ and $x\prime$ are similar, they probably have the same label (cluster and label algorithms).
-%\kyle{Could be a clearer description of semi-supervised learning}
+\kyle{Could be a clearer description of semi-supervised learning}\logan{Agreed. The key thing that separates it from other learning is that it uses labeled and unlabeled data}
 Active learning assumes there is a source of knowledge, such as a human expert, that can be queried 
 to label a selected batch of unlabeled data. 
+\logan{It sounds like these two categories are mutually exclusive. Do you think so? Can you state what differentiates them explicitly?}
 
 \subsection{Semi-supervised Approaches}
 \textit{Bootstrapping} is a semi-supervised technique, which starts from a small set of seed relation instances and iteratively learns more relation instances and extraction patterns.
@@ -48,7 +49,7 @@ than exhaustively annotating text, it still requires expert guidance.
 In data programming as in boostrapping and distant supervision it is important to evaluate the quality of functions and extraction patters to decrease noisy patterns.
 
 \subsection{Active Learning}
-Active learning~\cite{zhou2017brief} assumes that the gold standard labels of unlabeled instances can be queried from an oracle (domain expert or source of knowledge). 
+Active learning~\cite{zhou2017brief} assumes that the gold standard labels of unlabeled instances can be queried from an oracle (domain expert or source of knowledge).
 The goal of active learning is to decrease the cost of labeling by requesting a limited number of labels from the oracle, that have been deemed most valuable by the learner.
 Uncertainty sampling approaches define ``valuable'' data by measuring uncertainty in the predictions.
 For example, in the case of a single learner, querying predictions with maximum entropy in which the learner assigns all classes with equal probability~\cite{lewis1994heterogeneous} or predictions closest to the decision boundary in the case of support vector machine classifiers~\cite{campbell2000query}.
@@ -61,6 +62,7 @@ PolyNER extends previous work to create a low-cost scientific fact extraction sy
 %We ask: how can we quickly generate annotated data for scientific named entity recognition?
 Specifically, we address two challenges: (1) lack of (expensive) training data in some fields, including our own polymer science application which lacks free access to large polymer databases; and (2) the need for domain expert curators, which impedes the use of crowdsourcing platforms such as Amazon Mechanical Turk~\cite{buhrmester2011amazon} or Figure8~(\url{https://www.figure-eight.com/}).
 For these reasons, our approach is similar to bootstrapping but applied to named entities rather than entity pairs. 
+\logan{Confusing. If PolyNER is similar to boostrapping, why are are you describing it in the active learning section? I'm generally not sure why this paragraph is in "Related Work"}
 We generate approximate labels by extracting targets similar to a few seed entities using word representations and vector similarity measures.
 To address noise in the output, expert label small batches of candidates, which can be used to train a word vector classifier and propose final scientific named entities.
 %\kyle{Somewhat hesitant to include the next sentences. Doesnt feel like it belongs here}\roselyne{I think it's ok here if we're trying to emphasize how it is different, but I guess you want to phrase it as a contribution and it may need to be repeated in the intro/conclusion. Making a note for tomorrow}
