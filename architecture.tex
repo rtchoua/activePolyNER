@@ -5,7 +5,7 @@ Rather than labeling entire documents and phrases, annotators label proposed can
 %\logan{What is downstream in this metaphor? I also don't think it is a needed detail}\roselyne{ok, removed, it stemmed from the idea in my head about mentioning that our labels can be used by Hong, and others later, picked up from snuba, but probably can be emphasized better or elsewhere}.
 Earlier results show that with two hours of labeling we can 
 tradeoff precision and recall on par with state-of-the-art domain specific software by selecting ensemble of classifiers for discrimination~\cite{tchoua2019polyner}.%\loganfussingaboutrecallandprecision \roselyne{noted, will specify in results that we also use ROC and PR curves}
-Here, we further tune some of polyNER's component and incorporate active learning with different sampling strategies in order to further improve performance.
+Here, we further tune some of polyNER's components and incorporate active learning with different sampling strategies in order to further improve performance.
 PolyNER uses word representations and minimal domain knowledge (a few
 seed entities) to produce a small set of candidates for expert labeling;
 labeled candidates are then used to train named entity word vector classifiers.
@@ -26,6 +26,14 @@ We also describe the labeling process, and training and testing configuration fo
 \end{figure*}
 
 \subsection{NLP-Filtering}
+%\subsubsection{Word Embedding Model}
+%\logan{Why is this titled "Word Embedding Model" and you start by describing a classifier?}
+%We hypothesize that we can implement a classifier, which can detect word vectors for polymers based on their context. 
+%\logan{This is the only section that you start with a "hypothesis"}\roselyne{ok removing this and moving section}
+%\logan{Where is this section in F\ref{fig:architecture}?}
+%We generate an unsupervised word embedding model using out entire corpus and train classifiers on vector representations using labels generated via the active learning(step 3 of Figure~\ref{fig:current}).
+%Finally, in step 4, we test our classifiers against all the NLP-filtered words from the test corpus, as shown on Figure~\ref{fig:current}.
+
 %\logan{Make section labels line up with the names in the figures}
 First, we define an
 NLP filtering preprocessing step that is used to filter out
@@ -124,19 +132,12 @@ We save the best performing classifier on the labeled candidates for subsequent 
 The requested labels are annotated by humans to serve as addition training data for the next learning iteration. 
 We describes these steps in more details in the following sections.
 
-\subsubsection{Word Embedding Model}
-\logan{Why is this titled "Word Embedding Model" and you start by describing a classifier?}
-We hypothesize that we can implement a classifier, which can detect word vectors for polymers based on their context. 
-\logan{This is the only section that you start with a "hypothesis"}
-\logan{Where is this section in F\ref{fig:architecture}?}
-We generate an unsupervised word embedding model using out entire corpus and train classifiers on vector representations using labels generated via the active learning(step 3 of Figure~\ref{fig:current}).
-Finally, in step 4, we test our classifiers against all the NLP-filtered words from the test corpus, as shown on Figure~\ref{fig:current}.
-
 \subsubsection{Untrained and Expert Labeling}
 As explained in section~\ref{sect:background}, recognizing polymers can require more or less domain expertise.
 We assign two domain experts to annotated candidates generated using our two maximum entropy-based uncertainty sampling (\textit{UBS} and \textit{Distance UBS}). 
-Each expert annotates one strategy but we perform crosschecking for 10\% of the first batch of labels. We confirm agreement between labels for all but 1 of the set of 20 candidates or an agreement of 95\%.
-\logan{The inter-relater score is a result, not part of the architecture}
+Each expert annotates one strategy but we perform crosschecking for 10\% of the first batch of labels to get a measure of agreement between experts. 
+%We confirm agreement between labels for all but 1 of the set of 20 candidates or an agreement of 95\%.
+\logan{The inter-relater score is a result, not part of the architecture}\roselyne{ok, don't remove, come back to this to make sure I add it later}
 Experts simply approve or reject candidates using a simple web interface shown on Figure~\ref{fig:polyner}; a task that is more efficient than reading and annotating words in text.
 The interface
 provides example sentences as context for ambiguous candidates,
@@ -168,13 +169,14 @@ Clicking on ``?'' delivers up to 25 more example sentences.
 We use multiple of classifiers that we concurrently trained and test on the same data in steps 1, 2 and 3 illustrated on Figure~\ref{fig:current}.
 The classifiers include the scikit-Learn~\cite{scikit-learn} implementations of Decision Tree (DT), Gradient Boosting (GB), K-Nearest Neighbor (KNN), Logistic Regression (LR), Linear Support Vector Machine (SVM), Naive Bayes (NB), and Random Forest (RF). 
 \logan{Something to consider for future: I've been nervous a long time about how we use so many models. How good is your grid search CV for these models? Many (KNN, SVM) are super sensitive to hyperparameters, and I'm worried we are testing 7 models badly and that we'd have better results with tuning 1 really well}
+\roselyne{Yes, this is definitely a lesson taken. I was just telling Kyle, I know exactly how I would change this experiment and others based on my experience now. Perhaps I need to say that in the discussion!}
 Our goal here is to explore the word embedding space and determine which classifier(s) works best for detecting our scientific named entities.
 As previously mentioned, we save the \textit{best-performing} classifier on labeled candidates (prior to updating the word embedding model  with test documents in order to clearly separate the training process from the test set, see step 1 in Figure~\ref{fig:current}).
-When defining best performance, we prioritize retrieving a maximum of targets over precise extraction.
+When defining best performance, we prioritize recall, or retrieving a maximum of targets over precise extraction.
 In other words, extracting a higher number of targets potentially requiring additional curation is favored over fewer correct targets.
-\logan{Can you express this quantitatively?}
-In each case, we use the dimensions of the word vector for each string as input features.
-\logan{Do you mean "use the word embedding for each word as input"? All word vectors should have the same dimensions}
+%\logan{Can you express this quantitatively?}\roselyne{I have favored recall, maybe I should just say that? better?}
+In each case, we use the word embedding for each string as input features.
+%\logan{Do you mean "use the word embedding for each word as input"? All word vectors should have the same dimensions}\roselyne{yes, they do, I want to indicate exactly that the valye of the dimensions word vector itself is used as features, I wasn't sure if the embedding for each word as input was clear enough.}
 
 
 
