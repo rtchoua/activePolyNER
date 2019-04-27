@@ -20,48 +20,65 @@ We also describe the labeling process, and training and testing configuration fo
 
 \begin{figure*}[!t]
 {\includegraphics[width=\textwidth]{figures/architecture.pdf}}
-\caption{\label{fig:architecture} PolyNER system showing NLP-filtering in (1), candidate sampling strategies in (2), and actie learning loop between expert labeling (3) and classification of scientific named entities (4). 
-	\logan{Should we differentiate between the "initial sampling" strategy done to bootstrap our training set and the "active learning sampling" strategy used to identify the next things to label? Mixing the two up is going to confuse people}
+\caption{\label{fig:architecture} PolyNER system showing NLP-filtering in (1), initial sampling and labeling in (2), candidate sampling strategies in (3), and actie learning loop between expert labeling (4) and classification of scientific named entities (5). 
+	%\logan{Should we differentiate between the "initial sampling" strategy done to bootstrap our training set and the "active learning sampling" strategy used to identify the next things to label? Mixing the two up is going to confuse people}\roselyne{OK will adapt the rest of the text and section titles too.}
 }
 \end{figure*}
 
-\subsection{Preprocessing}
-\logan{Make section labels line up with the names in the figures}
+\subsection{NLP-Filtering}
+%\logan{Make section labels line up with the names in the figures}
 First, we define an
 NLP filtering preprocessing step that is used to filter out
-words in scientific publications that are unlikely to be polymer referents. 1) We remove numbers. 2)
+words in scientific publications that are unlikely to be polymer referents. 
+In other words, we remove obvious non-candidates.
+First we remove
+unwanted characters (e.g. `:', `.', `,', `:', `-') from the beginning and the end of each
+candidate and eliminate numbers (including numbers followed by common units).
+This step allows us to recognize, for example, polyethylene; (which fails the
+exact string comparison test against ``polyethylene'').
 Hypothesizing that names of scientific entities will not, in general, be English
 vocabulary words, we remove words found in the SpaCy dictionaries
 of commonly used English words~\cite{choi2015depends}. (We manually remove common polymer
-names, such as polystyrene and polyethylene, from the dictionaries.) 3) We use
-SpaCy's part-of-speech tagging functionality to remove non-nouns. 4) We remove
-unwanted characters (e.g. `:', `.', `,', `:', `-') from the beginning and the end of each
-candidate, allowing us to recognize, for example, polyethylene; (which fails the
-exact string comparison test against ``polyethylene''). 5) We remove plurals (e.g.,
+names, such as polystyrene and polyethylene, from the dictionaries.) 
+We use
+SpaCy's part-of-speech tagging functionality to remove non-nouns.  
+Finally, we remove plurals (e.g.,
 polyamides, polynorbornenes), as they can represent polymer family names.
-\logan{2 is the only number that does not start with "We remove." Should you make this a bulleted list?}
+Note that this steps are generalizable and applicable to multiple science fields.
+%\logan{2 is the only number that does not start with "We remove." Should you make this a bulleted list?}\roselyne{Good point, but then this is hardly a section I think, I will try and see how it looks. Also some of the bullet text is short and some is long. e.g. numbers vs, entire sentence.}
 We refer to these pre-processed words (output of step 1 in Figure~\ref{fig:architecture}) as NLP-filtered candidates.
 
 
-\subsection{Sampling Strategies}
+\subsection{Initial Labeling}
 While the previous steps reduces the numbers of candidates and the imbalance of the dataset (target vs. non-target entity ration), there still remains a relatively large pool of potential candidates to select entities from.
-In order to achieve higher classification accuracy\textemdash
-by decreasing the number of potential false positives (candidates incorrectly identified as targets by our classifier)
-\textemdash we want to carefully select examples to be labeled by experts.
-\logan{Why is labeling "false positives" bad?}
-We implement three sampling strategies, which we refer to as \textit{Random}, \textit{Active Learning 1 (UBS)} and \textit{Active Learning 2 (Distance UBS)}, 
-to determine which candidates to label.
-Based on preliminary experiments, we set the size of batches of strings to be labeled to 200 or about an hour of expert time.
-\logan{As my comment in F\ref{fig:architecture}, we have two different kinds of sampling strategies and I think we should describe them separately. What do you think?}
+In our experience, the ratio of polymers-to-non-polymers in NLP-filtered words in publications is $\sim$5\%.
+In order to avoid giving the experts, only or mostly negative examples, and achieve meaningful classification results,
+we attempt to boost the number of actual entities in the first batch of candidates to be annotated byb using a word vector similarity metrics between these candidates and commonly used known entities as observed in a subset of publications or as suggested by experts.
+We discuss this distance metric in more details below.
+Candidate batch sizes are determined based on labeling time estimates and availability of expert curators.
+Based on preliminary experiments, we set the size of the first (and following batches) of strings to be labeled to 200 or about an hour of expert time.
 
-\subsubsection{Random Strategy}
-In the first strategy we randomly select 200 out of the pool of unlabeled NLP-filtered candidates.
+\subsection{Sampling Strategies}
+%While the previous steps reduces the numbers of candidates and the imbalance of the dataset (target vs. non-target entity ration), there still remains a relatively large pool of potential candidates to select entities from.
+%In order to achieve higher classification accuracy\textemdash
+%by decreasing the number of potential false positives (candidates incorrectly identified as targets by our classifier)
+%\textemdash we want to carefully select examples to be labeled by experts.
+%\logan{Why is labeling "false positives" bad?}\roselyne{It just takes more time from the expert, also we can't give the expert only negative examples.}
+We then implement three sampling strategies, which we refer to as \textit{Random}, \textit{Uncertainty-Based Sampling (UBS)} and \textit{Distance Uncertainty-Based Sampling (Distance UBS)}, 
+to determine which candidates to label.
+%Based on preliminary experiments, we set the size of batches of strings to be labeled to 200 or about an hour of expert time.
+%\logan{As my comment in F\ref{fig:architecture}, we have two different kinds of sampling strategies and I think we should describe them separately. What do you think?}\roselyne{I'm separating the initial sampling and adding it to the figure}
+
+\subsubsection{Random Strategy using NLP-Filtered Candidates}
+In the first strategy we randomly select 200 out of the pool of unlabeled NLP-filtered candidates from the entire corpus of publications.
 Note that the imbalance between polymers and other \textit{tokens} (words or space separated strings) that 
 do not exist in this set is still significant (less than 5\% in our test set).
+We exclude tokens included in our test set.
+
 
 \subsubsection{Uncertainty-Based Sampling using NLP-Filtered Candidates (UBS)}
-In the second strategy we use maximum entropy sampling method using the same pool of unlabeled NLP-filtered candidates.
-\logan{Same pool}
+In the second strategy we use maximum entropy sampling method using the same pool of unlabeled NLP-filtered candidates from the full corpus of documents used in the random strategy.
+%\logan{Same pool}
 As previously mentioned, maximum entropy selection falls under the category of uncertainty sampling, which identifies data points where a classifier predicts outcome at the decision boundary between two or more classes. 
 For example, in our case, when predicting whether a word vector represents a polymer, or not, the classifier assigns equal probability to either case.
 In the binary case, probabilities range from $0$ to $0.5$. Therefore, we predict outcome for all our NLP-filtered candidates and obtains a probability $p$ for each data point. We compute a list of $0.5-p$ values for all unlabeled data and sort the list in ascending order.
@@ -87,19 +104,23 @@ Specifically we use the Gensim continuous bag-of-words
 algorithm~\cite{rehurek2010software} to generate vectors.
 We can then determine, for each NLP-filtered word, the extent to which it occurs
 in a similar context to the representative polymers, by computing the similarities
-between the word's vector and those for our seed entities. 
-When dealing with multiple seed entities, we use the highest similarity score for ranking candidates.
+between the word's vector and those for our known representative entities. 
+When dealing with multiple representative entities, we use the highest similarity score for ranking candidates.
+Here too, we exclude terms that exist in our test set of documents.
 
 \begin{figure*}[!t]
 \centering
 \scalebox{0.6}{\includegraphics{figures/al_setup.pdf}}
-\caption{\label{fig:current} The active learning experiment set up; we generate an unsupervised word embedding model using our entire corpus in 1), we propose NLP-filtered candidate entities to untrained and expert annotators in 2) before classifying their word vectors in 3). We save this classifier for uncertainty-based selection of labels for the next round of active learning. In 4), we test this word vector classifier on all NLP-filtered words from the test documents. \logan{What are the blue docs? Why don't they have an arrow? Where do the NLP candidates for 2 come from?}}
+\caption{\label{fig:current} The active learning experiment set up; we generate an unsupervised word embedding model using our entire corpus in 1), we propose NLP-filtered candidate entities to untrained and expert annotators in 2) before classifying their word vectors in 3). We save this classifier for uncertainty-based selection of labels for the next round of active learning. In 4), we test this word vector classifier on all NLP-filtered words from the test documents. 
+%\logan{What are the blue docs? Why don't they have an arrow? Where do the NLP candidates for 2 come from?}
+%\roselyne{They come from the entire pool of NLP-filtered candidates (excluding the test set, will make sure this is clear}
+}
 \end{figure*}
 
 \subsection{Active Learning Loop}
 Without prior knowledge of the distribution of target entities in the vector space, we use multiple of classifiers at each iteration of the active learning process. 
 We save the best performing classifier on the labeled candidates for subsequent maximum entropy-based uncertainty sampling. 
-\logan{You have neither defined nor motivated MEU, I think}
+%\logan{You have neither defined nor motivated MEU, I think}\roselyne{See if you would add something to the previous strategies (UBS). That's where I've tried to define it, tell me if it's not clear}.
 The requested labels are annotated by humans to serve as addition training data for the next learning iteration. 
 We describes these steps in more details in the following sections.
 
