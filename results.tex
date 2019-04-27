@@ -168,11 +168,11 @@ Figure~\ref{fig:roc_init} shows the Receiver Operating Curve (ROC) for the initi
 \logan{I do not like this as a topic sentence because it doesn't offer any indication of what to draw from the figure. I prefer ones that are "We found that X, as shown in Figure Y." Topic sentences with some editorial comments worked in help keep the narrative of the purpose of your study alive.}
 The ROC plot is an evaluation measure that is based on two basic evaluation measures: specificity (true positive rate) and sensitivity (true negative rate).
 Sensitivity is the same as recall. Specificity is a measure of the true negative rate (the proportion of actual negatives that are correctly identified as such).
-A classifier with the random performance level always has the same 0.5 true positive rate and false negative rate.
-\logan{Not true. The TPR depends on how many points you sample, and is always equal to the FPR}
+A classifier with the random performance level always has the same true positive rate and false negative rate.
+%\logan{Not true. The TPR depends on how many points you sample, and is always equal to the FPR}\roselyne{oh right.}
 A classifier with the perfect performance level shows a combination of two straight lines immediately showing a true positive rate of 1.0 and remaining there as recall increases.
-Classifiers with meaningful performance levels usually lie in the area between the random ROC curve (baseline) and the perfect ROC curve.
-\logan{Also not quite correct. All classifiers with better-than-random performance lie between random and perfect. Maybe just skip the notion of betweenness and talk about the AUC}
+Classifiers with better-than-random performance levels usually lie in the area between the random ROC curve (baseline) and the perfect ROC curve.
+%\logan{Also not quite correct. All classifiers with better-than-random performance lie between random and perfect. Maybe just skip the notion of betweenness and talk about the AUC}\roselyne{this is what I tried to say, you don't like the word meaningful? I meant if it's below it's usually bad.}
 The area under the curve (AUC) measures the area under the ROC.
 Ideally the AUC of a learning algorithm is above 0.5. 
 Since AUC takes into account true negatives or correctly predicted non-polymers and our dataset is imbalanced containing more non-polymers than polymers, we also plot the Precision Recall Curve (PRC) to visualize the tradeoff between precision and recall.\logan{A little wordy, can you streamline this sentence?}
@@ -180,8 +180,7 @@ Since AUC takes into account true negatives or correctly predicted non-polymers 
 
 While the AUC for the initial base KNN classifier is above random performance in Figure~\ref{fig:roc_init}, the initial PRC shows poor precision regardless of recall (see Figure~\ref{fig:prc_init}).
 \logan{Better topic sentence. It provides a hit of what to look for. But, you do not follow it up with any details supporting this claim}
-
-\logan{This is a long section for just describing how you made the classifier and that it is pretty bad. Do we need this section?}
+\logan{This is a long section for just describing how you made the classifier and that it is pretty bad. Do we need this section?}\roselyne{I will shorten and improve next}
 
 \begin{figure*}
 \centering
