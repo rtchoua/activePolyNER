@@ -1,42 +1,88 @@
 \section{Introduction}
 \label{sect:apner_introduction}
 
-Despite much progress in Natural Language Processing (NLP), scientific named entity recognition (NER) remains
-a research challenge.
-At the same time there are several opportunity to mine scientific entities from the literature in fields such as biology and materials science.
-The main reason for this gap between advances in NLP and scientific extraction needs, is the lack of carefully annotated dataset for specific target.
-In contrast, there is a conference organized around the CoNLL dataset for standard NER and other NLP tasks to push the state-of-the-art each year.
+In many fields of science, the scientific literature contains large quantities of data in unstructured form that,
+if extracted, could benefit research.
+A major obstacle to scientific fact extraction is the difficulty of identifying scientific entities in text.
+\ian{It seems to me that the preceding two sentences that I added are needed to provide context.
+They need to be improved, though.}
+Despite much progress in natural language processing (NLP), 
+scientific named entity recognition (NER) remains a research challenge.
+The main reason for this gap between NLP advances and scientific extraction needs is the lack of carefully annotated datasets for specific targets.
+In standard NER, 
+progress is made possible by, for example, the 
+Conference on Computational Natural Language Learning (CoNLL) dataset,
+which supports much work that advances the state of the art.
+But NER systems trained on CoNNL data do not perform well for scientific text, due to 
+the distinctive vocabularies used in different scientific disciplines and subdisciplines.
 
-Driven by bioinformatics\textemdash which develops methods and software tools for understanding biological data\textemdash similar efforts exist in biology~\cite{song2004posbiotm}, and more recently in chemistry~\cite{krallinger2015chemdner}.
-However, recruiting experts to design complete extraction schema, define clear annotations rules and generate training data for most advanced machine-learning based NLP techniques is a huge endeavor that has to be repeated for every new field.
+Science-specific training datasets have been established in
+%Efforts have been launched 
+%In contrast, there is a conference organized around the CoNLL dataset for standard NER and other NLP tasks to push the state-of-the-art each year.
+%Driven by bioinformatics\textemdash which develops methods and software tools for understanding biological data\textemdash similar efforts exist in 
+biology~\cite{song2004posbiotm} and, more recently, chemistry~\cite{krallinger2015chemdner}.
+However, the expert effort required to 
+design 
+%complete 
+extraction schema, 
+define clear annotation rules, and generate training data % for most advanced machine-learning based NLP techniques 
+is substantial, and cannot feasibly be performed for 
+%has to be repeated for 
+every field of science.
 %\logan{Are you sure you want to use materials science as the opening line? Maybe add a general sentence up top "data-intensive science is awesome, but requires accessible data. The development of new materials is a great example for such opportunities and needs in domain science. [I'm making these comments under the context that this will be a thesis chapter]}\roselyne{point taken!}
-For example, despite the large number of publications in materials science, the process of designing new materials is still one of trial and error.
-The field of materials informatics aims to address this problem by combining large datasets and computational models to achieve targeted materials design and reduce time-to-market and development costs of new materials.
-A large amount of such data already exists in unstructured text in the scientific literature, but the lack of training data impedes the direct application of state-of-the-art extraction methods.
+As a consequence, annotated datasets do no exist in most fields,
+%In many fields, such as material science, no such annotated datasets exist.
+preventing the application of state-of-the-art NER and fact extraction methods.
+
+%This problem is apparent in materials science where, 
+%despite many publications containing much data,
+%a lack of annotated datasets impedes progress in materials informatics, 
+%a field that aims to replace current trial-and-error materials design processes
+%by combining large datasets and computational models to achieve targeted materials design, 
+%thus reducing time-to-market and development costs of new materials.
+
+This problem is apparent in materials science, where materials informatics 
+seeks to combine large datasets and computational models to 
+replace current trial-and-error materials design processes with targeted materials design, 
+thus reducing time-to-market and development costs of new materials.
+A lack of annotated training data has hindered progress,
+preventing large-scale application of methods pioneered in, for example,
+biomedicine.
+Those methods, which often use hybrid rule-based, machine learning, and statistical techniques to extract entity names and relations from the literature~\cite{leaman2008banner,zeng2015survey}, require much training data.
+%the process of designing new materials is still one of trial and error.
+%The field of materials informatics aims to address this problem by combining large datasets and computational models to achieve targeted materials design and reduce time-to-market and development costs of new materials.
+%A large amount of such data already exists in unstructured text in the scientific literature, but the lack of training data impedes the direct application of state-of-the-art extraction methods.
 % hence the need for materials information extraction.
 %\logan{Good intro paragraph. "Opportunity -> problem you are solving" in an inch of text}\roselyne{Thanks!|}
+%There is a considerable amount of prior work in scientific facts extraction, notably in biomedicine. 
+%State-of-the-art methods often use hybrid rule-based, machine learning, and statistical techniques to extract entity names and relations from the literature~\cite{leaman2008banner,zeng2015survey}. 
+While similar efforts have begun in materials science~\cite{hawizy2011chemicaltagger,rocktaschel2012chemspot,leaman2015tmchem,swain2016chemdataextractor,young2018data}, the lack of available training data for new materials impedes rapid progress. 
+Instead, each new research project targeting a new type of materials must first undertake considerable
+effort to create a large, carefully annotated training
+data tailored for this new target, a task that often requires considerable in-depth domain knowledge.
 
-There is a considerable amount of prior work in scientific facts extraction, notably in biomedicine. 
-State-of-the-art methods often use hybrid rule-based, machine learning, and statistical techniques to extract entity names and relations from the literature~\cite{leaman2008banner,zeng2015survey}. 
-While similar efforts have begun in materials science~\cite{hawizy2011chemicaltagger,rocktaschel2012chemspot,leaman2015tmchem,swain2016chemdataextractor,young2018data}, the lack of available training data for new materials impedes rapid progress. %\logan{Cite an Elsa paper?}\roselyne{done! good point.}
-Instead, attempts to extract a new type of materials rely  on large, carefully annotated training
-data tailored for this new target, often requiring some amount of in-depth domain knowledge.
-For example, in the subfield of polymer science, scientists and engineers lack access to a freely available large database of polymers and their properties.
-
+The subfield of polymer science puts these problems in particularly stark relief.
+Polymers have their own unique nomenclature, as we explain below, and thus annotated datasets created for general
+chemistry are of little value.
+Scientists and engineers lack access to a freely available large database of polymers and their properties.
 %\kyle{should cite our previous papers about polyNER. ANd change phrasing here to make it sound like polyner is now well established
 %and what we are doing here is enhancing it with active learning. }
 To address these challenges, we have designed polyNER, a system for generating training data for scientific NER using semi-supervised and active learning.
 PolyNER uses natural language processing to produce sets of candidate entities;
-experts then iteratively approve or reject candidates in small batches selected using an active learning approach;
+experts then iteratively approve or reject candidates in small batches selected using an active learning
+\ian{You say that polyNER uses active learning, then you say that you enhance it with AL in this paper. 
+Inconsistent?}
+ approach;
 the labels are used to train a series of context-based word vector classifiers after each iteration.
 PolyNER's labels can also be used to train other machine learning models to leverage features beyond their context to recognize target entities.
 The goal is
 to substitute the labor-intensive processes of assembling a large
 manually annotated corpus (and reduce costs) by using small numbers of carefully selected candidates to be labeled via focused expert input. 
+
 In this paper, we seek to improve polyNER's performance in both the generation of candidate entities and the labeling process.
-We experiment with different \textit{representative} (commonly used) entities to generate candidates and tune the word embedding model parameters to increase the yield of actual scientific entities among candidates; we use active learning with maximum entropy uncertainty sampling and two different pools of unlabeled data to train classifiers and compare their learning rate after 5 iterations. 
+We experiment with different \textit{representative} (commonly used) entities to generate candidates and tune the word embedding model parameters to increase the yield of actual scientific entities among candidates; we use active learning with maximum entropy uncertainty sampling and two different pools of unlabeled data to train classifiers and compare their learning rate after five iterations. 
 %\logan{"seed entities" is not a standard term, right? If it is not standard, maybe use something less metaphorical "ways to generate initial candidates for labeling"}\roselyne{I don't think so standard but I picked it up from similar works in NER, snowball, do you mean not to use it in the intro or the whole paper. Will search and see how many times I use it. I had started using representative entities, which I also have to define.} 
-Using labels generated via active learning we train word vector classifiers and achieve NER performance comparable to 
+Using labels generated via active learning, we train word vector classifiers and achieve NER performance comparable to 
 a state-of-the art rule-based chemical entity extraction
 system, ChemDataExtractor (CDE)~\cite{swain2016chemdataextractor}, which we have previously enhanced
 with dictionary- and rule-based methods for identifying polymers~\cite{tchoua2017towards}.

@@ -3,10 +3,13 @@
 %\roselyne{Adjust/shorten since I added text.}
 %\kyle{Sounds similar to previous paper. First paragraph should be re-written.}
 %\roselyne{Yes, it's exactly the same! Made a note to myself but hadn't come back to it yet.}
-The challenges of chemical NER are similar to those found in the biomedical field~\cite{krallinger2015chemdner,kim2004introduction}. 
-For example, in polymer science, entities can be described with multiple referrents (synonymy).
+\ian{This is the first reference to ``chemical NER,'' which you have not previously said you are addressing: 
+above, you refer to materials science.}
+The challenges of chemical NER are similar to those in biomedicine~\cite{krallinger2015chemdner,kim2004introduction}. 
+Entities can be described with multiple referrents (synonymy).
 Conversely, the same word may refer to different concepts depending on context (polysemy).
-\textit{Polystyrene} is often referred to as PS, but \textit{polystyrenes} can also be referred to as \textit{GPPS}, \textit{HIPS}, and \textit{EPS}, combined with other monomers yielding \textit{SBR}, \textit{SBS}, and \textit{ABS}, or used to describe polystyrene derivatives such as \textit{PAMS}, \textit{PMS}, and \textit{PSS}.
+For example,
+\textit{polystyrene} is often referred to as \textit{PS}, but \textit{polystyrenes} can also be referred to as \textit{GPPS}, \textit{HIPS}, and \textit{EPS}, combined with other monomers yielding \textit{SBR}, \textit{SBS}, and \textit{ABS}, or used to describe polystyrene derivatives such as \textit{PAMS}, \textit{PMS}, and \textit{PSS}.
 %\textit{Polystyrene} is often referred to as \textit{PS}, but \textit{polystyrenes} also describes a family of polymers including \textit{GPPS}, \textit{HIPS}, \textit{EPS}, \textit{SBR}, \textit{SBS}, and \textit{ABS}. 
 %\roselyne{Ask Debbie to check previous example. Done!}
 While standards for naming polymers (e.g., International Union of Pure and Applied Chemistry (IUPAC~\cite{hiorns2013brief}) naming conventions), they are not always followed in practice~\cite{tamames2006success}. 
@@ -21,8 +24,8 @@ In addition to challenges related to the makeup of the scientific entities, the 
 %\logan{I don't know the word "paucity." Am I just unread, or should we use a lower-brow word?}
 %\roselyne{I need to admit you made me google the term lower-brown word :-) will use scarcity, or sparseness or rarity?}
 Considerable time and manual effort are involved in creating and maintaining the balanced
-Conference on Computational Natural Language Learning (CoNLL) dataset for standard NER~\cite{tjong2003introduction}.
-Example sentences from such corpera include one or more entities per sentence. 
+CoNLL dataset for standard NER~\cite{tjong2003introduction}.
+Example sentences from such corpora include one or more entities per sentence. 
 In our attempt to recognize polymer names in full text documents, we face a very imbalanced dataset where most sentences do not contain a target entity as there are only a handful of target entities per document.
 %(we found less 2\% of words in sample publications are polymers in our test dataset)
 While there has been much interest in machine learned recognition of biochemical entities~\cite{jessop2011oscar4,rocktaschel2012chemspot,leaman2015tmchem,swain2016chemdataextractor}, there has concurrently been significant effort involved in selecting and (often manually) generating quality data for
