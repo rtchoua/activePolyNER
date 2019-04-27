@@ -1,18 +1,20 @@
 \section{Design and Implementation}
 \label{sect:apner_architecture}
 As previously mentioned, our main goal is designing polyNER is to slash labeling costs by reducing the time and effort spent by experts to generate training data. 
-Rather than labeling entire documents and phrases, annotators label proposed candidate entities to be classified downstream.
-\logan{What is downstream in this metaphor? I also don't think it is a needed detail}
+Rather than labeling entire documents and phrases, annotators label proposed candidate entities to be classified.
+%\logan{What is downstream in this metaphor? I also don't think it is a needed detail}\roselyne{ok, removed, it stemmed from the idea in my head about mentioning that our labels can be used by Hong, and others later, picked up from snuba, but probably can be emphasized better or elsewhere}.
 Earlier results show that with two hours of labeling we can 
-tradeoff precision and recall on par with state-of-the-art domain specific software by selecting ensemble of classifiers for discrimination~\cite{tchoua2019polyner}.\loganfussingaboutrecallandprecision
+tradeoff precision and recall on par with state-of-the-art domain specific software by selecting ensemble of classifiers for discrimination~\cite{tchoua2019polyner}.%\loganfussingaboutrecallandprecision \roselyne{noted, will specify in results that we also use ROC and PR curves}
 Here, we further tune some of polyNER's component and incorporate active learning with different sampling strategies in order to further improve performance.
 PolyNER uses word representations and minimal domain knowledge (a few
 seed entities) to produce a small set of candidates for expert labeling;
 labeled candidates are then used to train named entity word vector classifiers.
 We integrate an active learning loop into polyNER's architecture to incrementally improve the performance of the classifiers.
 In order to explore whether natural language processing, and specifically the use of word vector coordinates as features can accelerate the learning process,
-we use three sampling strategies and two different candidate pools for maximum entropy uncertainty sampling, which we describe in this section.
-\logan{We have mentioned these two different pools twice now, but haven't given a hint as to what they are. I think we should describe them succinctly here.}
+we use three sampling strategies and two different candidate pools, one set of unlabeled nouns and one set of approximately labeled nouns (presented as target entities based on \textit{similarity} to commonly used known entities) from our corpus.
+We describe our sampling strategies and approximate labeling in more details in this section.
+% for maximum entropy uncertainty sampling, which we describe in this section.
+%\logan{We have mentioned these two different pools twice now, but haven't given a hint as to what they are. I think we should describe them succinctly here.}\roselyne{Done I think}
 The general architecture of polyNER is illustrated in Figure~\ref{fig:architecture}.
 We also describe the labeling process, and training and testing configuration for our word vector classifiers in the active learning loop. 
 
