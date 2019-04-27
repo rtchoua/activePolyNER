@@ -1,16 +1,24 @@
 \section{Introduction}
 \label{sect:apner_introduction}
 
+Despite much progress in Natural Language Processing (NLP), scientific named entity recognition (NER) remains
+a research challenge.
+At the same time there are several opportunity to mine scientific entities from the literature in fields such as biology and materials science.
+The main reason for this gap between advances in NLP and scientific extraction needs, is the lack of carefully annotated dataset for specific target.
+In contrast, there is a conference organized around the CoNLL dataset for standard NER and other NLP tasks to push the state-of-the-art each year.
 
-\logan{Are you sure you want to use materials science as the opening line? Maybe add a general sentence up top "data-intensive science is awesome, but requires accessible data. The development of new materials is a great example for such opportunities and needs in domain science. [I'm making these comments under the context that this will be a thesis chapter]}
-Despite the large number of publications in materials science, the process of designing new materials is still one of trial and error.
+Driven by bioinformatics\textemdash which develops methods and software tools for understanding biological data\textemdash similar efforts exist in biology~\cite{song2004posbiotm}, and more recently in chemistry~\cite{krallinger2015chemdner}.
+However, recruiting experts to design complete extraction schema, define clear annotations rules and generate training data for most advanced machine-learning based NLP techniques is a huge endeavor that has to be repeated for every new field.
+%\logan{Are you sure you want to use materials science as the opening line? Maybe add a general sentence up top "data-intensive science is awesome, but requires accessible data. The development of new materials is a great example for such opportunities and needs in domain science. [I'm making these comments under the context that this will be a thesis chapter]}\roselyne{point taken!}
+For example, despite the large number of publications in materials science, the process of designing new materials is still one of trial and error.
 The field of materials informatics aims to address this problem by combining large datasets and computational models to achieve targeted materials design and reduce time-to-market and development costs of new materials.
-A large amount of such data already exists in unstructured text in the scientific literature, hence the need for materials information extraction.
-\logan{Good intro paragraph. "Opportunity -> problem you are solving" in an inch of text}
+A large amount of such data already exists in unstructured text in the scientific literature, but the lack of training data impedes the direct application of state-of-the-art extraction methods.
+% hence the need for materials information extraction.
+%\logan{Good intro paragraph. "Opportunity -> problem you are solving" in an inch of text}\roselyne{Thanks!|}
 
 There is a considerable amount of prior work in scientific facts extraction, notably in biomedicine. 
 State-of-the-art methods often use hybrid rule-based, machine learning, and statistical techniques to extract entity names and relations from the literature~\cite{leaman2008banner,zeng2015survey}. 
-While similar efforts have begun in materials science~\cite{hawizy2011chemicaltagger,rocktaschel2012chemspot,leaman2015tmchem,swain2016chemdataextractor}, the lack of available training data for new materials impedes rapid progress. \logan{Cite an Elsa paper?}
+While similar efforts have begun in materials science~\cite{hawizy2011chemicaltagger,rocktaschel2012chemspot,leaman2015tmchem,swain2016chemdataextractor,young2018data}, the lack of available training data for new materials impedes rapid progress. %\logan{Cite an Elsa paper?}\roselyne{done! good point.}
 Instead, attempts to extract a new type of materials rely  on large, carefully annotated training
 data tailored for this new target, often requiring some amount of in-depth domain knowledge.
 For example, in the subfield of polymer science, scientists and engineers lack access to a freely available large database of polymers and their properties.
@@ -26,8 +34,8 @@ The goal is
 to substitute the labor-intensive processes of assembling a large
 manually annotated corpus (and reduce costs) by using small numbers of carefully selected candidates to be labeled via focused expert input. 
 In this paper, we seek to improve polyNER's performance in both the generation of candidate entities and the labeling process.
-We experiment with different seed entities to generate candidates and tune the word embedding model parameters to increase the yield of actual scientific entities among candidates; we use active learning with maximum entropy uncertainty sampling and two different pools of unlabeled data to train classifiers and compare their learning rate after 5 iterations. 
-\logan{"seed entities" is not a standard term, right? If it is not standard, maybe use something less metaphorical "ways to generate initial candidates for labeling"}
+We experiment with different \textit{representative} (commonly used) entities to generate candidates and tune the word embedding model parameters to increase the yield of actual scientific entities among candidates; we use active learning with maximum entropy uncertainty sampling and two different pools of unlabeled data to train classifiers and compare their learning rate after 5 iterations. 
+%\logan{"seed entities" is not a standard term, right? If it is not standard, maybe use something less metaphorical "ways to generate initial candidates for labeling"}\roselyne{I don't think so standard but I picked it up from similar works in NER, snowball, do you mean not to use it in the intro or the whole paper. Will search and see how many times I use it. I had started using representative entities, which I also have to define.} 
 Using labels generated via active learning we train word vector classifiers and achieve NER performance comparable to 
 a state-of-the art rule-based chemical entity extraction
 system, ChemDataExtractor (CDE)~\cite{swain2016chemdataextractor}, which we have previously enhanced
@@ -42,4 +50,4 @@ We review semi-supervised methods for NLP systems in
 Section~\ref{sect:apner_related}. 
 We describe the design and implementation in Section~\ref{sect:apner_architecture} and evaluate polyNER
 in Section~\ref{sect:apner_results}. We summarize and discuss future work in Section~\ref{sect:apner_conclusion}.
-\logan{<soapbox>I only see CS have this "table of contents" paragraph. Is it explicitly required, or just an idiosyncrasy of the CS community? Also, does everyone skip over them while reading anyway?</soapbox>}
+%\logan{<soapbox>I only see CS have this "table of contents" paragraph. Is it explicitly required, or just an idiosyncrasy of the CS community? Also, does everyone skip over them while reading anyway?</soapbox>}\roselyne{Very common in computer science paper I think, I'll let Ian and Kyle confirm.}
