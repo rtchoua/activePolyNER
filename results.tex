@@ -1,8 +1,8 @@
 \section{Evaluation}
 \label{sect:apner_results}
-We first report on a study in which we evaluate the generation of distance candidates using the vector similarity measures and seed entities. 
-\logan{Would using "candidate entities" rather than "distance candidates" make more sense?}
-\logan{If F\ref{fig:current} describes your setup. Why not reference it here?}
+We first report on a study in which we evaluate the generation of candidates entities using the vector similarity measures and representative (commonly used) entities. 
+%\logan{Would using "candidate entities" rather than "distance candidates" make more sense?}
+%\logan{If F\ref{fig:current} describes your setup. Why not reference it here?}\roselyne{That is the set up for the active learning but I also evaluate the candidate generation, so I think for now, I'll leave it out but see if I refer to it in the sections below.}
 We then discuss the results of four rounds of active learning using multiple word vector classifiers and our three sampling strategies: random, UBS, and Distance UBS.
 Finally, we experiment with word representations enhanced with character-level information using FastText~\cite{bojanowski2016enriching,joulin2016bag}.
 
@@ -17,33 +17,35 @@ We evaluate extraction accuracy in terms of precision and recall.
 Recall refers to the fraction of actual positives that
 are labeled correctly and precision to the fraction of predicted
 positives that labeled correctly.
-\logan{What part of this data can we release, if any?}
+%\logan{What part of this data can we release, if any?}\roselyne{Hong and I are working on a dataset following a schema we discussed for release, I think we talked about it but didn't update you guys back. However it's more like NLP datasets, where we are releasing sentences with entities and not this exact dataset}
 
 \subsection{Word Embedding Settings}
-\logan{Needs better topic sentence. Say why you are doing this more clearly, less about the "what"}
-We explore how the choice of seed entities, the internal parameters \textit{vector} and \textit{window_size}  impact the number of target entities retrieved using similarity measures.
-In order to estimate the entity-richness of our large pool of distance candidates and since we do not have manually extracted data for the entire corpus, we create a list of \nistnum{10000} distance candidate vectors most similar to our seed entity vectors and report the fraction of gold standard polymer extracted. 
-Based on our experience of $\sim$ 5 polymers per document (\nistnum{8450} polymers for \nistnum{1690} documents), we can expect a fraction of the polymers found in the 100 gold standard documents to be extracted in the \nistnum{10000} candidates most similar to our seed entities.
-\logan{This is confusing. Why are we using a model to estimate the total population of the polymers and not just assuming the gold-standard is a representative sample?}
+%\logan{Needs better topic sentence. Say why you are doing this more clearly, less about the "what"}
+In order to maximize the number of actual entities in the dataset\textemdash and the ratio of target vs non-target entities\textemdash in the intial set of labels,
+we explore how the choice of seed entities, the internal parameters \textit{vector} and \textit{window_size}  impact the number of target entities retrieved using similarity measures.
+To estimate the entity-richness of our large pool of distance candidates and since we do not have manually extracted data for the entire corpus, we create a list of \nistnum{10000} distance candidate vectors most similar to our representative entity vectors and report the fraction of gold standard polymer extracted. 
+In our gold-standard of publications, there are $\sim$ 5 polymers per document (\nistnum{8450} polymers for \nistnum{1690} documents), we can expect a fraction of the polymers found in the 100 gold standard documents to be extracted in the \nistnum{10000} candidates most similar to our seed entities.
+%\logan{This is confusing. Why are we using a model to estimate the total population of the polymers and not just assuming the gold-standard is a representative sample?}\roselyne{ok, 467/100)}
 We evaluate the entity-richness of polymers in this pool of candidates by measuring the percentage of the 467 manually extracted polymer names that it yields;
 we use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.
 
-\subsubsection{Seed Candidates}
-Here, we focus on how the choice of seed entities affects recall, which we take as a measure of the entity-richness of the pool of candidates.
-\logan{This is confusing. Is the fraction of polymers in the candidate pool not the recall?}
+\subsubsection{Representative Candidates}
+Here, we focus on how the choice of seed entities affects the fraction of polymers in the candidates, which we take as a measure of the entity-richness of the pool of candidates.
+%\logan{This is confusing. Is the fraction of polymers in the candidate pool not the recall?}\roselyne{yes, why? I've replaced the word recall.}
 In previous work using the same corpus~\cite{tchoua2016hybrid,tchoua2016hybridi}, we build a dictionary of polymer names using a rule-based approach and aggregating synonyms across ChemDataExtractor records\textemdash a record consists of all information found about a chemical entity in a document.  
 Having built this dictionary, we can identify the 10 most frequently occurring polymers in our corpus and their acronyms.
+Experts can also suggest these entities based on prior knowledge.
 We assume that frequent polymers provide a large number of example sentences that illustrate context in which polymers are commonly used.
-\logan{Do you think it would be better to use the gold standard, where we have certainty of the labels, to estimate the most-frequent polymers?}
+%\logan{Do you think it would be better to use the gold standard, where we have certainty of the labels, to estimate the most-frequent polymers?}\roselyne{we used the entire corpus, we know the most frequent polymers}
 Hence, we first test the most common, the three most common and the ten most common polymers as seed entities.
-\logan{The circularness of this strategy makes me uncomfortable. We use an NER model to determine the initial training set for the NER model? How would you address this criticism?}
+%\logan{The circularness of this strategy makes me uncomfortable. We use an NER model to determine the initial training set for the NER model? How would you address this criticism?}\roselyne{not sure I understand how I am using an NER model to determine the NER model, I'm just testing with various seed entities. As you suggested before, experts can give this info, or we can just measure the frequency of a few known entities. Added a line about this so that no prior work is needed.}
 We experiment with including and excluding their acronyms as corresponding additional seed entities.
 (Note that this modest set of 1, 3 and 10 seed entities could also be suggested by an expert.)
 Table~\ref{tab:candidate_generation} shows the results for this set of experiments on rows one through six.
 When using \textit{polystyrene} (the most commonly used name) as a seed entity, the pool of candidates contained 33.55 \% of the 467 gold standard polymers.
-\logan{Another potential criticism: Would I need a gold standard to build the NER method? I thought your method is supposed to help me avoid having to do the work for generating a gold standard?}
+%\logan{Another potential criticism: Would I need a gold standard to build the NER method? I thought your method is supposed to help me avoid having to do the work for generating a gold standard?}\roselyne{There is no way to evaluate if you don't have a gold standard is there?}
 We note a 2 \% increase in the fraction of polymers retrieved when using \textit{polystyrene} and its acronym compared to using \textit{polystyrene} alone (37.69 \%).
-\logan{Is this an important detail? Why does it need to stay [I think this section is a little dense]}
+%\logan{Is this an important detail? Why does it need to stay [I think this section is a little dense]}\roselyne{well, before Kyle thought this was a bit vague, so I added lots of numbers, I may come back and remove this}
 The fraction of polymers increases by 10 \% when using the three most frequent polymers as seed entities (from 33.55 \% to 46.9 \% and 47.97 \% with acronyms); the three most frequent polymers in our datasets are \textit{polystyrene},\textit{poly(methyl methacrylate)},\textit{polyethylene} and their acronyms (\textit{PS}, \textit{PMMA} and \textit{PE})
 Using ten instead of three entities however, only slightly increases the yield of polymers by less than 1 \%, from 47.97 \% for three frequent polymers with acronyms to 48.39 \% for ten frequent polymers with acronyms.
 
