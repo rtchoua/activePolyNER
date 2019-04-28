@@ -45,10 +45,11 @@ We experiment with including and excluding their acronyms as corresponding addit
 Table~\ref{tab:candidate_generation} shows the results for this set of experiments on rows one through six.
 When using \textit{polystyrene} (the most commonly used name) as a seed entity, the pool of candidates contained 33.55 \% of the 467 gold standard polymers.
 %\logan{Another potential criticism: Would I need a gold standard to build the NER method? I thought your method is supposed to help me avoid having to do the work for generating a gold standard?}\roselyne{There is no way to evaluate if you don't have a gold standard is there?}
-We note a 2 \% increase in the fraction of polymers retrieved when using \textit{polystyrene} and its acronym compared to using \textit{polystyrene} alone (37.69 \%).
-%\logan{Is this an important detail? Why does it need to stay [I think this section is a little dense]}\roselyne{well, before Kyle thought this was a bit vague, so I added lots of numbers, I may come back and remove this}
-The fraction of polymers increases by 10 \% when using the three most frequent polymers as seed entities (from 33.55 \% to 46.9 \% and 47.97 \% with acronyms); the three most frequent polymers in our datasets are \textit{polystyrene},\textit{poly(methyl methacrylate)},\textit{polyethylene} and their acronyms (\textit{PS}, \textit{PMMA} and \textit{PE})
-Using ten instead of three entities however, only slightly increases the yield of polymers by less than 1 \%, from 47.97 \% for three frequent polymers with acronyms to 48.39 \% for ten frequent polymers with acronyms.
+We note a 2 \% increase in the fraction of polymers retrieved when using \textit{polystyrene} and its acronym compared to using \textit{polystyrene} alone.% (37.69 \%).
+%\logan{Is this an important detail? Why does it need to stay [I think this section is a little dense]}\roselyne{well, before Kyle thought this was a bit vague, so I added lots of numbers, I may come back and remove this}\roselyne{Removing details from here}
+The fraction of polymers increases by 10 \% when using the three most frequent polymers as representative entities; %(from 33.55 \% to 46.9 \% and 47.97 \% with acronyms); 
+the three most frequent polymers in our datasets are \textit{polystyrene},\textit{poly(methyl methacrylate)},\textit{polyethylene}.% and their acronyms (\textit{PS}, \textit{PMMA} and \textit{PE})
+Using ten instead of three entities however, only slightly increases the yield of polymers by less than 1 \%.%, from 47.97 \% for three frequent polymers with acronyms to 48.39 \% for ten frequent polymers with acronyms.
 
 \begin{table}[ht!]
 \centering
@@ -73,7 +74,7 @@ Using ten instead of three entities however, only slightly increases the yield o
 \hline
  5 &    10 most frequent polymer names & 46.47\%\\
 \hline
- 6 &    3 most frequent polymer names with acronyms & 48.39\%\\
+ 6 &    10 most frequent polymer names with acronyms & 48.39\%\\
 \hline
  7 &    $\chi$DB polymer names & 46.68\%\\
 \hline
@@ -167,24 +168,24 @@ Recall that the batch size of 200 was set based on an estimate of 30-60 minutes 
 As described on Figure~\ref{fig:current}, in the first step, we train and test on candidates generated from a word embedding model generated using only the training documents. 
 We train the classifier on 80\% of the data and test on 20\%.
 
-We observe a better-than-random behavior on the Receiver Operating Characteristic (ROC) curve shown on 
+We observe a better-than-random behavior on the Receiver Operating Characteristic (ROC) curve with an AUC of 0.62 as shown on 
 Figure~\ref{fig:roc_init}. %shows the Receiver Operating Characteristic (ROC) curve for the initial classifier with highest recall when evaluating on the test corpus.
 %\logan{I do not like this as a topic sentence because it doesn't offer any indication of what to draw from the figure. I prefer ones that are "We found that X, as shown in Figure Y." Topic sentences with some editorial comments worked in help keep the narrative of the purpose of your study alive.}
-The ROC plot is an evaluation measure that is based on two basic evaluation measures: specificity (true positive rate) and sensitivity (true negative rate).
-Sensitivity is the same as recall. Specificity is a measure of the true negative rate (the proportion of actual negatives that are correctly identified as such).
-A classifier with the random performance level always has the same true positive rate and false negative rate.
-%\logan{Not true. The TPR depends on how many points you sample, and is always equal to the FPR}\roselyne{oh right.}
-A classifier with the perfect performance level shows a combination of two straight lines immediately showing a true positive rate of 1.0 and remaining there as recall increases.
-Classifiers with better-than-random performance levels usually lie in the area between the random ROC curve (baseline) and the perfect ROC curve.
+%The ROC plot is an evaluation measure that is based on two basic evaluation measures: specificity (true positive rate) and sensitivity (true negative rate).
+%Sensitivity is the same as recall. Specificity is a measure of the true negative rate (the proportion of actual negatives that are correctly identified as such).
+%A classifier with the random performance level always has the same true positive rate and false negative rate.
+%%\logan{Not true. The TPR depends on how many points you sample, and is always equal to the FPR}\roselyne{oh right.}
+%A classifier with the perfect performance level shows a combination of two straight lines immediately showing a true positive rate of 1.0 and remaining there as recall increases.
+%Classifiers with better-than-random performance levels usually lie in the area between the random ROC curve (baseline) and the perfect ROC curve.
 %\logan{Also not quite correct. All classifiers with better-than-random performance lie between random and perfect. Maybe just skip the notion of betweenness and talk about the AUC}\roselyne{this is what I tried to say, you don't like the word meaningful? I meant if it's below it's usually bad.}
-The area under the curve (AUC) measures the area under the ROC.
-Ideally the AUC of a learning algorithm is above 0.5. 
+%The area under the curve (AUC) measures the area under the ROC.
+%Ideally the AUC of a learning algorithm is above 0.5. 
 The AUC can be misleading for imbalanced dataset as it takes into account true negatives or correctly predicted non-polymers (inverse ratio).
 For example if a dataset contains 90\% of sample A and 10\% of sample B, if a classifier predicts every sample as belonging to the first class (A), the accuracy reported will be of 90\% but this classifier is not useful in practice.
 %Since AUC takes into account true negatives or correctly predicted non-polymers and our dataset is imbalanced containing more non-polymers than polymers, 
-Therefore, we also plot the Precision Recall Curve (PRC) to visualize the tradeoff between precision and recall.%\logan{A little wordy, can you streamline this sentence?}
+Therefore, we also plot the Precision Recall (PR) curve to visualize the tradeoff between precision and recall.%\logan{A little wordy, can you streamline this sentence?}
 %\logan{This paragraph contains no conclusions, it just explains the ROC. Add something about the results.}\roselyne{I explain below? will elaborate}
-While the AUC for the initial base KNN classifier is above random performance in Figure~\ref{fig:roc_init}, the initial PRC shows poor precision regardless of recall (see Figure~\ref{fig:prc_init}).
+While the AUC for the initial base KNN classifier is above random performance (0.5) in Figure~\ref{fig:roc_init}, the initial PRC shows poor precision regardless of recall (see Figure~\ref{fig:prc_init}).
 We have obtained better performance with more labels (897) in our previous implementation~\cite{tchoua2019polyner}, these preliminary results point to the fact that the classifier is beginning to learn but 80\% of 200 labels is not have enough training data to perform well in practice yet.
 %\logan{Better topic sentence. It provides a hit of what to look for. But, you do not follow it up with any details supporting this claim}\roselyne{yes this is where i was doing some explaining for the paragraph, will elabotate}
 %\logan{This is a long section for just describing how you made the classifier and that it is pretty bad. Do we need this section?}\roselyne{I will shorten and improve next, the main reason for poor performance is small sample data, because we know this works better with 800 data points, from previous polyNER paper.}
@@ -193,7 +194,7 @@ We have obtained better performance with more labels (897) in our previous imple
 \centering
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth,height=2in]{figures/roc_init.png}
-\caption{Receiver Operating Curve for KNN model for initial round of labels.}\label{fig:roc_init}
+\caption{Receiver Operating Characteristic Curve for KNN model for initial round of labels.}\label{fig:roc_init}
 \end{minipage}\qquad
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth,height=2in]{figures/prc_init.png}
@@ -345,7 +346,8 @@ During the active learning process, candidates to be labeled by experts are sele
 these are also more likely to be candidates which lack context and for which vectors have been generated using character-level information. 
 As a result, the expert is presented with several nearly identical candidates (e.g. \textit{PS13k/PMMA12k}, \textit{PS214k/PMMA12k}, and \textit{PS31.6k/PMMA12k}) hindering the learning process as they are located in close vicinity in terms of the full (character and context) word embedding space.
 In other words, in this full space, while their uncertainty measure is comparable, these examples are not \textit{diverse}, where diversity is a measure of the distance of the examples to each other or previously labeled instances~\cite{brinker2003incorporating}.
-One solution to explore in the future, would be to impose a diversity constraint on the candidates using batch active learning for example.\logan{There are batch active learning papers, and surely a review. Cite one so that people do not think you're planning to reinvent such methods.}
+One solution to explore in the future, would be to impose a diversity constraint on the candidates using batch active learning for example~\ref{settles2009active}.
+%\logan{There are batch active learning papers, and surely a review. Cite one so that people do not think you're planning to reinvent such methods.}\roselyne{Definitely planned on adding citation but hadn't reread that part, thanks}
 %\logan{This seem more like a "Future Work/Can we do even better!?" section than an actual discussion. Should we rename the section accordingly}
 
 
