@@ -4,8 +4,8 @@ NER and other information extraction tasks rely on large amount of training data
 Weakly supervised learning methods work with much less training data and aim to address this challenge.
 They generally fall under two categories: semi-supervised learning and active learning~\cite{zhou2017brief}.
 The key difference between the two is that the former relies on approximately labeled data (as opposed to correctly labeled data for supervised learning) and the latter starts off with unlabeled data.
-Semi-supervised learning attempts to automatically label data using prior knowledge and a set of labeled data. 
-For example, it assumes that if $x$ and $x\prime$ are similar, they probably have the same label (cluster and label algorithms).
+Semi-supervised learning attempts to automatically label data by using prior knowledge and a set of labeled data. 
+For example, it assumes that if $x$ and $y$ are similar, they probably have the same label (cluster and label algorithms).
 %\kyle{Could be a clearer description of semi-supervised learning}\logan{Agreed. The key thing that separates it from other learning is that it uses labeled and unlabeled data}\roselyne{Added key difference explicitely as suggested}
 Active learning assumes there is a source of knowledge, such as a human expert, that can be queried 
 to label a selected batch of unlabeled data. 
@@ -40,8 +40,8 @@ The user defines features (e.g. if a specific keyword appears between two entiti
 %\kyle{I don't get how this is an example feature. Seems like its more labels.}), \roselyne{Hope it's clarified, they're more like user defined functions and rules - this is Snorkel's ancestor}
 the system then uses statistical inference to determine the probability that each newly discovered pair of interest is \textit{True}.
 
-\textit{Data programming} used in the Snorkel system, users define 
-\textit{labeling functions} to provide labels for subsets of data~\cite{ratner2016data}. 
+\textit{Data programming}, as used in the Snorkel system, has users define 
+\textit{labeling functions} to provide labels for data subsets~\cite{ratner2016data}. 
 Errors due to differences in accuracy and conflicts between labeling functions are 
 addressed by learning and modeling the accuracies of the labeling functions. 
 Under certain conditions, data programming achieves results on par with those of supervised learning methods.

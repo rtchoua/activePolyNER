@@ -5,19 +5,19 @@
 %\roselyne{Yes, it's exactly the same! Made a note to myself but hadn't come back to it yet.}
 %\ian{This is the first reference to ``chemical NER,'' which you have not previously said you are addressing: 
 %above, you refer to materials science.}\roselyne{mistake, I think I can directly say polymer science here, or have a different intro}
-Our design is generally motivated by the need to extract previously unmined scientific entities. 
-In particular, our initial goal is to enable machine-learned extraction of polymer names. 
+Our work is generally motivated by the need to extract previously unmined scientific entities;
+our initial goal is to enable machine-learned extraction of polymer names. 
 The challenges of polymer science NER are similar to those in biomedicine~\cite{krallinger2015chemdner,kim2004introduction}. 
 Entities can be described with multiple referrents (synonymy).
 Conversely, the same word may refer to different concepts depending on context (polysemy).
 For example,
-\textit{polystyrene} is often referred to as \textit{PS}, but \textit{polystyrenes} can also be referred to as \textit{GPPS}, \textit{HIPS}, and \textit{EPS}, combined with other monomers yielding \textit{SBR}, \textit{SBS}, and \textit{ABS}, or used to describe polystyrene derivatives such as \textit{PAMS}, \textit{PMS}, and \textit{PSS}.
+\textit{polystyrene} is often referred to as \textit{PS}, but \textit{polystyrenes} can also be referred to as \textit{GPPS}, \textit{HIPS}, and \textit{EPS}; combined with other monomers yielding \textit{SBR}, \textit{SBS}, and \textit{ABS}; or used to describe polystyrene derivatives such as \textit{PAMS}, \textit{PMS}, and \textit{PSS}.
 %\textit{Polystyrene} is often referred to as \textit{PS}, but \textit{polystyrenes} also describes a family of polymers including \textit{GPPS}, \textit{HIPS}, \textit{EPS}, \textit{SBR}, \textit{SBS}, and \textit{ABS}. 
 %\roselyne{Ask Debbie to check previous example. Done!}
-While standards for naming polymers (e.g., International Union of Pure and Applied Chemistry (IUPAC~\cite{hiorns2013brief}) naming conventions), they are not always followed in practice~\cite{tamames2006success}. 
-Instead, polymer names may be reported as source-based names (based on the monomer name), structure-based names (based on the repeat unit), common names (requiring domain specific knowledge), trade names (based on the manufacturer), and names based on some of chemical groups within the polymer (requiring context to fully specify the chemistry) generating variability in naming conventions.
+While standards for naming polymers exist (e.g., International Union of Pure and Applied Chemistry (IUPAC~\cite{hiorns2013brief}) naming conventions), they are not always followed in practice~\cite{tamames2006success}. 
+Instead, polymer names may be reported as source-based names (based on the monomer name), structure-based names (based on the repeat unit), common names (requiring domain specific knowledge), trade names (based on the manufacturer), and names based on chemical groups within the polymer (requiring context to fully specify the chemistry), generating variability in naming conventions.
 Typographical variants (e.g., alternative uses of hyphens, brackets, spacing) and alternative component orders cause more variations between polymer names in the literature.
-The origin of these different naming conventions is closely linked to the desire for clarity within a journal article coupled with the often complicated monomeric structures~\cite{audus2017polymer}.
+The origin of these different naming conventions is linked to the desire for clarity within a journal article, coupled with the often complicated monomeric structures~\cite{audus2017polymer}.
 %For example, sequence-defined polymers, where multiple monomers are chemically bound in a well-defined sequence as in proteins, often defy normal naming practices as it is not possible to concisely list every monomer and the respective position of the monomer~\cite{lutz2014polymer}. 
 %Another class of polymers that often suffer from complicated names are conjugated polymers, which exhibit useful optical and electrical properties. 
 %Conjugated polymers are complex due to the co-polymerization of multiple monomers (donor/acceptor units), the type and position of side chains along the polymer backbone and the coupling between monomer units to control regioregularity~\cite{himmelberger2015engineering}.
@@ -28,29 +28,44 @@ In addition to challenges related to the makeup of the scientific entities, the 
 Considerable time and manual effort are involved in creating and maintaining the balanced
 CoNLL dataset for standard NER~\cite{tjong2003introduction}.
 Example sentences from such corpora include one or more entities per sentence. 
-In our attempt to recognize polymer names in full text documents, we face a very imbalanced dataset where most sentences do not contain a target entity as there are only a handful of target entities per document.
+In our attempt to recognize polymer names in full text documents, we face a very imbalanced dataset where most sentences do not contain a target entity, as there are only a handful of target entities per document.
 %(we found less 2\% of words in sample publications are polymers in our test dataset)
-While there has been much interest in machine learned recognition of biochemical entities~\cite{jessop2011oscar4,rocktaschel2012chemspot,leaman2015tmchem,swain2016chemdataextractor}, there has concurrently been significant effort involved in selecting and (often manually) generating quality data for
+While there has been much interest in machine learned recognition of biochemical entities~\cite{jessop2011oscar4,rocktaschel2012chemspot,leaman2015tmchem,swain2016chemdataextractor}, 
+\ian{``there has concurrently been significant effort involved in selecting...'': 
+can we say simply, ``the successes that have been achieved have required much human effort to
+generate quality training data~\cite{krallinger2015chemdner}.''? 
+The current text seems to me to be oblique and also to imply that it may be possible to generate training
+data \emph{without} manual effort.}
+there has concurrently been significant effort involved in selecting and (often manually) generating quality data for
 trainable statistical NER systems~\cite{krallinger2015chemdner}. 
 Previous work has also found that even state-of-the-art NER systems do
 not typically perform well when applied to different domains~\cite{krallinger2013overview}. 
-Therefore the problem of training machine learning models for recognizing new scientific entities remains a challenging one.
+Therefore the problem of training machine learning models to recognize new scientific entities in a new field, such as polymer science, remains challenging.
 
-Due to these issues, identifying polymeric names is a non-trivial exercise not only for computers, but also for experts within the field. 
-We expect such a scenario that is not unique to polymer science.
-However current machine learning NER techniques rely access to large annotated corpora, which in turn require time and effort from expert labelers.
+\ian{I edited the following a bit to avoid what seemed to me to be repetition with preceding sections.
+One concern: I wonder if the end of this paragraph repeats (perhaps more clearly!) what we say in the introduction
+about the goals of the paper?}
+%Due to these issues, identifying polymeric names is a non-trivial exercise for both computers and experts. % within the field. 
+%This general situation is not unique to polymer science and has been resolved in other fields by the use of extensive
+%expert effort to define domain-specific rules and/or to
+%create large annotated corpora for training 
+%machine learning NER methods.
+We aim in our work to slash the expert time and effort required to achieve state-of-the-art NER performance
+in a new field.
 %Our long-term goal is to build a hybrid human-computer system in which we leverage both 
 %human and machine capabilities to extract polymer names and their properties.  
 %PolyNER focuses on the task of identifying polymer names. 
-To address this challenge and save cost,
-we have previously shown that with just two hours of labeling, polyNER architecture allows users to tradeoff precision and recall using word vector classifier ensembles achieving precision or recall on par with a well-performing hybrid NER model
+%To address this challenge and save cost.
+We have previously shown that with just two hours of expert labeling effort, 
+polyNER can achieve %allows users to tradeoff precision and recall using word vector classifier ensembles achieving 
+precision or recall on par with a well-performing hybrid NER model
 %either 52.7\% precision or 90.7\% recall when combining classifiers:
 %a 10.5\% improvement in precision or 22.4\% in recall over a well-performing hybrid NER model
 %, achieving
 %either 52.7\% precision or 90.7\% recall when combining classifiers:
 %a 10.5\% improvement in precision or 22.4\% in recall over a well-performing hybrid NER model
-that combines a dictionary, expert created rules, and machine learning algorithms~\cite{tchoua2019polyner}. 
-In this paper, we describe efforts to further improve polyNER's performance using active learning.
+that combines a dictionary, expert-created rules, and machine learning algorithms~\cite{tchoua2019polyner}. 
+In this paper, we describe how we further improve polyNER's performance by using active learning.
 %\logan{I do not see why the performance numbers are important here? Will readers know if they are good or bad?}
 %\roselyne{This was a way to mention previous work on polyNER and motivate/focus this paper on active learning, but I'm thinking they may fit better at the beginning of new design.}
 %\loganfussingaboutrecallandprecision{}\roselyne{Noted! :-) at the command}
