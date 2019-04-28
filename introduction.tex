@@ -80,7 +80,9 @@ to substitute the labor-intensive processes of assembling a large
 manually annotated corpus (and reduce costs) by using small numbers of carefully selected candidates to be labeled via focused expert input. 
 
 In this paper, we seek to improve polyNER's performance in both the generation of candidate entities and the labeling process.
-We experiment with different \textit{representative} (commonly used) entities to generate candidates and tune the word embedding model parameters to increase the yield of actual scientific entities among candidates; we use active learning with maximum entropy uncertainty sampling and two different pools of unlabeled data to train classifiers and compare their learning rate after five iterations. 
+We experiment with different \textit{representative} (commonly used) entities to generate candidates;
+% and tune the word embedding model parameters to increase the yield of actual scientific entities among candidates; 
+we use active learning with maximum entropy uncertainty sampling and two different pools of unlabeled data to train classifiers and compare their learning rate after five iterations. 
 %\logan{"seed entities" is not a standard term, right? If it is not standard, maybe use something less metaphorical "ways to generate initial candidates for labeling"}\roselyne{I don't think so standard but I picked it up from similar works in NER, snowball, do you mean not to use it in the intro or the whole paper. Will search and see how many times I use it. I had started using representative entities, which I also have to define.} 
 Using labels generated via active learning, we train word vector classifiers and achieve NER performance comparable to 
 a state-of-the art rule-based chemical entity extraction

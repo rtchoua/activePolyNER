@@ -3,7 +3,7 @@
 We first report on a study in which we evaluate the generation of candidates entities using the vector similarity measures and representative (commonly used) entities. 
 %\logan{Would using "candidate entities" rather than "distance candidates" make more sense?}
 %\logan{If F\ref{fig:current} describes your setup. Why not reference it here?}\roselyne{That is the set up for the active learning but I also evaluate the candidate generation, so I think for now, I'll leave it out but see if I refer to it in the sections below.}
-We then discuss the results of four rounds of active learning using multiple word vector classifiers and our three sampling strategies: random, UBS, and Distance UBS.
+We then discuss the results of initial classification and subsequent four rounds of active learning using multiple word vector classifiers and our three sampling strategies: random, UBS, and Distance UBS.
 Finally, we experiment with word representations enhanced with character-level information using FastText~\cite{bojanowski2016enriching,joulin2016bag}.
 
 \subsection{Dataset}
@@ -28,6 +28,7 @@ In our gold-standard of publications, there are $\sim$ 5 polymers per document (
 %\logan{This is confusing. Why are we using a model to estimate the total population of the polymers and not just assuming the gold-standard is a representative sample?}\roselyne{ok, 467/100)}
 We evaluate the entity-richness of polymers in this pool of candidates by measuring the percentage of the 467 manually extracted polymer names that it yields;
 we use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.
+\roselyne{Since I removed parameter tuning, add choices of parameters here?}
 
 \subsubsection{Representative Candidates}
 Here, we focus on how the choice of seed entities affects the fraction of polymers in the candidates, which we take as a measure of the entity-richness of the pool of candidates.
@@ -125,34 +126,34 @@ For the remainder of the experiments, we use the three most frequent polymers an
 %}
 %\end{figure}
 
-\subsubsection{Word Embedding Window and Size Parameters}
-We generate a pool of \nistnum{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \nistnum{1690}, excluding any token found in our test documents. 
-As previously mentioned, to measure the entity-richness of our dataset, we compute the fraction of polymers retrieved using the similarity measure to our representative entities in the  \nistnum{10000} candidates.
-%We measure the impact of the \textit{window} and \textit{size} on the fraction of polymers extracted from the gold standard in the list of \nistnum{10000} candidates most similar to our representative entities. 
-%\logan{Where are the 10k candidates from again? Could we reference this set by its purpose rather than its size?}\roselyne{Done I think.}
-%\logan{Need a reason why this is important? Also, this statement again raises my concern about using "fraction extracted from gold standard" as a metric for quality of the initial training set?}\roselyne{same answer as above, trying to increase balance in dataset.}
-The \textit{window} represents the maximum distance between the current and predicted word within a sentence. In other words, it represents the number of words before and after each word considered by the neural network to generate a vector representation for that word. 
-For each parameter setting, we measure the yield of polymers ten times for each window and vector size setting.
-We observe slightly higher fraction of polymers retrieved for window sizes of 1 and 2. The yield subsequently decreases and more noticeably with window size larger than 5 (see Figure~\ref{fig:window_size}).
-The \textit{size} determines the size of the word vector (features for our classifier).
-We varied this parameter between 100 and 500.
-The average yield of polymer names was measured at 49.3 with a standard deviation of less than 1\% (see Figure~\ref{fig:vector_size}).
-We conclude that the vector size does not impact the fraction of polymers retrieved during the distance candidate generation.
+%\subsubsection{Word Embedding Window and Size Parameters}
+%We generate a pool of \nistnum{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \nistnum{1690}, excluding any token found in our test documents. 
+%As previously mentioned, to measure the entity-richness of our dataset, we compute the fraction of polymers retrieved using the similarity measure to our representative entities in the  \nistnum{10000} candidates.
+%%We measure the impact of the \textit{window} and \textit{size} on the fraction of polymers extracted from the gold standard in the list of \nistnum{10000} candidates most similar to our representative entities. 
+%%\logan{Where are the 10k candidates from again? Could we reference this set by its purpose rather than its size?}\roselyne{Done I think.}
+%%\logan{Need a reason why this is important? Also, this statement again raises my concern about using "fraction extracted from gold standard" as a metric for quality of the initial training set?}\roselyne{same answer as above, trying to increase balance in dataset.}
+%The \textit{window} represents the maximum distance between the current and predicted word within a sentence. In other words, it represents the number of words before and after each word considered by the neural network to generate a vector representation for that word. 
+%For each parameter setting, we measure the yield of polymers ten times for each window and vector size setting.
+%We observe slightly higher fraction of polymers retrieved for window sizes of 1 and 2. The yield subsequently decreases and more noticeably with window size larger than 5 (see Figure~\ref{fig:window_size}).
+%The \textit{size} determines the size of the word vector (features for our classifier).
+%We varied this parameter between 100 and 500.
+%The average yield of polymer names was measured at 49.3 with a standard deviation of less than 1\% (see Figure~\ref{fig:vector_size}).
+%We conclude that the vector size does not impact the fraction of polymers retrieved during the distance candidate generation.
 %[49.67880085653105, 49.25053533190578, 49.46466809421842, 49.46466809421842, 48.82226980728051]
 %\logan{Need a concluding sentence?}
 
 
-\begin{figure}
-\centering
-%\begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in]{figures/window_size.png}
-\caption{Impact of varying window size on fraction of polymers retrieved.}\label{fig:window_size}
-%\end{minipage}\qquad
-%\begin{minipage}[b]{.4\textwidth}
-%\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/vector_size.png}
-%\caption{Impact of varying vector size on fraction of polymers retrieved. \logan{Can we combine this with F\ref{fig:window_size}? (If we keep it) }}\label{fig:vector_size}
-%\end{minipage}
-\end{figure}
+%\begin{figure}
+%\centering
+%%\begin{minipage}[b]{.4\textwidth}
+%\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in,height=2.5in]{figures/window_size.png}
+%\caption{Impact of varying window size on fraction of polymers retrieved.}\label{fig:window_size}
+%%\end{minipage}\qquad
+%%\begin{minipage}[b]{.4\textwidth}
+%%\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/vector_size.png}
+%%\caption{Impact of varying vector size on fraction of polymers retrieved. \logan{Can we combine this with F\ref{fig:window_size}? (If we keep it) }}\label{fig:vector_size}
+%%\end{minipage}
+%\end{figure}
  %\kyle{Not sure this fig is worth including}\roselyne{Agreed that it's not so interesting but i think it goes with the windows one and i will combine the two figures you think should be together.}\roselyne{May remove as paper gets longer}
 
 \subsubsection{Initial Classifier}
@@ -191,17 +192,17 @@ We have obtained better performance with more labels (897) in our previous imple
 \begin{figure*}
 \centering
 \begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/roc_init.png}
+\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth,height=2in]{figures/roc_init.png}
 \caption{Receiver Operating Curve for KNN model for initial round of labels.}\label{fig:roc_init}
 \end{minipage}\qquad
 \begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prc_init.png}
+\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth,height=2in]{figures/prc_init.png}
 \caption{Precision Recall Curve for KNN model for initial round of labels.}\label{fig:prc_init}
 \end{minipage}
 
 \centering
 \begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/rocs_round5.png}
+\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth,height=2in]{figures/rocs_round5.png}
 \captionsetup{labelformat=empty}
 \caption{Receiver Operating Characteristic curve for last round of active learning. 
 %\logan{I think we could benefit from easier-to-remember labels than AL1 and AL2. I don't remember which is which. Also why does the file say Round 5 and the text iterating curves? If we say ROC is a worse plot, why even show it?}\roselyne{ROC is not worse but perhaps incomplete}
@@ -209,7 +210,7 @@ We have obtained better performance with more labels (897) in our previous imple
 }\label{fig:rocs_round5}
 \end{minipage}\qquad
 \begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prcs_round5.png}
+\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth,height=2in]{figures/prcs_round5.png}
 \captionsetup{labelformat=empty}
 \caption{Precision Recall Curves for last round of active learning.}\label{fig:prcs_round5}
 \end{minipage}
@@ -326,7 +327,10 @@ We achieve higher recall than CDE and CDE+ using labels from UBS and FastText ve
 
 \subsection{Discussion and Future Work}
 \label{sec:discussion}
-\roselyne{Add results here, bootstrapping helps enriching dataset, but active learning with distance does not learn faster, it is still better than random. Add that 200 is not enough for a batch size to learn, maybe start with 600?}
+\roselyne{Add results here, bootstrapping helps enriching dataset, but active learning with distance does not learn faster, it is still better than random. Add that 200 is not enough for a batch size to learn, maybe start with 600? Add that I wouldn't use multiple classifiers.
+Also talk about cross checking here somehow since i do not have enough to have a labeling section for results
+Each expert annotates one strategy but we perform crosschecking for 10\% of the first batch of labels to get a measure of agreement between experts.} 
+%We confirm agreement between labels for all but 1 of the set of 20 candidates or an agreement of 95\%.}
 %\logan{The discussion starts out with your last part of the Results section, skipping over anything else you learned. }
 We attribute the increased performance to the character embedding enhancement, which not only recognizes ``poly'' (and yields more names based on this n-gram comparison), but also filters out more anomalous candidates (preceding or following polymer names) generated during tokenization and missed by the filtering steps such as ``\textit{$A_mB_n$}'', or ``\textit{Mw/Mn=1.36}''.  
 In other words, the classifiers of character and (context-based) word embedding vectors performs better than classifiers of only context-based word embedding.
@@ -353,7 +357,7 @@ One solution to explore in the future, would be to impose a diversity constraint
 %\caption{Receiver Operating Curve for KNN model trained using active learning labels and word representations enriched with character-level information.}\label{fig:UBS_rocs_fasttext}
 %\end{minipage}\qquad
 %\begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in]{figures/fasttext_prc_al_corpus_round5_100}
+\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in,height=2in]{figures/fasttext_prc_al_corpus_round5_100}
 \caption{Precision Recall Curve for KNN model trained using active learning labels and word representations enriched with character-level information.}\label{fig:UBS_prcs_fasttext}
 %\end{minipage}
 \end{figure}
