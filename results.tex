@@ -354,7 +354,7 @@ During the active learning process, candidates to be labeled by experts are sele
 these are also more likely to be candidates which lack context and for which vectors have been generated using character-level information. 
 As a result, the expert is presented with several nearly identical candidates (e.g. \textit{PS13k/PMMA12k}, \textit{PS214k/PMMA12k}, and \textit{PS31.6k/PMMA12k}) hindering the learning process as they are located in close vicinity in terms of the full (character and context) word embedding space.
 In other words, in this full space, while their uncertainty measure is comparable, these examples are not \textit{diverse}, where diversity is a measure of the distance of the examples to each other or previously labeled instances~\cite{brinker2003incorporating}.
-One solution to explore in the future, would be to impose a diversity constraint on the candidates using batch active learning for example~\ref{settles2009active}.
+One solution to explore in the future, would be to impose a diversity constraint on the candidates using batch active learning for example~\cite{settles2009active}.
 %\logan{There are batch active learning papers, and surely a review. Cite one so that people do not think you're planning to reinvent such methods.}\roselyne{Definitely planned on adding citation but hadn't reread that part, thanks}
 %\logan{This seem more like a "Future Work/Can we do even better!?" section than an actual discussion. Should we rename the section accordingly}
 

@@ -5,8 +5,8 @@ Weakly supervised learning methods work with much less training data and aim to 
 They generally fall under two categories: semi-supervised learning and active learning~\cite{zhou2017brief}.
 The key difference between the two is that the former relies on approximately labeled data (as opposed to correctly labeled data for supervised learning) and the latter starts off with unlabeled data.
 Semi-supervised learning attempts to label data automatically by using prior knowledge and a set of labeled data. 
-For example, it assumes that if $x$ and $y$ are similar, they probably have the same label (cluster and label algorithms).
-\ian{The reference to ``cluster and label algorithms'' is obscure to me.}
+For example, it assumes that if $x$ and $y$ are similar, they probably have the same label (first cluster the whole dataset, then label each cluster with labeled data~\cite{zhu2005semi}).
+%\ian{The reference to ``cluster and label algorithms'' is obscure to me.}\roselyne{Does the sentence still make sense to you without that ``hint'', the idea is to cluster the data and assign }
 %\kyle{Could be a clearer description of semi-supervised learning}\logan{Agreed. The key thing that separates it from other learning is that it uses labeled and unlabeled data}\roselyne{Added key difference explicitely as suggested}
 Active learning assumes there is a source of knowledge, such as a human expert, that can be queried 
 to label a selected batch of unlabeled data. 
