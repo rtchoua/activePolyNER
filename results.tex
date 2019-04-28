@@ -190,34 +190,43 @@ We have obtained better performance with more labels (897) in our previous imple
 %\logan{Better topic sentence. It provides a hit of what to look for. But, you do not follow it up with any details supporting this claim}\roselyne{yes this is where i was doing some explaining for the paragraph, will elabotate}
 %\logan{This is a long section for just describing how you made the classifier and that it is pretty bad. Do we need this section?}\roselyne{I will shorten and improve next, the main reason for poor performance is small sample data, because we know this works better with 800 data points, from previous polyNER paper.}
 
+\ian{Presumably you will fix the layout and figure labels for Figs~\ref{fig:prc_init} etc.}
+
+\ian{You refer in different places to ``Receiver Operating Characteristic Curve," ``Receiver Operating Curve,''
+and Receiver Operation Curve.'' I changed all to ROC curve to be consistent.}
+
 \begin{figure*}
 \centering
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/roc_init.png}
-\caption{Receiver Operating Characteristic Curve for KNN model for initial round of labels.}\label{fig:roc_init}
+\caption{ROC curve for KNN model for initial round of labels.}\label{fig:roc_init}
 \end{minipage}\qquad
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prc_init.png}
-\caption{Precision Recall Curve for KNN model for initial round of labels.}\label{fig:prc_init}
+\caption{PR curve for KNN model for initial round of labels.}\label{fig:prc_init}
 \end{minipage}
 
 \centering
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/rocs_round5_new.png}
 \captionsetup{labelformat=empty}
-\caption{Receiver Operating Characteristic curve for last round of active learning. 
+%\caption{ROC curve for last round of active learning. 
 %\logan{I think we could benefit from easier-to-remember labels than AL1 and AL2. I don't remember which is which. Also why does the file say Round 5 and the text iterating curves? If we say ROC is a worse plot, why even show it?}\roselyne{ROC is not worse but perhaps incomplete}
 %\roselyne{There are 5 rounds of labeling but 4 rounds of active learning, it's confusing, with the table this is less confusing, I used to say, round, but changed to iteration, will use last. Agreed about the names, but hard to compress these names. I've tried and changed them but they haven't changed in the figure yet.}
-}\label{fig:rocs_round5}
+%}
+\label{fig:rocs_round5}
 \end{minipage}\qquad
+\hspace{2ex}
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prcs_round5_rule.png}
 \captionsetup{labelformat=empty}
-\caption{Precision Recall Curves for last round of active learning.}\label{fig:prcs_round5}
+%\caption{PR curves for last round of active learning.}
+\label{fig:prcs_round5}
 \end{minipage}
 \setcounter{figure}{8}  
-\caption{Receiver Operation and Precision Recall Curves for last round of active learning. 
-ROC curves improved from initial round, AUCs for active learning are 0.74 and 0.7 compared to initial 0.62. The classifier based on random sampling does not indicate learning based on AUC. PR curves also show improvement over initial poor performance,
+\caption{ROC (left) and PR (right) curves for last round of active learning. 
+ROC curves improved from the initial round: AUCs for active learning are 0.74 and 0.7 compared to initial 0.62. 
+The classifier based on random sampling does not indicate learning based on AUC. PR curves also show improvement over initial poor performance,
 the random strategy has only shows two probabilities for target and non-targets predictions; the other two active learning strategies are lifting away from the bottom corner and indicating discriminative capacities.
 In both types of plots, active learning using NLP-filtered candidates (AL UBS) outperforms the active learning using distance candidates (AL D-UBS) and approaches rule-based performance.
 % AL-1 refers to active learning using NLP-filtered nouns. AL-2 refers to active learning using candidates deemed similar to representative entities.  %\logan{<soapbox>Is it standard practice to use such uninformativ figure captions in CS? I was taught to make the captions almost standalone from the text</soapbox>}
@@ -226,23 +235,23 @@ In both types of plots, active learning using NLP-filtered candidates (AL UBS) o
 
 \subsubsection{Discrimination}
 After the initial round of labeling, we experiment with the three strategies mentioned in Section~\ref{sect:apner_architecture}: random sampling (Random), active learning using pool of NLP-filtered nouns from training corpus (UBS), and active learning using pool of \nistnum{10000} distance candidates deemed closest to our seed entities(Distance UBS) \textemdash minus 200 used in initial round).
-Given the relatively small batch size, we see no improvement in the precision recall curve for two rounds of active learning or first three rounds of labeling. 
+Given the relatively small batch size, we see no improvement in the PR curve for two rounds of active learning or the first three rounds of labeling. 
 Precision remains under 5\% across all used classifiers as shown in Table~\ref{tab:pr_table}. 
 %\logan{I think the table would be better suited as a plot}\roselyne{I am tempted to remove it, and just indicate that there was not much learning in the first 3 rounds, but Kyle had a comment that people like to see it for themselves and suggested a table. I don't think the plots would look good either has it will bring attention to the problem of using multiple classifiers as previously discussed. I can go back to ommitting this or displaying the last two rounds.}
 %\loganfussingaboutrecallandprecision \roselyne{I actually read that this is what people use many times for imbalanced datasets, but I get the point and we have ROCS to got with the last two rounds}
 
 \begin{table}[ht!]
 \centering
-\caption{Precision and recall when tested against ground truth documents for classifiers at each round of the active learning process.\label{tab:pr_table}
+\caption{Precision and recall when tested against ground truth documents for classifiers at each active learning round.\label{tab:pr_table}
 }
 \vspace{2ex}
 %[35.55, 37.69, 46.9, 47.97, 46.47, 48.39, 46.68, 36.4]
-\setlength\tabcolsep{3pt}
+\setlength\tabcolsep{4pt}
 %\begin{tabular}{*4c}
 \begin{tabular}{|c|c|c|c|c|}
 \hline
 & & \multicolumn{3}{c|}{\textbf{Strategies}} \\
- Round \# & Metric & \textbf{Random} & \textbf{UBS}  & \textbf{Distance UBS}  \\
+ \textbf{Round \#} & \textbf{Metric} & \textbf{Random} & \textbf{UBS}  & \textbf{Distance UBS}  \\
 %\hline
 %Round 0\ \ & \multicolumn{3}{c|}{} \\
 \hline
@@ -355,11 +364,11 @@ One solution to explore in the future, would be to impose a diversity constraint
 \centering
 %\begin{minipage}[b]{.4\textwidth}
 %\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in]{figures/fasttext_roc_al_corpus_round5_100}
-%\caption{Receiver Operating Curve for KNN model trained using active learning labels and word representations enriched with character-level information.}\label{fig:UBS_rocs_fasttext}
+%\caption{ROC curve for KNN model trained using active learning labels and word representations enriched with character-level information.}\label{fig:UBS_rocs_fasttext}
 %\end{minipage}\qquad
 %\begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in]{figures/fasttext_prc_al_corpus_round5_100}
-\caption{Precision Recall Curve for KNN model trained using active learning labels and word representations enriched with character-level information.}\label{fig:UBS_prcs_fasttext}
+\caption{PR curve for KNN model trained using active learning labels and word representations enriched with character-level information.}\label{fig:UBS_prcs_fasttext}
 %\end{minipage}
 \end{figure}
 
