@@ -3,17 +3,22 @@
 The lack of access to large amount of expert-annotated training data impedes the adoption of recent machine learning techniques in certain scientific applications.
 PolyNER is a generalizable system that can efficiently use expert input via approximate candidate generation and active learning for scientific named entity recognition.
 We show that using natutal language processing techniques, we can bootstrap a word vector classifier of scientific entities.
-Using polyNER's labels and a classifier of character enhanced word embedding vectors, we achieves achieves 31.7\% precision and 82.3\% recall,  a performance comparable to best-of-breed
-\loganfussingaboutrecallandprecision
+Using polyNER's labels and a classifier of character-enhanced word embedding vectors, we achieve 
+%achieves 31.7\% precision and 82.3\% recall,  a 
+performance comparable to best-of-breed
+%\loganfussingaboutrecallandprecision \roselyne{came with PR curve showing good trade off margins}
 hybrid NER model (CDE+) that combines a dictionary, expert created
-rules, and machine learning algorithms and was trained on the CHEMDNER corpus:
+rules, and machine learning algorithms.
+CDE+ was trained on the CHEMDNER corpus:
 a collection of \nistnum{10000} PubMed abstracts that contain a total of 84,355 chemical entity mentions labeled manually by expert chemistry literature curators, following annotation guidelines specifically defined for this task~\cite{krallinger2015chemdner}. 
-\logan{Very long sentence, break it up.}
-PolyNER was trained on data annotated using $\sim$ five hours of expert time and minimal untrained crowd input.
-\logan{This is your most important conclusion, perhaps bring it earlier in the conclusion}
+%\logan{Very long sentence, break it up.}
+By contrast, polyNER was trained on data annotated using $\sim$ five hours of expert time and minimal untrained crowd input.
+%\logan{This is your most important conclusion, perhaps bring it earlier in the conclusion}
 While we note that CDE+ is intended to extract polymers and their properties, our work highlights the potential of using minimal amount of data and focused expert input in order to enable machine learning techniques for previously unmined scientific entities. 
 We are currently exploring using polyNER-labeled data to annotate text for other NER approaches,
 such as bidirectional long short-term memory models.
-With a view to exploring generalizability, we are also working to apply polyNER
-to quite different problems, such as extracting dataset names from social science
-literature. \logan{Maybe be a little more broad here. "We hope that our findings will ...", etc.}
+We plan to explore the generalizability of our approach further by applying it to different field, that is extracting another previously unmined scientific entities.
+%With a view to exploring generalizability, we are also working to apply polyNER
+%to quite different problems, such as extracting dataset names from social science
+%literature. 
+%\logan{Maybe be a little more broad here. "We hope that our findings will ...", etc.}\roselyne{this is also too close to previous conclusion, hadn't worked on it enough yet}
