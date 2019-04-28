@@ -137,21 +137,22 @@ We observe slightly higher fraction of polymers retrieved for window sizes of 1 
 The \textit{size} determines the size of the word vector (features for our classifier).
 We varied this parameter between 100 and 500.
 The average yield of polymer names was measured at 49.3 with a standard deviation of less than 1\% (see Figure~\ref{fig:vector_size}).
+We conclude that the vector size does not impact the fraction of polymers retrieved during the distance candidate generation.
 %[49.67880085653105, 49.25053533190578, 49.46466809421842, 49.46466809421842, 48.82226980728051]
-\logan{Need a concluding sentence?}
+%\logan{Need a concluding sentence?}
 
 
-\begin{figure*}
+\begin{figure}
 \centering
-\begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/window_size.png}
+%\begin{minipage}[b]{.4\textwidth}
+\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in]{figures/window_size.png}
 \caption{Impact of varying window size on fraction of polymers retrieved.}\label{fig:window_size}
-\end{minipage}\qquad
-\begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/vector_size.png}
-\caption{Impact of varying vector size on fraction of polymers retrieved. \logan{Can we combine this with F\ref{fig:window_size}? (If we keep it) }}\label{fig:vector_size}
-\end{minipage}
-\end{figure*}
+%\end{minipage}\qquad
+%\begin{minipage}[b]{.4\textwidth}
+%\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/vector_size.png}
+%\caption{Impact of varying vector size on fraction of polymers retrieved. \logan{Can we combine this with F\ref{fig:window_size}? (If we keep it) }}\label{fig:vector_size}
+%\end{minipage}
+\end{figure}
  %\kyle{Not sure this fig is worth including}\roselyne{Agreed that it's not so interesting but i think it goes with the windows one and i will combine the two figures you think should be together.}\roselyne{May remove as paper gets longer}
 
 \subsubsection{Initial Classifier}
@@ -163,9 +164,11 @@ We train the initial classifier using the first
 Recall that the batch size of 200 was set based on an estimate of 30-60 minutes of expert time.
 %\logan{Maybe we can be specific here about how much time it took. "We found that a batch of 200 required ..."}\roselyne{this is an average based on your estimate, but I don't have an exact number from the first test}
 As described on Figure~\ref{fig:current}, in the first step, we train and test on candidates generated from a word embedding model generated using only the training documents. 
+We train the classifier on 80\% of the data and test on 20\%.
 
-Figure~\ref{fig:roc_init} shows the Receiver Operating Curve (ROC) for the initial classifier with highest recall when evaluating on the test corpus.
-\logan{I do not like this as a topic sentence because it doesn't offer any indication of what to draw from the figure. I prefer ones that are "We found that X, as shown in Figure Y." Topic sentences with some editorial comments worked in help keep the narrative of the purpose of your study alive.}
+We observe a better-than-random behavior on the Receiver Operating Characteristic (ROC) curve shown on 
+Figure~\ref{fig:roc_init}. %shows the Receiver Operating Characteristic (ROC) curve for the initial classifier with highest recall when evaluating on the test corpus.
+%\logan{I do not like this as a topic sentence because it doesn't offer any indication of what to draw from the figure. I prefer ones that are "We found that X, as shown in Figure Y." Topic sentences with some editorial comments worked in help keep the narrative of the purpose of your study alive.}
 The ROC plot is an evaluation measure that is based on two basic evaluation measures: specificity (true positive rate) and sensitivity (true negative rate).
 Sensitivity is the same as recall. Specificity is a measure of the true negative rate (the proportion of actual negatives that are correctly identified as such).
 A classifier with the random performance level always has the same true positive rate and false negative rate.
@@ -175,12 +178,15 @@ Classifiers with better-than-random performance levels usually lie in the area b
 %\logan{Also not quite correct. All classifiers with better-than-random performance lie between random and perfect. Maybe just skip the notion of betweenness and talk about the AUC}\roselyne{this is what I tried to say, you don't like the word meaningful? I meant if it's below it's usually bad.}
 The area under the curve (AUC) measures the area under the ROC.
 Ideally the AUC of a learning algorithm is above 0.5. 
-Since AUC takes into account true negatives or correctly predicted non-polymers and our dataset is imbalanced containing more non-polymers than polymers, we also plot the Precision Recall Curve (PRC) to visualize the tradeoff between precision and recall.\logan{A little wordy, can you streamline this sentence?}
-\logan{This paragraph contains no conclusions, it just explains the ROC. Add something about the results.}
-
+The AUC can be misleading for imbalanced dataset as it takes into account true negatives or correctly predicted non-polymers (inverse ratio).
+For example if a dataset contains 90\% of sample A and 10\% of sample B, if a classifier predicts every sample as belonging to the first class (A), the accuracy reported will be of 90\% but this classifier is not useful in practice.
+%Since AUC takes into account true negatives or correctly predicted non-polymers and our dataset is imbalanced containing more non-polymers than polymers, 
+Therefore, we also plot the Precision Recall Curve (PRC) to visualize the tradeoff between precision and recall.%\logan{A little wordy, can you streamline this sentence?}
+%\logan{This paragraph contains no conclusions, it just explains the ROC. Add something about the results.}\roselyne{I explain below? will elaborate}
 While the AUC for the initial base KNN classifier is above random performance in Figure~\ref{fig:roc_init}, the initial PRC shows poor precision regardless of recall (see Figure~\ref{fig:prc_init}).
-\logan{Better topic sentence. It provides a hit of what to look for. But, you do not follow it up with any details supporting this claim}
-\logan{This is a long section for just describing how you made the classifier and that it is pretty bad. Do we need this section?}\roselyne{I will shorten and improve next}
+We have obtained better performance with more labels (897) in our previous implementation~\cite{tchoua2019polyner}, these preliminary results point to the fact that the classifier is beginning to learn but 80\% of 200 labels is not have enough training data to perform well in practice yet.
+%\logan{Better topic sentence. It provides a hit of what to look for. But, you do not follow it up with any details supporting this claim}\roselyne{yes this is where i was doing some explaining for the paragraph, will elabotate}
+%\logan{This is a long section for just describing how you made the classifier and that it is pretty bad. Do we need this section?}\roselyne{I will shorten and improve next, the main reason for poor performance is small sample data, because we know this works better with 800 data points, from previous polyNER paper.}
 
 \begin{figure*}
 \centering
@@ -197,23 +203,31 @@ While the AUC for the initial base KNN classifier is above random performance in
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/rocs_round5.png}
 \captionsetup{labelformat=empty}
-\caption{Receiver Operating Curve for iteration 4.\logan{I think we could benefit from easier-to-remember labels than AL1 and AL2. I don't remember which is which. Also why does the file say Round 5 and the text iterating curves? If we say ROC is a worse plot, why even show it?}}\label{fig:rocs_round5}
+\caption{Receiver Operating Characteristic curve for last round of active learning. 
+%\logan{I think we could benefit from easier-to-remember labels than AL1 and AL2. I don't remember which is which. Also why does the file say Round 5 and the text iterating curves? If we say ROC is a worse plot, why even show it?}\roselyne{ROC is not worse but perhaps incomplete}
+%\roselyne{There are 5 rounds of labeling but 4 rounds of active learning, it's confusing, with the table this is less confusing, I used to say, round, but changed to iteration, will use last. Agreed about the names, but hard to compress these names. I've tried and changed them but they haven't changed in the figure yet.}
+}\label{fig:rocs_round5}
 \end{minipage}\qquad
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prcs_round5.png}
 \captionsetup{labelformat=empty}
-\caption{Precision Recall Curves for iteration 4.}\label{fig:prcs_round5}
+\caption{Precision Recall Curves for last round of active learning.}\label{fig:prcs_round5}
 \end{minipage}
 \setcounter{figure}{8}  
-\caption{Receiver Operation and Precision Recall Curves for iterations 4 and 5. AL - 1 refers to active learning using NLP-filtered nouns. AL - 2 refers to active learning using candidates deemed similar to seed entities.  \logan{<soapbox>Is it standard practice to use such uninformativ figure captions in CS? I was taught to make the captions almost standalone from the text</soapbox>}}\label{fig:rocs_prcs_round5}
+\caption{Receiver Operation and Precision Recall Curves for last round of active learning. 
+ROC curves improved from initial round, AUCs for active learning are 0.74 and 0.7 compared to initial 0.62. The classifier based on random sampling does not indicate learning. PR curves also show improvement over initial poor performance,
+the random strategy has only learned two probabilities for target and non-targets; the other two active learning strategies are lifting away from the bottom corner and indicating discriminative capacities.
+In both types of plots, active learning using NLP-filtered candidates slightly outperforms the active learning using distance candidates.
+% AL-1 refers to active learning using NLP-filtered nouns. AL-2 refers to active learning using candidates deemed similar to representative entities.  %\logan{<soapbox>Is it standard practice to use such uninformativ figure captions in CS? I was taught to make the captions almost standalone from the text</soapbox>}
+}\label{fig:rocs_prcs_round5}
 \end{figure*}
 
 \subsubsection{Discrimination}
 After the initial round of labeling, we experiment with the three strategies mentioned in Section~\ref{sect:apner_architecture}: random sampling (Random), active learning using pool of NLP-filtered nouns from training corpus (UBS), and active learning using pool of \nistnum{10000} distance candidates deemed closest to our seed entities(Distance UBS) \textemdash minus 200 used in initial round).
 Given the relatively small batch size, we see no improvement in the precision recall curve for two rounds of active learning or first three rounds of labeling. 
 Precision remains under 5\% across all used classifiers as shown in Table~\ref{tab:pr_table}. 
-\logan{I think the table would be better suited as a plot}
-\loganfussingaboutrecallandprecision
+%\logan{I think the table would be better suited as a plot}\roselyne{I am tempted to remove it, and just indicate that there was not much learning in the first 3 rounds, but Kyle had a comment that people like to see it for themselves and suggested a table. I don't think the plots would look good either has it will bring attention to the problem of using multiple classifiers as previously discussed. I can go back to ommitting this or displaying the last two rounds.}
+%\loganfussingaboutrecallandprecision \roselyne{I actually read that this is what people use many times for imbalanced datasets, but I get the point and we have ROCS to got with the last two rounds}
 
 \begin{table}[ht!]
 \centering
@@ -289,7 +303,7 @@ Therefore, we generate a FastText word embedding model, and generate character-e
 
 
 Next, we train a KNN classifier using vectors for these candidates labeled through UBS or active learning using a pool of NLP-filtered candidates (identified as best-performing in previous experiments).
-\logan{Confusing. Is UBS not active learning?}
+\logan{Confusing. Is UBS not active learning?}\roselyne{it's the sampling method}
 We test the classifier against NLP-filtered nouns from our 100-document test set.
 The KNN classifier performance improves when using these word vectors as shown in Figures~\ref{fig:UBS_rocs_fasttext} and~\ref{fig:UBS_prcs_fasttext}.
 \logan{Why sow both figures if you say PRC is better.}
