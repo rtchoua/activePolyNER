@@ -1,11 +1,14 @@
 \section{Introduction}
 \label{sect:apner_introduction}
-
-In many fields of science, the scientific literature contains large quantities of data in unstructured form that,
-if extracted, could benefit research.
+A wealth of valuable research data is published in unstructured form in millions of scientific articles each year.%\cite latest version of that report?"
+Reading and extracting pertinent information from those articles has
+become an unmanageable task for scientists and makes
+it hard to build on existing results. 
+%In many fields of science, the scientific literature contains large quantities of important data in unstructured form that,
+%if extracted, could benefit research.
 A major obstacle to scientific fact extraction is the difficulty of identifying scientific entities in text.
 \ian{It seems to me that the preceding two sentences that I added are needed to provide context.
-They need to be improved, though.}
+They need to be improved, though.}\roselyne{better?}
 Despite much progress in natural language processing (NLP), 
 scientific named entity recognition (NER) remains a research challenge.
 The main reason for this gap between NLP advances and scientific extraction needs is the lack of carefully annotated datasets for specific targets.
@@ -67,19 +70,20 @@ chemistry are of little value.
 Scientists and engineers lack access to a freely available large database of polymers and their properties.
 %\kyle{should cite our previous papers about polyNER. ANd change phrasing here to make it sound like polyner is now well established
 %and what we are doing here is enhancing it with active learning. }
-To address these challenges, we have designed polyNER, a system for generating training data for scientific NER using semi-supervised and active learning.
+To address these challenges, we have previously designed polyNER, a system for generating training data for scientific NER using semi-supervised and active learning.
 PolyNER uses natural language processing to produce sets of candidate entities;
-experts then iteratively approve or reject candidates in small batches selected using an active learning
-\ian{You say that polyNER uses active learning, then you say that you enhance it with AL in this paper. 
-Inconsistent?}
- approach;
-the labels are used to train a series of context-based word vector classifiers after each iteration.
+experts then iteratively approve or reject candidates via an an easy-to-use Web interface;
+%in small batches selected using an active learning
+%\ian{You say that polyNER uses active learning, then you say that you enhance it with AL in this paper. 
+%Inconsistent?}\roselyne{yes thank you, made some changes (too fast) after Kyle pointed out that we had already introduced polymer in the now accepted paper}.
+% approach;
+the labels are used to train context-based word vector classifiers. %after each iteration.
 PolyNER's labels can also be used to train other machine learning models to leverage features beyond their context to recognize target entities.
 The goal is
 to substitute the labor-intensive processes of assembling a large
 manually annotated corpus (and reduce costs) by using small numbers of carefully selected candidates to be labeled via focused expert input. 
 
-In this paper, we seek to improve polyNER's performance in both the generation of candidate entities and the labeling process.
+In this paper, we seek to improve polyNER's performance in the generation of candidate entities, the labeling process and the classification of entities.
 We experiment with different \textit{representative} (commonly used) entities to generate candidates;
 % and tune the word embedding model parameters to increase the yield of actual scientific entities among candidates; 
 we use active learning with maximum entropy uncertainty sampling and two different pools of unlabeled data to train classifiers and compare their learning rate after five iterations. 

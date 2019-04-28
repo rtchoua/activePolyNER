@@ -203,7 +203,7 @@ We have obtained better performance with more labels (897) in our previous imple
 
 \centering
 \begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/rocs_round5.png}
+\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/rocs_round5_new.png}
 \captionsetup{labelformat=empty}
 \caption{Receiver Operating Characteristic curve for last round of active learning. 
 %\logan{I think we could benefit from easier-to-remember labels than AL1 and AL2. I don't remember which is which. Also why does the file say Round 5 and the text iterating curves? If we say ROC is a worse plot, why even show it?}\roselyne{ROC is not worse but perhaps incomplete}
@@ -217,9 +217,9 @@ We have obtained better performance with more labels (897) in our previous imple
 \end{minipage}
 \setcounter{figure}{8}  
 \caption{Receiver Operation and Precision Recall Curves for last round of active learning. 
-ROC curves improved from initial round, AUCs for active learning are 0.74 and 0.7 compared to initial 0.62. The classifier based on random sampling does not indicate learning. PR curves also show improvement over initial poor performance,
-the random strategy has only learned two probabilities for target and non-targets; the other two active learning strategies are lifting away from the bottom corner and indicating discriminative capacities.
-In both types of plots, active learning using NLP-filtered candidates outperforms the active learning using distance candidates and approaches rule-based performance.
+ROC curves improved from initial round, AUCs for active learning are 0.74 and 0.7 compared to initial 0.62. The classifier based on random sampling does not indicate learning based on AUC. PR curves also show improvement over initial poor performance,
+the random strategy has only shows two probabilities for target and non-targets predictions; the other two active learning strategies are lifting away from the bottom corner and indicating discriminative capacities.
+In both types of plots, active learning using NLP-filtered candidates (AL UBS) outperforms the active learning using distance candidates (AL D-UBS) and approaches rule-based performance.
 % AL-1 refers to active learning using NLP-filtered nouns. AL-2 refers to active learning using candidates deemed similar to representative entities.  %\logan{<soapbox>Is it standard practice to use such uninformativ figure captions in CS? I was taught to make the captions almost standalone from the text</soapbox>}
 }\label{fig:rocs_prcs_round5}
 \end{figure*}
