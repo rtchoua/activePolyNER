@@ -98,7 +98,7 @@ We apply each of these strategies to our NLP-filtered candidates to determine wh
 
 \subsubsection{Random Strategy using NLP-Filtered Candidates}
 In the first strategy, we randomly select 200 out of the pool of unlabeled NLP-filtered candidates from the entire corpus of publications.
-Note that the imbalance between polymers and other NLP-filtered \textit{tokens} (words or space separated strings)  is still significant (less than 5\% in our test set).
+Note that the imbalance between polymers and other NLP-filtered \textit{tokens} (words or space separated strings)  is still significant (less than 5\% in our experience).
 %We exclude tokens included in our test set.\ian{I have no idea what the preceding text is saying. What does it mean to have an imbalance with things that do not exist?
 %Could this paragraph simply be, ``As a baseline, we will present results for a random selection strategy,
 %in which 200 candidates are selected at random from the NLP-filtered candidates.''}\roselyne{It's missing dictionary, that do not exist in the dictionary}
@@ -157,19 +157,22 @@ algorithm~\cite{rehurek2010software} to generate vectors.
 We can then determine, for each NLP-filtered word, the extent to which it occurs
 in a similar context to the representative\ian{Your referred above to ``seed entities.'' Now you switch to ``representative polymers'' and ``representative entities.'' I recommend sticking to one term and using it consistently.} polymers, by computing the similarities
 between the word's vector and those for our known representative entities. 
-When dealing with multiple representative entities\ian{Be clear: do we use one or many?}, we use the highest similarity score for ranking candidates.
-Here too, we exclude terms that exist in our test set of documents.
+We experiment with one and more seed entities; when dealing with multiple representative entities,
+%\ian{Be clear: do we use one or many?}\roselyne{we experiment with both, hence the phrasing, will be more specific}
+we use the highest similarity score for ranking candidates.
+%Here too, we exclude terms that exist in our test set of documents.
 
-\begin{figure*}[!t]
+\begin{figure}
 \centering
-\scalebox{0.6}{\includegraphics{figures/al_setup.pdf}}
-\caption{\label{fig:current} The active learning experiment set up; we generate an unsupervised word embedding model using our entire corpus in 1), we propose NLP-filtered candidate entities to untrained and expert annotators in 2) before classifying their word vectors in 3). We save this classifier for uncertainty-based selection of labels for the next round of active learning. In 4), we test this word vector classifier on all NLP-filtered words from the test documents. 
+%\scalebox{0.4}{\includegraphics{figures/al_setup.pdf}}
+\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in]{figures/al_setup.pdf}
+\caption{\label{fig:current} The active learning experiment set up; 1) we first generate an unsupervised word embedding model using our entire corpus, 2) we propose NLP-filtered candidate entities to untrained and expert annotators before classifying their word vectors in 3). We select the best-performing classifier for uncertainty-based sampling of labels for the next round of active learning. In 4), we test this word vector classifier on all NLP-filtered words from the test documents. 
 %\logan{What are the blue docs? Why don't they have an arrow? Where do the NLP candidates for 2 come from?}
 %\roselyne{They come from the entire pool of NLP-filtered candidates (excluding the test set, will make sure this is clear}
-\ian{Could this fit in a single column?}
-\ian{Here and in other figure, I find it confusing to have the description precede the number.}
+%\ian{Could this fit in a single column?}
+%\ian{Here and in other figure, I find it confusing to have the description precede the number.}
 }
-\end{figure*}
+\end{figure}
 
 \subsection{Active Learning Loop}
 As we have no prior knowledge of the distribution of target entities in the vector space, 
