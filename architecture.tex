@@ -135,8 +135,7 @@ between classes.
 %\ian{I don't understand the next text. Could we write, 
 %``For example, when predicting whether or not a word vector represents a polymer, 
 %maximum entropy arises when the classifier assigns equal probability to the polymer and not-polymer cases.''}
-For example, when predicting whether or not a word vector represents a polymer, maximum entropy arises when the classifier assigns equal probability to the polymer and not-
-polymer cases.
+For example, when predicting whether or not a word vector represents a polymer, maximum entropy arises when the classifier assigns equal probability to the polymer and not-polymer cases.
 As we have two classes, this equal probability is 0.5.
 %For example, in our case, when predicting whether or not a word vector represents a polymer, 
 %the classifier assigns equal probability to either case.
@@ -148,39 +147,22 @@ Points with scores closest to $0$ are most uncertain.
 We select the first 200 entries from this ordered list to be labeled by experts.
 
 \subsubsection{Uncertainty-Based Sampling using NLP-Filtered Distance Candidates (Distance UBS)}\label{sec:we}
-Our second strategy selects NLP-filtered candidates that are 
-deemed to be most similar to seed entities as determined by vector distance measures.
-%\ian{It is confusing that for the first two strategies, you refer to them as strategies, and here you switch to talking about a pool. (Further adding to confusion is that earlier you said you had two pools. Here you refer to the ``third pool.'') Can we say, rather: ``Our second strategy selects NLP-filtered candidates that are 
-%deemed to be most similar to seed entities as determined by vector distance measures.
-%The intuition behind this strategy..."}\roselyne{This is an error, there is no third pool}
-The third pool is composed of NLP-filtered candidates deemed to be most similar to seed entities as determined by vector distance measures.
-The intuition behind generating this pool of candidates is to increase the likelihood that a candidate is a target referent (name, acronym, synonym, etc.) by comparing its vector to that of a known entity.
-Our goal is to determine whether polymers are used in a consistent context that can be used to detect and classify their corresponding context-aware vectors.
+Our second strategy selects NLP-filtered candidates that are used in similar contexts to known entities..
+The intuition here is that a candidate is more likely to be a target referent (a name, acronym, synonym, etc.) if it used in a similar context.
 For example, the polymer name ``polystyrene'' in a sentence ``The
 melting point of polystyrene is ...'' suggests that X may also be a polymer in the
 sentence ``The melting point of X is ...''.
 
-%\ian{I added a new paragraph here because I feel that readability suffers due to long paragraphs.}
+We use the word embeddings introduced in Section~\ref{sec:wes} to capture this notion of context,
+and vector distance between word vectors as a measure of similarity.
+Whether or not this approach works in practice will depend on whether 
+polymer names are in fact used in consistent contexts that is captured by our 
+word embedding  vectors. 
 
-A word embedding method 
-%\ian{You referred to ``vector distance" but then switch to talking about word embedding.
-%Maybe say ``We use word embedding methods to obtain the vectors that we use for determining distance.''} 
-maps each word
-in a sentence or document to a vector in an n-dimensional real vector space to
-represent the linguistic context in which the word appears. (This mapping may
-be based, for example, on co-occurrence frequencies of words.) 
-We can then
-determine the distance between two words by computing the distance between
-their corresponding vectors in the feature space.
-We use Word2Vec, a recent, light-weight and easy-to-use implementation of context-based vector representations~\cite{mikolov2013efficient,mikolov2013distributed}.
-Specifically we use the Gensim continuous bag-of-words
-(CBOW) implementation of the Word2Vec
-algorithm~\cite{rehurek2010software} to generate vectors.
 We can then determine, for each NLP-filtered word, the extent to which it occurs
 in a similar context to the representative\ian{Your referred above to ``seed entities.'' Now you switch to ``representative polymers'' and ``representative entities.'' I recommend sticking to one term and using it consistently.} polymers, by computing the similarities
 between the word's vector and those for our known representative entities. 
 We experiment with one and more seed entities; when dealing with multiple representative entities,
-%\ian{Be clear: do we use one or many?}\roselyne{we experiment with both, hence the phrasing, will be more specific}
 we use the lowest distance score for ranking candidates.
 %Here too, we exclude terms that exist in our test set of documents.
 

@@ -86,8 +86,7 @@ In the first phase, the candidate generation is similar to bootstrapping but app
 The initial batch of labels contains strings deemed \textit{similar} to a few seed entities, 
 with similarity determined by using word representations and vector distance measures.
 %\ian{In the next sentence, I have no idea what ``noise in the output'' means, and I wonder if other readers will?}
-This approach is approximate and likely to include errors (words that have similar context to entities but are not actual entities),
-therefore, the next phase is expert labeling. 
+As this approach is approximate and is likely to include errors (words that have similar context to entities but are not actual entities), the next phase is expert labeling. 
 Subsequent batches of labels are obtained via active learning and used 
 %To address noise in the output, expert label small batches of candidates, 
 %which can be used\ian{the term ``can be used'' confuses me. Is the training that is defined here part of your system?}
