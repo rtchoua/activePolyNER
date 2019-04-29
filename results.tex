@@ -54,23 +54,23 @@ we use lower-case exact string matching between the gold standard polymer names 
 \subsubsection{Representative Candidates}
 Here, we focus on how the choice of seed entities affects the fraction of polymers in the candidates, which we take as a measure of the entity-richness of the pool of candidates.
 %\logan{This is confusing. Is the fraction of polymers in the candidate pool not the recall?}\roselyne{yes, why? I've replaced the word recall.}
-In previous work using the same corpus~\cite{tchoua2016hybrid,tchoua2016hybridi}, we build a dictionary of polymer names using a rule-based approach and aggregating synonyms across ChemDataExtractor records\textemdash a record consists of all information found about a chemical entity in a document.  
-Having built this dictionary, we can identify the 10 most frequently occurring polymers in our corpus and their acronyms.
-Experts can also suggest these entities based on prior knowledge.
+In previous work using the same corpus~\cite{tchoua2016hybrid,tchoua2016hybridi}, we build a dictionary of polymer names by using a rule-based approach and aggregating synonyms across ChemDataExtractor records. (A record consists of all information found about a chemical entity in a document.)  
+Here we use this dictionary to identify the 10 most frequently occurring polymers in our corpus and their acronyms.
+%Experts can also suggest these entities based on prior knowledge.
 We assume that frequent polymers provide a large number of example sentences that illustrate context in which polymers are commonly used.
 %\logan{Do you think it would be better to use the gold standard, where we have certainty of the labels, to estimate the most-frequent polymers?}\roselyne{we used the entire corpus, we know the most frequent polymers}
 Hence, we first test the most common, the three most common, and the ten most common polymers as seed entities.
 %\logan{The circularness of this strategy makes me uncomfortable. We use an NER model to determine the initial training set for the NER model? How would you address this criticism?}\roselyne{not sure I understand how I am using an NER model to determine the NER model, I'm just testing with various seed entities. As you suggested before, experts can give this info, or we can just measure the frequency of a few known entities. Added a line about this so that no prior work is needed.}
-We experiment with including and excluding their acronyms as corresponding additional seed entities.
+We experiment with including and excluding their acronyms as additional seed entities.
 (Note that this modest set of 1, 3 and 10 seed entities could also be suggested by an expert.)
-Table~\ref{tab:candidate_generation} shows the results for this set of experiments on rows one through six.
-When using \textit{polystyrene} (the most commonly used name) as a seed entity, the pool of candidates contained 33.55 \% of the 467 gold standard polymers.
+Rows 1--6 of Table~\ref{tab:candidate_generation} shows the results for this set of experiments.
+When using \textit{polystyrene} (the most commonly used name) as a seed entity, the pool of candidates contained 33.55\% of the 467 gold standard polymers.
 %\logan{Another potential criticism: Would I need a gold standard to build the NER method? I thought your method is supposed to help me avoid having to do the work for generating a gold standard?}\roselyne{There is no way to evaluate if you don't have a gold standard is there?}
-We note a 2 \% increase in the fraction of polymers retrieved when using \textit{polystyrene} and its acronym compared to using \textit{polystyrene} alone.% (37.69 \%).
+We note a 2\% increase in the fraction of polymers retrieved when using \textit{polystyrene} and its acronym compared to using \textit{polystyrene} alone.% (37.69\%).
 %\logan{Is this an important detail? Why does it need to stay [I think this section is a little dense]}\roselyne{well, before Kyle thought this was a bit vague, so I added lots of numbers, I may come back and remove this}\roselyne{Removing details from here}
-The fraction of polymers increases by 10 \% when using the three most frequent polymers as representative entities; %(from 33.55 \% to 46.9 \% and 47.97 \% with acronyms); 
+The fraction of polymers increases by 10\% when using the three most frequent polymers as representative entities; %(from 33.55\% to 46.9\% and 47.97\% with acronyms); 
 the three most frequent polymers in our datasets are \textit{polystyrene},\textit{poly(methyl methacrylate)},\textit{polyethylene}.% and their acronyms (\textit{PS}, \textit{PMMA} and \textit{PE})
-Using ten instead of three entities however, only slightly increases the yield of polymers by less than 1 \%.%, from 47.97 \% for three frequent polymers with acronyms to 48.39 \% for ten frequent polymers with acronyms.
+Using ten instead of three entities however, only slightly increases the yield of polymers by less than 1\%.%, from 47.97\% for three frequent polymers with acronyms to 48.39\% for ten frequent polymers with acronyms.
 
 \begin{table}[ht!]
 \centering
