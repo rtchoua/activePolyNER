@@ -29,36 +29,46 @@ We use these 467 names as a gold standard in subsequent subsections.
 %\logan{What part of this data can we release, if any?}\roselyne{Hong and I are working on a dataset following a schema we discussed for release, I think we talked about it but didn't update you guys back. However it's more like NLP datasets, where we are releasing sentences with entities and not this exact dataset}
 
 \subsection{Word Embedding Settings}
-\ian{Are you exploring these issues in general, as the first sentence states, 
-or are you trying to find good values for these settings, for use in subsequent work? I can't tell.}
+%\ian{Are you exploring these issues in general, as the first sentence states, 
+%or are you trying to find good values for these settings, for use in subsequent work? I can't tell.}\roselyne{Only for this initial labeling, later in the paper I indicate that we could tune for classification}
 %\logan{Needs better topic sentence. Say why you are doing this more clearly, less about the "what"}
 In order to maximize the number of actual entities in the dataset\textemdash and the ratio of target to non-target entities\textemdash in the initial set of labels,
-we explore how the choice of seed entities and the internal parameters \texttt{vector} and \texttt{window_size} impact the number of target entities retrieved using similarity measures.
+we explore how the choice of seed entities and the internal parameters (vector) \texttt{size} and \texttt{window_size} impact the number of target entities retrieved using similarity measures.
+While we can't expect meaningful classification using only positive examples, given the imbalance in the whole dataset, we aim to select the parameters that yield the highest ratio of polymers in this initial batch of candidates.
 
-\ian{Maybe the following would be simpler if written as follows. This seems to say what you are trying to say?: 
-``We use the 467 gold standard polymer names identified by experts in our 100-document test set to
+%\ian{Maybe the following would be simpler if written as follows. This seems to say what you are trying to say?: 
+%``We use the 467 gold standard polymer names identified by experts in our 100-document test set to
+%evaluate the performance of different word embedding settings.
+%Specifically, for each choice of settings that we want to evaluate,
+%we determine the \num{10000} distance candidate vectors that are most similar to the representative entity vectors 
+%and report what fraction of the 467 gold standard names are included in that \num{10000}.
+%We use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.}
+%\roselyne{Thank you. I want to justify the number 10000, will rephrase because your text is better but it doesn't answer the question why 10000 necessarily}
+
+We use the 467 gold standard polymer names identified by experts in our 100-document test set to
 evaluate the performance of different word embedding settings.
 Specifically, for each choice of settings that we want to evaluate,
 we determine the \num{10000} distance candidate vectors that are most similar to the representative entity vectors 
 and report what fraction of the 467 gold standard names are included in that \num{10000}.
-We use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.}
-
-To estimate the entity-richness of our large pool of distance candidates and since we do not have manually extracted data for the entire corpus, we create a list of \num{10000} distance candidate vectors most similar to our representative entity vectors and report the fraction of gold standard polymers extracted. 
-In our gold-standard of publications, there are $\sim$5 polymers per document (\num{8450} polymers for \num{1690} documents). Thus, we expect a fraction of the polymers found in the 100 gold standard documents to be extracted in the \num{10000} candidates most similar to our seed entities.
-\ian{I have no idea what you are trying to say here $\ddot\smile$. You say ... ``our gold-standard of publications ... 1690 documents'', but previously you define the gold standard as being 100 documents.}
+We set this number based on observations that in our test set, there are $\sim$5 polymers per document.
+Therefore, we assume that considering our entire corpus,  the \num{10000} most similar to the representative entity vectors should contain a significant portion of polymers, including some from our test set.
+We use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.
+%To estimate the entity-richness of our large pool of distance candidates and since we do not have manually extracted data for the entire corpus, we create a list of \num{10000} distance candidate vectors most similar to our representative entity vectors and report the fraction of gold standard polymers extracted. 
+%In our gold-standard of publications, there are $\sim$5 polymers per document (\num{8450} polymers for \num{1690} documents). Thus, we expect a fraction of the polymers found in the 100 gold standard documents to be extracted in the \num{10000} candidates most similar to our seed entities.
+%\ian{I have no idea what you are trying to say here $\ddot\smile$. You say ... ``our gold-standard of publications ... 1690 documents'', but previously you define the gold standard as being 100 documents.}
 %\logan{This is confusing. Why are we using a model to estimate the total population of the polymers and not just assuming the gold-standard is a representative sample?}\roselyne{ok, 467/100)}
 We evaluate the entity-richness of polymers in this pool of candidates by measuring the percentage of the 467 manually extracted polymer names that it yields;
 we use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.
 \roselyne{Since I removed parameter tuning, add choices of parameters here?}
 
 \subsubsection{Representative Candidates}
-Here, we focus on how the choice of seed entities affects the fraction of polymers in the candidates, which we take as a measure of the entity-richness of the pool of candidates.
-\ian{I think that having said above how we define performance, 
-we can say ``We first investigate how the choice of seed entities affects performance.''}
+We first investigate how the choice of seed entities affects performance.''
+%\ian{I think that having said above how we define performance, 
+%we can say ``We first investigate how the choice of seed entities affects performance.''}
 %\logan{This is confusing. Is the fraction of polymers in the candidate pool not the recall?}\roselyne{yes, why? I've replaced the word recall.}
 In previous work using the same corpus~\cite{tchoua2016hybrid,tchoua2016hybridi}, we build a dictionary of polymer names by using a rule-based approach and aggregating synonyms across ChemDataExtractor records. (A record consists of all information found about a chemical entity in a document.)  
 Here we use this dictionary to identify the 10 most frequently occurring polymers in our corpus and their acronyms.
-\ian{Table says ``most frequent,'' text says ``most common.'' Be consistent.}
+\ian{Table says ``most frequent,'' text says ``most common.'' Be consistent.}\roselyne{check everywhere.}
 %Experts can also suggest these entities based on prior knowledge.
 We assume that frequent polymers provide a large number of example sentences that illustrate context in which polymers are commonly used.
 %\logan{Do you think it would be better to use the gold standard, where we have certainty of the labels, to estimate the most-frequent polymers?}\roselyne{we used the entire corpus, we know the most frequent polymers}
@@ -80,33 +90,34 @@ but by less than 1\% when using 10 instead of three entities.%, from 47.97\% for
 
 \begin{table}[ht!]
 \centering
-\caption{Fraction of gold standard polymer names extracted from pool of \num{10000} \textit{distance} candidates with different candidate generation methods.\label{tab:candidate_generation}\ian{I don'tt hink it is credible to have four significant figures given that there are only 467 gold standard names. Three is plenty.}
-\ian{It seems to me that these are not different candidate generation methods, but rather different seed entities?}
+\caption{Fraction of gold standard polymer names extracted from pool of \num{10000} \textit{distance} candidates with different candidate generation methods.\label{tab:candidate_generation}
+%\ian{I don'tt hink it is credible to have four significant figures given that there are only 467 gold standard names. Three is plenty.}
+%\ian{It seems to me that these are not different candidate generation methods, but rather different seed entities?}
 }
 \vspace{2ex}
 %[35.55, 37.69, 46.9, 47.97, 46.47, 48.39, 46.68, 36.4]
 \setlength\tabcolsep{3pt}
 \begin{tabular}{|C{0.1in}|C{2.4in}|C{0.6in}|}
  \hline
-\textbf{\#} & \textbf{Candidate generation method} & \textbf{Fraction of polymers extracted}  \\
+\textbf{\#} & \textbf{Seed entities} & \textbf{Fraction of polymers extracted}  \\
 \end{tabular}
 \begin{tabular}{|C{0.1in}|R{2.4in}|L{0.6in}|}
 \hline\hline
- 1 &    Polystyrene & 35.55\% \ \ \ \  \\
+ 1 &    Polystyrene & 35.6\% \ \ \ \  \\
 \hline
- 2 &    Polystyrene, with acronym PS & 37.69\% \ \ \ \ \\
+ 2 &    Polystyrene, with acronym PS & 37.7\% \ \ \ \ \\
 \hline
- 3 &    Three most frequent polymer names & 46.90\% \ \ \ \ \\
+ 3 &    Three most frequent polymer names & 46.9\% \ \ \ \ \\
 \hline
- 4 &    Three most frequent polymer names, with acronyms &  47.97\% \ \ \ \ \\
+ 4 &    Three most frequent polymer names, with acronyms &  48.0\% \ \ \ \ \\
 \hline
- 5 &    10 most frequent polymer names & 46.47\% \ \ \ \ \\
+ 5 &    10 most frequent polymer names & 46.5\% \ \ \ \ \\
 \hline
- 6 &    10 most frequent polymer names, with acronyms & 48.39\% \ \ \ \ \\\hline
+ 6 &    10 most frequent polymer names, with acronyms & 48.4\% \ \ \ \ \\\hline
 \hline
- 7 &    $\chi$DB polymer names & 46.68\% \ \ \ \ \\
+ 7 &    $\chi$DB polymer names & 46.7\% \ \ \ \ \\
 \hline
-  8 &  crowDB polymer names    & 36.40\% \ \ \ \ \\
+  8 &  crowDB polymer names    & 36.4\% \ \ \ \ \\
 \hline
 \end{tabular}
 \end{table}
@@ -195,11 +206,16 @@ in the previously discussed list of
 \num{10000} candidates.'' [There is no need to explain how you found those entities.]}
 \ian{Then to be consistent, refer to parameters by names as above:
 ``parameter values  \texttt{vector}=200 and \texttt{window\_size}=2.'' Remind the reader what these parameters are used for?}
+We train the initial classifier on the 200 entities 
+the highest similarity scores
+in the previously discussed list of
+\num{10000} candidates.
 
-We arranged the previous list of \num{10000} candidates in decreasing order of similarity scores.
-We train the initial classifier using the first
-200 entities from this list.
-Recall that the batch size of 200 was set based on an estimate of 30--60 minutes of expert time.\ian{You previously said 60 minutes. Be consistent.}
+%We arranged the previous list of \num{10000} candidates in decreasing order of similarity scores.
+%We train the initial classifier using the first
+%200 entities from this list.
+Recall that the batch size of 200 was set based on an estimate of 60 minutes of expert time.
+%\ian{You previously said 60 minutes. Be consistent.}
 %\logan{Maybe we can be specific here about how much time it took. "We found that a batch of 200 required ..."}\roselyne{this is an average based on your estimate, but I don't have an exact number from the first test}
 As described on Figure~\ref{fig:current}, in the first step, we train and test on candidates generated from a word embedding model generated using only the training documents. 
 We train the classifier on 80\% of the data and test on 20\%.
