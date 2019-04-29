@@ -166,7 +166,7 @@ we use the highest similarity score for ranking candidates.
 \centering
 %\scalebox{0.4}{\includegraphics{figures/al_setup.pdf}}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in]{figures/al_setup.pdf}
-\caption{\label{fig:current} The active learning experiment set up; 1) we first generate an unsupervised word embedding model using our entire corpus, 2) we propose NLP-filtered candidate entities to untrained and expert annotators before classifying their word vectors in 3). We select the best-performing classifier for uncertainty-based sampling of labels for the next round of active learning. In 4), we test this word vector classifier on all NLP-filtered words from the test documents. 
+\caption{\label{fig:current} The active learning experiment set up; 1) we first generate an unsupervised word embedding model using our entire corpus, 2) we propose NLP-filtered candidate entities to untrained and expert annotators before classifying their word vectors in 3). We select the best-performing classifier for uncertainty-based sampling of labels for the next round of active learning. In 4), we evaluate this word vector classifier on all NLP-filtered words from a set of test documents. 
 %\logan{What are the blue docs? Why don't they have an arrow? Where do the NLP candidates for 2 come from?}
 %\roselyne{They come from the entire pool of NLP-filtered candidates (excluding the test set, will make sure this is clear}
 %\ian{Could this fit in a single column?}
