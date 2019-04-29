@@ -165,7 +165,7 @@ we use the highest similarity score for ranking candidates.
 \begin{figure}
 \centering
 %\scalebox{0.4}{\includegraphics{figures/al_setup.pdf}}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in]{figures/al_setup.pdf}
+\includegraphics[trim=0.15in 0.1in 0in 0.in,clip,width=3.5in]{figures/al_setup.pdf}
 \caption{\label{fig:current} The active learning experiment set up; 1) we first generate an unsupervised word embedding model using our entire corpus, 2) we propose NLP-filtered candidate entities to untrained and expert annotators before classifying their word vectors in 3). We select the best-performing classifier for uncertainty-based sampling of labels for the next round of active learning. In 4), we evaluate this word vector classifier on all NLP-filtered words from a set of test documents. 
 %\logan{What are the blue docs? Why don't they have an arrow? Where do the NLP candidates for 2 come from?}
 %\roselyne{They come from the entire pool of NLP-filtered candidates (excluding the test set, will make sure this is clear}
@@ -196,7 +196,8 @@ provides example sentences as context for ambiguous candidates,
 and allows the expert to access the publication(s) in which a particular candidate
 appears. % when desired.
 
-Expert time is costly and we aim to reduce the cost of obtaining labels.
+We aim to reduce the amount of costly expert time used to obtain labels.
+%Expert time is costly and we aim to reduce the cost of obtaining labels.
 Therefore for our baseline of randomly sampled NLP-filtered nouns, we experiment with a two-phase review process.
 Tokenization is one of the largest sources of error for scientific entities such as polymers, 
 which contain characters such as `:', `(',

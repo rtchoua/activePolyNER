@@ -58,6 +58,7 @@ we can say ``We first investigate how the choice of seed entities affects perfor
 %\logan{This is confusing. Is the fraction of polymers in the candidate pool not the recall?}\roselyne{yes, why? I've replaced the word recall.}
 In previous work using the same corpus~\cite{tchoua2016hybrid,tchoua2016hybridi}, we build a dictionary of polymer names by using a rule-based approach and aggregating synonyms across ChemDataExtractor records. (A record consists of all information found about a chemical entity in a document.)  
 Here we use this dictionary to identify the 10 most frequently occurring polymers in our corpus and their acronyms.
+\ian{Table says ``most frequent,'' text says ``most common.'' Be consistent.}
 %Experts can also suggest these entities based on prior knowledge.
 We assume that frequent polymers provide a large number of example sentences that illustrate context in which polymers are commonly used.
 %\logan{Do you think it would be better to use the gold standard, where we have certainty of the labels, to estimate the most-frequent polymers?}\roselyne{we used the entire corpus, we know the most frequent polymers}
@@ -69,7 +70,8 @@ We experiment with including and excluding their acronyms as additional seed ent
 Rows 1--6 of Table~\ref{tab:candidate_generation} shows the results for these experiments.
 When using \textit{polystyrene} (the most commonly used name) as a seed entity, the pool of candidates contained 33.55\% of the 467 gold standard polymers.
 %\logan{Another potential criticism: Would I need a gold standard to build the NER method? I thought your method is supposed to help me avoid having to do the work for generating a gold standard?}\roselyne{There is no way to evaluate if you don't have a gold standard is there?}
-We note a 2\% increase in the fraction of polymers retrieved when using \textit{polystyrene} and its acronym compared to using \textit{polystyrene} alone. % (37.69\%).
+We note a 2\% increase in the fraction of polymers retrieved when using both \textit{polystyrene} and \textit{PS}, 
+when compared to using \textit{polystyrene} alone. % (37.69\%).
 %\logan{Is this an important detail? Why does it need to stay [I think this section is a little dense]}\roselyne{well, before Kyle thought this was a bit vague, so I added lots of numbers, I may come back and remove this}\roselyne{Removing details from here}
 The fraction of polymers increases by 10\% when we use three representative entities 
 %(from 33.55\% to 46.9\% and 47.97\% with acronyms); 
@@ -79,31 +81,32 @@ but by less than 1\% when using 10 instead of three entities.%, from 47.97\% for
 \begin{table}[ht!]
 \centering
 \caption{Fraction of gold standard polymer names extracted from pool of \num{10000} \textit{distance} candidates with different candidate generation methods.\label{tab:candidate_generation}\ian{I don'tt hink it is credible to have four significant figures given that there are only 467 gold standard names. Three is plenty.}
+\ian{It seems to me that these are not different candidate generation methods, but rather different seed entities?}
 }
 \vspace{2ex}
 %[35.55, 37.69, 46.9, 47.97, 46.47, 48.39, 46.68, 36.4]
 \setlength\tabcolsep{3pt}
 \begin{tabular}{|C{0.1in}|C{2.4in}|C{0.6in}|}
  \hline
-\textbf{\#} & \textbf{Candidate Generation Method} & \textbf{Fraction of polymers extracted}  \\
+\textbf{\#} & \textbf{Candidate generation method} & \textbf{Fraction of polymers extracted}  \\
 \end{tabular}
 \begin{tabular}{|C{0.1in}|R{2.4in}|L{0.6in}|}
+\hline\hline
+ 1 &    Polystyrene & 35.55\% \ \ \ \  \\
 \hline
- 1 &    Polystyrene & 35.55\%  \\
+ 2 &    Polystyrene, with acronym PS & 37.69\% \ \ \ \ \\
 \hline
- 2 &    Polystyrene with acronym (PS) & 37.69\%\\
+ 3 &    Three most frequent polymer names & 46.90\% \ \ \ \ \\
 \hline
- 3 &    3 most frequent polymer names & 46.90\%\\
+ 4 &    Three most frequent polymer names, with acronyms &  47.97\% \ \ \ \ \\
 \hline
- 4 &    3 most frequent polymer names with acronyms &  47.97\%\\
+ 5 &    10 most frequent polymer names & 46.47\% \ \ \ \ \\
 \hline
- 5 &    10 most frequent polymer names & 46.47\%\\
+ 6 &    10 most frequent polymer names, with acronyms & 48.39\% \ \ \ \ \\\hline
 \hline
- 6 &    10 most frequent polymer names with acronyms & 48.39\%\\
+ 7 &    $\chi$DB polymer names & 46.68\% \ \ \ \ \\
 \hline
- 7 &    $\chi$DB polymer names & 46.68\%\\
-\hline
-  8 &  crowDB polymer names    & 36.40\%\\
+  8 &  crowDB polymer names    & 36.40\% \ \ \ \ \\
 \hline
 \end{tabular}
 \end{table}
@@ -186,8 +189,10 @@ For the remainder of the experiments, we use the three most frequent polymers an
 %Having explored the parameters for distance candidate generation, we generate a pool of \num{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \num{1690}, excluding any token found in our test documents. 
 %\logan{Is the 10k entries mentioned in the previous section this set? If so, we need to revise the order of these sections?}
 
-\ian{Can this be reworded to ``We train the initial classifier on the 200 entities in the previously discussed list of
-\num{10000} candidates that have the highest similarity scores.''}
+\ian{Can this be reworded to ``We train the initial classifier on the 200 entities 
+the highest similarity scores
+in the previously discussed list of
+\num{10000} candidates.'' [There is no need to explain how you found those entities.]}
 \ian{Then to be consistent, refer to parameters by names as above:
 ``parameter values  \texttt{vector}=200 and \texttt{window\_size}=2.'' Remind the reader what these parameters are used for?}
 
@@ -199,8 +204,8 @@ Recall that the batch size of 200 was set based on an estimate of 30--60 minutes
 As described on Figure~\ref{fig:current}, in the first step, we train and test on candidates generated from a word embedding model generated using only the training documents. 
 We train the classifier on 80\% of the data and test on 20\%.
 
-We observe a better-than-random behavior on the Receiver Operating Characteristic (ROC) curve with an AUC of 0.62 as shown on 
-Figure~\ref{fig:roc_init}. %shows the Receiver Operating Characteristic (ROC) curve for the initial classifier with highest recall when evaluating on the test corpus.
+We observe a better-than-random behavior on the Receiver Operating Characteristic (ROC) curve with an AUC of 0.62, as shown in 
+Figure~\ref{fig:knn_init}. %shows the Receiver Operating Characteristic (ROC) curve for the initial classifier with highest recall when evaluating on the test corpus.
 %\logan{I do not like this as a topic sentence because it doesn't offer any indication of what to draw from the figure. I prefer ones that are "We found that X, as shown in Figure Y." Topic sentences with some editorial comments worked in help keep the narrative of the purpose of your study alive.}
 %The ROC plot is an evaluation measure that is based on two basic evaluation measures: specificity (true positive rate) and sensitivity (true negative rate).
 %Sensitivity is the same as recall. Specificity is a measure of the true negative rate (the proportion of actual negatives that are correctly identified as such).
@@ -211,7 +216,8 @@ Figure~\ref{fig:roc_init}. %shows the Receiver Operating Characteristic (ROC) cu
 %\logan{Also not quite correct. All classifiers with better-than-random performance lie between random and perfect. Maybe just skip the notion of betweenness and talk about the AUC}\roselyne{this is what I tried to say, you don't like the word meaningful? I meant if it's below it's usually bad.}
 %The area under the curve (AUC) measures the area under the ROC.
 %Ideally the AUC of a learning algorithm is above 0.5. 
-The AUC can be misleading for imbalanced dataset as it takes into account true negatives or correctly predicted non-polymers (inverse ratio).
+AUC can be misleading for imbalanced datasets, 
+as it takes into account true negatives or correctly predicted non-polymers (inverse ratio).
 For example, if a dataset contains 90\% of class A and 10\% of class B, 
 a classifier that predicts every sample as belonging to class A has an accuracy of 90\%, 
 but is not useful in practice.
@@ -219,8 +225,9 @@ but is not useful in practice.
 Therefore, we also plot the Precision Recall (PR) curve to show the tradeoff between precision and recall.%\logan{A little wordy, can you streamline this sentence?}
 %\logan{This paragraph contains no conclusions, it just explains the ROC. Add something about the results.}\roselyne{I explain below? will elaborate}
 While the AUC for the initial base KNN classifier is above random performance (0.5) in Figure~\ref{fig:knn_init}, 
-the initial PRC shows poor precision regardless of recall.
-We have obtained better performance with more labels (897) in our previous implementation~\cite{tchoua2019polyner}, these preliminary results point to the fact that the classifier is beginning to learn but 80\% of 200 labels is not have enough training data to perform well in practice yet.
+the initial PR curve shows poor precision regardless of recall.
+We have obtained better performance with more labels (897) in our previous implementation~\cite{tchoua2019polyner}, suggesting that the classifier begins to learn with more data. 
+However, 160 labels (80\% of 200) is not yet enough. % training data to perform well in practice.
 %\logan{Better topic sentence. It provides a hit of what to look for. But, you do not follow it up with any details supporting this claim}\roselyne{yes this is where i was doing some explaining for the paragraph, will elabotate}
 %\logan{This is a long section for just describing how you made the classifier and that it is pretty bad. Do we need this section?}\roselyne{I will shorten and improve next, the main reason for poor performance is small sample data, because we know this works better with 800 data points, from previous polyNER paper.}
 
@@ -235,6 +242,7 @@ We have obtained better performance with more labels (897) in our previous imple
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/roc_init.png}
 %\caption{ROC curve for KNN model for initial round of labels.}\label{fig:roc_init}
 \end{minipage}\qquad
+\hspace{2ex}
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prc_init.png}
 %\caption{PR curve for KNN model for initial round of labels.}
@@ -262,9 +270,9 @@ We have obtained better performance with more labels (897) in our previous imple
 \label{fig:prcs_round5}
 \end{minipage}
 %\setcounter{figure}{8}  
-\caption{ROC (left) and PR (right) curves for last round of active learning. 
-ROC curves improved from the initial round: AUCs for active learning are 0.74 and 0.7 compared to initial 0.62. 
-The classifier based on random sampling does not indicate learning based on AUC. 
+\caption{ROC (left) and PR (right) curves after four rounds of active learning. 
+AUCs for active learning are 0.74 and 0.7 \ian{for UBS and Distance UBS?} compared to initial 0.62\ian{you mean after one round?}. 
+The classifier based on random sampling does not indicate learning based on AUC\ian{I don't understand what you mean here. It is doing better than random. It seems to me that, in general, you are using this graph to make a number of assertions about improvement over initial performance that are not supported by the graph, because you do not show the lines for ``initial performance." All the graph shows is that they all do better than random, with UBS better than Distance UBS, which is in turn better than Random.} 
 PR curves also show improvement over initial poor performance,
 the random strategy has only shows two probabilities for target and non-target predictions; 
 the other two active learning strategies are lifting away from the bottom corner, indicating discriminative capacities.
@@ -274,9 +282,26 @@ In both types of plots, active learning using NLP-filtered candidates (AL UBS) o
 \end{figure*}
 
 \subsubsection{Discrimination}
-After the initial round of labeling, we experiment with the three strategies described in Section~\ref{sect:apner_architecture}: random sampling (Random), active learning using pool of NLP-filtered nouns from training corpus (UBS), and active learning using the \num{10000} distance candidates deemed closest to our seed entities (Distance UBS). %\textemdash minus the 200 used in the initial round).
-We see no improvement in the PR curve for two rounds of active learning or the first three rounds of labeling. 
-Precision remains under 5\% across all classifiers, as shown in Table~\ref{tab:pr_table}. 
+After the initial round of labeling, we experiment with the three strategies described in Section~\ref{sect:apner_architecture}: random sampling (Random), 
+active learning using the NLP-filtered nouns from the training corpus (UBS), 
+and active learning using the \num{10000} distance candidates deemed closest to our seed entities (Distance UBS). %\textemdash minus the 200 used in the initial round).
+
+Results, in Table~\ref{tab:pr_table}, show 
+no improvement in the first two rounds: % of active learning or the first three rounds of labeling. 
+precision remains under 5\% for all strategies.
+However, in the third iteration, we observe increases in precision,
+an improvement that  
+is sustained in the fourth iteration for UBS.
+Figure~\ref{fig:rocs_prcs_round5} shows ROC and PR curves for the three strategies after four rounds. 
+The AUC for UBS is 0.74 and that of Distance UBS is 0.70. 
+The PR curves for both are improved (lifting away from the lower left corner of the graph) over the first round, 
+with active learning better tradeoff with UBS showing than with Distance UBS and Random strategies.
+%After round 3 and 4, we observe and confirm some, albeit moderate, level context-based predictive ability.
+%We also determine that the classifier, which uses UBS is performing better than with the two other strategies.
+When tested against our gold standard of 467 one-word polymer names, the KNN classifier achieves 18.21\% precision and  45.64\% recall. 
+While the candidate generation helps insure that the classes are balanced in the initial batch of labels, using a pool of distance candidates (Distance UBS) does not yield better results than using active learning with a pool of all NLP-filtered candidates (UBS).
+Intuitively, basic UBS can find \textit{useful} instances (target and non-targets) to be labeled from the entire word embedding space, while examples from Distance UBS are clustered around the seed entities that may be colocated in that space.
+
 %\logan{I think the table would be better suited as a plot}\roselyne{I am tempted to remove it, and just indicate that there was not much learning in the first 3 rounds, but Kyle had a comment that people like to see it for themselves and suggested a table. I don't think the plots would look good either has it will bring attention to the problem of using multiple classifiers as previously discussed. I can go back to ommitting this or displaying the last two rounds.}
 %\loganfussingaboutrecallandprecision \roselyne{I actually read that this is what people use many times for imbalanced datasets, but I get the point and we have ROCS to got with the last two rounds}
 
@@ -295,42 +320,32 @@ Precision remains under 5\% across all classifiers, as shown in Table~\ref{tab:p
 %\hline
 %Round 0\ \ & \multicolumn{3}{c|}{} \\
 \hline
-0 & Precision &        \multicolumn{3}{c|}{6.53\%} \\
-0 & Recall\ \ \ \ \ &               \multicolumn{3}{c|}{19.10\%} \\
+\multirow{2}{*}{0} & Precision &        \multicolumn{3}{c|}{6.53\%} \\
+ & Recall\ \ \ \ \ &               \multicolumn{3}{c|}{19.10\%} \\
 %\hline
 %Round 1\ \  & \multicolumn{3}{c|}{} \\
 \hline
-1 & Precision     & 3.75\%       &      3.18\%      &  5.28\% \\
-1 & Recall\ \ \ \ \ & 0.29\%      &   93.62\%     &  56.81\% \\
+\multirow{2}{*}{1}  & Precision     & 3.75\%       &      3.18\%      &  5.28\% \\
+ & Recall\ \ \ \ \ & 0.29\%      &   93.62\%     &  56.81\% \\
 %\hline
 %Round 2\ \  & \multicolumn{3}{c|}{} \\
 \hline
-2& Precision      & 1.49\%           &      3.79\%      &  5.35\% \\
-2& Recall\ \ \ \ \ & 1.45\%           &    46.38\%      &  10.14\% \\
+\multirow{2}{*}{2} & Precision      & 1.49\%           &      3.79\%      &  5.35\% \\
+& Recall\ \ \ \ \ & 1.45\%           &    46.38\%      &  10.14\% \\
 %\hline
 %Round 3\ \  & \multicolumn{3}{c|}{} \\
 \hline
-3 & Precision      & 6.02\%              &    21.23\%      &  3.93\% \\
-3 & Recall\ \ \ \ \ & 44.64\%            &    40.00\%      &  84.35\%  \\
+\multirow{2}{*}{3}  & Precision      & 6.02\%              &    21.23\%      &  3.93\% \\
+ & Recall\ \ \ \ \ & 44.64\%            &    40.00\%      &  84.35\%  \\
 %\hline
 %Round 4\ \  & \multicolumn{3}{c|}{} \\
 \hline
-4& Precision     & 7.06\%          &    18.21\%      &  7.20\% \\
-4& Recall\ \ \ \ \ & 40.70\%         &     45.64\%     &  51.88\% \\
+\multirow{2}{*}{4} & Precision     & 7.06\%          &    18.21\%      &  7.20\% \\
+& Recall\ \ \ \ \ & 40.70\%         &     45.64\%     &  51.88\% \\
 \hline
 \end{tabular}
 \end{table}
 
-However, in the third iteration of active learning, we notice an increase in precision in UBS (see Table~\ref{tab:pr_table}). 
-This learning is sustained in the following iteration as illustrated in Figure~\ref{fig:rocs_prcs_round5}. 
-The AUC for UBS is 0.74 and that of Distance UBS is 0.70. 
-The PRCs for both are improved (lifting away from the lower left corner of the graph) over the first round, 
-with active learning better tradeoff with UBS showing than with Distance UBS and Random strategies.
-%After round 3 and 4, we observe and confirm some, albeit moderate, level context-based predictive ability.
-%We also determine that the classifier, which uses UBS is performing better than with the two other strategies.
-When tested against our gold standard of 467 one-word polymer names, the KNN classifier achieves 18.21\% precision and  45.64\% recall. 
-While the candidate generation helps insure that the classes are balanced in the initial batch of labels, using a pool of distance candidates (Distance UBS) does not yield better results than using active learning with a pool of all NLP-filtered candidates (UBS).
-Intuitively, basic UBS can find \textit{useful} instances (target and non-targets) to be labeled from the entire word embedding space, while examples from Distance UBS are clustered around the seed entities that may be colocated in that space.
 
 We selected seed entities based on their frequency in our corpus and the yield of target entities during the candidate generation.
 This observation suggests that we could also study how the choice of seed entities impact of the performance of the classifier during the active learning process. 
@@ -360,12 +375,13 @@ many polymers begin with the prefixes ``poly'' or ``poly(.''
 Therefore, we generate a FastText word embedding model, 
 and generate character-enhanced vectors for our UBS-labeled candidates.
 
-Next, we train a KNN classifier using vectors for these candidates labeled through active learning using a pool of NLP-filtered candidates (identified as best-performing in previous experiments).
+Next, we train a KNN classifier using vectors for these candidates labeled through active learning from a pool of NLP-filtered candidates (identified as best-performing in previous experiments).
 %\logan{Confusing. Is UBS not active learning?}\roselyne{it's the sampling method}
 We test the classifier against NLP-filtered nouns from our 100-document test set.
-The KNN classifier performance improves when using these word vectors, as shown in Figure~\ref{fig:UBS_prcs_fasttext}.
+KNN classifier performance improves when using these word vectors, 
+achieving 29.7\% precision and 81.9\% recall.
 %\logan{Why sow both figures if you say PRC is better.}\roselyne{I will end up taking them off, as I'm now at 12 pages}
-In this case, the classifier achieves 29.7\% precision and 81.9\% recall. 
+%In this case, the classifier achieves 29.7\% precision and 81.9\% recall. 
 These numbers are comparable to those achieved by ChemDataExtractor (CDE), a state-of-the-art chemical NLP tool.
 As CDE aims to extract all
 chemical compounds, not just polymers, it serves only as a demonstration of an
@@ -375,7 +391,8 @@ at 74.5\%, but its precision for polymers is, as expected, low at 8.7\%.
 %\loganfussingaboutrecallandprecision \roselyne{comes with PRC so should be good here}
 We have previously modified CDE with
 manually defined polymer identification rules~\cite{tchoua2017towards};
-our polymer-enhanced version (CDE+) achieved 42.2\% precision and 68.3\% recall on the same test set. 
+our polymer-enhanced version (CDE+) achieved 42.2\% precision and 68.3\% recall on the same test set,
+as shown in Figure~\ref{fig:UBS_prcs_fasttext}.\ian{Is this a good place for figure reference?}
 We achieve higher recall than CDE and CDE+ using labels from UBS and FastText vectors and intermediate precision with only about five hours of expert labeling.
 
 \subsection{Discussion and Future Work}
@@ -415,7 +432,9 @@ for example by using batch active learning~\cite{settles2009active}.
 %\end{minipage}\qquad
 %\begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in]{figures/fasttext_prc_al_corpus_round5_100}
-\caption{PR curve for KNN model trained with active learning labels and word representations enriched with character-level information.\ian{I am curious why the line is straight for recall from 0 to 0.4?}}\label{fig:UBS_prcs_fasttext}
+\caption{PR curve for KNN model trained with active learning labels and word representations enriched with character-level information. Results for CDE+ are also shown.
+\ian{I am curious why the line is straight for recall from 0 to 0.4?}}
+\label{fig:UBS_prcs_fasttext}
 %\end{minipage}
 \end{figure}
 
