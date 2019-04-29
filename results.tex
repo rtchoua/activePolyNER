@@ -407,8 +407,9 @@ at 74.5\%, but its precision for polymers is, as expected, low at 8.7\%.
 %\loganfussingaboutrecallandprecision \roselyne{comes with PRC so should be good here}
 We have previously modified CDE with
 manually defined polymer identification rules~\cite{tchoua2017towards};
-our polymer-enhanced version (CDE+) achieved 42.2\% precision and 68.3\% recall on the same test set,
-as shown in Figure~\ref{fig:UBS_prcs_fasttext}.\ian{Is this a good place for figure reference?}
+our polymer-enhanced version (CDE+) achieved 42.2\% precision and 68.3\% recall on the same test set.
+We show the precision recall curve for the FastText vector classifier and the CDE+ performance on Figure~\ref{fig:UBS_prcs_fasttext}.
+%as shown in Figure~\ref{fig:UBS_prcs_fasttext}.\ian{Is this a good place for figure reference?}
 We achieve higher recall than CDE and CDE+ using labels from UBS and FastText vectors and intermediate precision with only about five hours of expert labeling.
 
 \subsection{Discussion and Future Work}
@@ -428,9 +429,10 @@ These results suggest that character-level information enhances classifier perfo
 In FastText, the portion of the word embedding vector generated using context varies depending on how much context is available in the entire corpus. 
 For words deemed to have enough context, vectors do not include any character-level information. 
 At the other extreme, for previously unseen words, the embedding is generated based solely on character n-gram information and comparison to other words in the corpus.
-During the active learning process, candidates to be labeled by experts are selected by using maximum-entropy based uncertainty sampling (for which the prediction probability is the same for both classes, target and non target);
-these candidates are more likely to lack context. % and for which vectors have been generated using character-level information. 
-\ian{I don't see why it is a result that the expert often presented with nearly identical candidates.}
+During the active learning process, candidates to be labeled by experts are selected by using maximum-entropy based uncertainty sampling (for which the prediction probability is the same for both classes, target and non target).
+These candidates are more likely to lack context. % and for which vectors have been generated using character-level information. 
+%\ian{I don't see why it is a result that the expert often presented with nearly identical candidates.}\roselyne{I've tried to re-add the character information to add sense but without the long sentence}
+and their corresponding vectors have been generated using mostly character-level information.
 As a result, the expert is often presented with several nearly identical candidates (e.g., \textit{PS13k/PMMA12k}, \textit{PS214k/PMMA12k}, and \textit{PS31.6k/PMMA12k}), which hinders the learning process as these candidates are located in close vicinity in terms of the full (character and context) word embedding space.
 In other words, in this full space, while their uncertainty measure is comparable, these examples are not \textit{diverse}, where diversity is a measure of the distance of the examples to each other or previously labeled instances~\cite{brinker2003incorporating}.
 One solution to explore in future work would be to impose a diversity constraint on the candidates,
