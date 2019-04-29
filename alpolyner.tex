@@ -98,15 +98,8 @@
   \newcommand{\loganfussingaboutrecallandprecision}{}
 \fi
 
-\newif\ifnist
-\nistfalse
-%\nisttrue
-
-\ifnist
-  \newcommand\nistnum[1]{\num[group-separator={},mode=text]{#1}}
-\else
-  \newcommand\nistnum[1]{\num[group-minimum-digits=4,group-separator={,},mode=text]{#1}} 
-\fi
+\usepackage{siunitx}
+\sisetup{detect-all}
 
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}

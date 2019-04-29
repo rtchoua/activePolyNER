@@ -1,8 +1,7 @@
 \section{Conclusion}
 \label{sect:apner_conclusion}
 The lack of access to large amount of expert-annotated training data impedes the adoption of recent machine learning techniques in certain scientific applications.
-%\ian{How is the next reworded sentence?}\roselyne{much improved}
-PolyNER overcomes this challenge by % is a generalizable system that 
+PolyNER overcomes this challenge by 
 using
 approximate candidate generation and active learning to target 
 expert input so that accurate scientific named entity recognition can be performed at low cost.
@@ -14,7 +13,7 @@ performance comparable to a best-of-breed
 hybrid NER model (CDE+) that combines a dictionary, expert-created
 rules, and machine learning algorithms.
 CDE+ was trained on the CHEMDNER corpus:
-a collection of \nistnum{10000} PubMed abstracts with 84,355 chemical entity mentions labeled manually by expert chemistry literature curators, following annotation guidelines specifically defined for this task~\cite{krallinger2015chemdner}. 
+a collection of \num{10000} PubMed abstracts with \num{84355} chemical entity mentions labeled manually by expert chemistry literature curators, following annotation guidelines specifically defined for this task~\cite{krallinger2015chemdner}. 
 %\logan{Very long sentence, break it up.}
 In contrast, polyNER was trained on data annotated using just five hours of expert time and minimal untrained crowd input.
 %\logan{This is your most important conclusion, perhaps bring it earlier in the conclusion}
