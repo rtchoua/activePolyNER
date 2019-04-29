@@ -1,16 +1,18 @@
 \section{Evaluation}
 \label{sect:apner_results}
-We first report on a study in which we evaluate the generation of candidates entities using the vector similarity measures and representative (commonly used) entities. 
+We first report on a study in which we evaluate the generation of candidate entities using the vector similarity measures and representative (commonly used) entities. 
 %\logan{Would using "candidate entities" rather than "distance candidates" make more sense?}
 %\logan{If F\ref{fig:current} describes your setup. Why not reference it here?}\roselyne{That is the set up for the active learning but I also evaluate the candidate generation, so I think for now, I'll leave it out but see if I refer to it in the sections below.}
 We then discuss the results of initial classification and subsequent four rounds of active learning using multiple word vector classifiers and our three sampling strategies: random, UBS, and Distance UBS.
 Finally, we experiment with word representations enhanced with character-level information using FastText~\cite{bojanowski2016enriching,joulin2016bag}.
 
-\subsection{Dataset}
-We evaluate extraction accuracy in terms of precision and recall.
+In this work, we evaluate extraction accuracy in terms of precision and recall.
 Recall refers to the fraction of actual positives that
 are labeled correctly and precision to the fraction of predicted
 positives that labeled correctly.
+
+\subsection{Dataset}
+
 We work with a corpus of \num{1690} full-text publications in HTML format from \textit{Macromolecules}, 
 a relevant journal in polymer science.
 These documents comprise \num{381947} sentences and \num{9229417} (\num{253195} unique) words or ``tokens,''
@@ -32,9 +34,12 @@ We use these 467 names as a gold standard in subsequent subsections.
 %\ian{Are you exploring these issues in general, as the first sentence states, 
 %or are you trying to find good values for these settings, for use in subsequent work? I can't tell.}\roselyne{Only for this initial labeling, later in the paper I indicate that we could tune for classification}
 %\logan{Needs better topic sentence. Say why you are doing this more clearly, less about the "what"}
+Recall from Section~\ref{sec:we} that the first step of the polyNER pipeline involves the use of the
+ Word2Vec word embedding tool to compute a word vector for each word.
 In order to maximize the number of actual entities in the dataset\textemdash and the ratio of target to non-target entities\textemdash in the initial set of labels,
-we explore how the choice of seed entities and the internal parameters (vector) \texttt{size} and \texttt{window_size} impact the number of target entities retrieved using similarity measures.
-While we can't expect meaningful classification using only positive examples, given the imbalance in the whole dataset, we aim to select the parameters that yield the highest ratio of polymers in this initial batch of candidates.
+we explore how the choice of seed entities and the Word2Vec parameters (vector) \texttt{size} and \texttt{window_size} impact the number of target entities retrieved. %  using similarity measures.
+%XXX_IAN don't understand next sentence
+While we cannot expect meaningful classification using only positive examples, given the imbalance in the whole dataset, we aim to select the Word2Vec parameters that yield the highest ratio of polymers in this initial batch of candidates.
 
 %\ian{Maybe the following would be simpler if written as follows. This seems to say what you are trying to say?: 
 %``We use the 467 gold standard polymer names identified by experts in our 100-document test set to
@@ -45,40 +50,40 @@ While we can't expect meaningful classification using only positive examples, gi
 %We use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.}
 %\roselyne{Thank you. I want to justify the number 10000, will rephrase because your text is better but it doesn't answer the question why 10000 necessarily}
 
-We use the 467 gold standard polymer names identified by experts in our 100-document test set to
+In the experiments that follow,
+we use the 467 gold standard polymer names identified by experts in our 100-document test set to
 evaluate the performance of different word embedding settings.
 Specifically, for each choice of settings that we want to evaluate,
 we determine the \num{10000} distance candidate vectors that are most similar to the representative entity vectors 
 and report what fraction of the 467 gold standard names are included in that \num{10000}.
-We set this number based on observations that in our test set, there are $\sim$5 polymers per document.
-Therefore, we assume that considering our entire corpus,  the \num{10000} most similar to the representative entity vectors should contain a significant portion of polymers, including some from our test set.
+%XXX_IAN don't know why number is explained, so commented out next two sentences
+%We set this number based on observations that in our test set, there are $\sim$5 polymers per document.
+%Therefore, we assume that considering our entire corpus,  the \num{10000} most similar to the representative entity vectors should contain a significant portion of polymers, including some from our test set.
 We use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.
 %To estimate the entity-richness of our large pool of distance candidates and since we do not have manually extracted data for the entire corpus, we create a list of \num{10000} distance candidate vectors most similar to our representative entity vectors and report the fraction of gold standard polymers extracted. 
 %In our gold-standard of publications, there are $\sim$5 polymers per document (\num{8450} polymers for \num{1690} documents). Thus, we expect a fraction of the polymers found in the 100 gold standard documents to be extracted in the \num{10000} candidates most similar to our seed entities.
 %\ian{I have no idea what you are trying to say here $\ddot\smile$. You say ... ``our gold-standard of publications ... 1690 documents'', but previously you define the gold standard as being 100 documents.}
 %\logan{This is confusing. Why are we using a model to estimate the total population of the polymers and not just assuming the gold-standard is a representative sample?}\roselyne{ok, 467/100)}
-We evaluate the entity-richness of polymers in this pool of candidates by measuring the percentage of the 467 manually extracted polymer names that it yields;
-we use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.
+%We evaluate the entity-richness of polymers in this pool of candidates by measuring the percentage of the 467 manually extracted polymer names that it yields;
+%we use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.
 \roselyne{Since I removed parameter tuning, add choices of parameters here?}
 
 \subsubsection{Representative Candidates}
-We first investigate how the choice of seed entities affects performance.''
-%\ian{I think that having said above how we define performance, 
-%we can say ``We first investigate how the choice of seed entities affects performance.''}
-%\logan{This is confusing. Is the fraction of polymers in the candidate pool not the recall?}\roselyne{yes, why? I've replaced the word recall.}
-In previous work using the same corpus~\cite{tchoua2016hybrid,tchoua2016hybridi}, we build a dictionary of polymer names by using a rule-based approach and aggregating synonyms across ChemDataExtractor records. (A record consists of all information found about a chemical entity in a document.)  
+We first investigate how the choice of seed entities affects performance.
+In previous work using the same corpus~\cite{tchoua2016hybrid,tchoua2016hybridi}, 
+we built a dictionary of polymer names by using a rule-based approach and aggregating synonyms across ChemDataExtractor records. (A record consists of all information found about a chemical entity in a document.)  
 Here we use this dictionary to identify the 10 most frequently occurring polymers in our corpus and their acronyms.
-\ian{Table says ``most frequent,'' text says ``most common.'' Be consistent.}\roselyne{check everywhere.}
+%\ian{Table says ``most frequent,'' text says ``most common.'' Be consistent.}\roselyne{check everywhere.}
 %Experts can also suggest these entities based on prior knowledge.
 We assume that frequent polymers provide a large number of example sentences that illustrate context in which polymers are commonly used.
 %\logan{Do you think it would be better to use the gold standard, where we have certainty of the labels, to estimate the most-frequent polymers?}\roselyne{we used the entire corpus, we know the most frequent polymers}
 Hence, we first test the most frequent, the three most frequent, and the ten most frequent polymers as seed entities.
 %\logan{The circularness of this strategy makes me uncomfortable. We use an NER model to determine the initial training set for the NER model? How would you address this criticism?}\roselyne{not sure I understand how I am using an NER model to determine the NER model, I'm just testing with various seed entities. As you suggested before, experts can give this info, or we can just measure the frequency of a few known entities. Added a line about this so that no prior work is needed.}
-We experiment with including and excluding their acronyms as additional seed entities.
+We also experiment with including and excluding their acronyms as additional seed entities.
 (Note that this modest set of 1, 3 and 10 seed entities could also be suggested by an expert.)
 
 Rows 1--6 of Table~\ref{tab:candidate_generation} shows the results for these experiments.
-When using \textit{polystyrene} (the most frequently used name) as a seed entity, the pool of candidates contained 33.55\% of the 467 gold standard polymers.
+When using \textit{polystyrene} (the most frequently used name) as a seed entity, the pool of candidates contained 33.6\% of the 467 gold standard polymers.
 %\logan{Another potential criticism: Would I need a gold standard to build the NER method? I thought your method is supposed to help me avoid having to do the work for generating a gold standard?}\roselyne{There is no way to evaluate if you don't have a gold standard is there?}
 We note a 2\% increase in the fraction of polymers retrieved when using both \textit{polystyrene} and \textit{PS}, 
 when compared to using \textit{polystyrene} alone. % (37.69\%).
@@ -87,6 +92,7 @@ The fraction of polymers increases by 10\% when we use three representative enti
 %(from 33.55\% to 46.9\% and 47.97\% with acronyms); 
 (the three most frequent polymers in our datasets are \textit{polystyrene}, \textit{poly(methyl methacrylate)}, and \textit{polyethylene}), % and their acronyms (\textit{PS}, \textit{PMMA} and \textit{PE})
 but by less than 1\% when using 10 instead of three entities.%, from 47.97\% for three frequent polymers with acronyms to 48.39\% for ten frequent polymers with acronyms.
+These results suggest that there is little value to using more than a few seed entities.
 
 \begin{table}[ht!]
 \centering
@@ -122,14 +128,17 @@ but by less than 1\% when using 10 instead of three entities.%, from 47.97\% for
 \end{tabular}
 \end{table}
 
-In a second set of experiments, we explore the idea of using larger numbers of seed entities to increase the fraction of polymers retrieved in the pool of candidates.
+To further explore whether using larger numbers of seed entities may increase the fraction of polymers retrieved,
+we conducted a second set of experiments.
 We have built a small database of polymer properties ($\chi$DB) in previous work~\cite{tchoua2016hybrid,tchoua2016hybridi}. 
-Our corpus of \num{1690} publications included 111 our of 175 $\chi$DB polymers.  
-We also scraped CrowDB, which lists some polymers and their properties at \url{http://polymerdatabase.com/} for polymer names.
-In this case, 32 out of 295 scraped polymer names were found in our corpus.
-We experiment using these 111 and 32 seed entities to extract polymers. The fraction of polymers from our gold standard is shown on rows seven and eight in Table~\ref{tab:candidate_generation}.
-These results confirm using more entities does not increase the yield of polymers, as some polymers have low frequency in the corpus, words that are most similar are less likely to be targets.
-For the remainder of the experiments, we use the three most frequent polymers and their acronyms. 
+Our corpus of \num{1690} publications included 111 out of 175 $\chi$DB polymers.  
+We also scraped CrowDB, which lists some polymers and their properties at \url{http://polymerdatabase.com/} for polymer names; 32 out of 295 scraped polymer names were found in our corpus.
+We measure how many of our gold standard polymers are identified when
+these 111 and 32 polymer names are used as seed entities, 
+with results shown in rows seven and eight of Table~\ref{tab:candidate_generation}.
+These results confirm that using more entities does not increase the yield of polymers.
+%as some polymers have low frequency in the corpus, words that are most similar are less likely to be targets.
+Thus, in all subsequent experiments, we use the three most frequent polymers and their acronyms as seeds. 
 %\logan{I think the metric we use for choosing an algorithm here (fraction of entries in the training set) is too indirect. Why not use the performance of the initial ML model to rate how good the training set is? A hypothetical concern with the metric as well: Does your current metric mean a pool with 100\% polymers would be the best? Wouldn't that lead to the same problem of imbalance as having no polymers?}
 %\roselyne{how about just 50-50\% what would be wrong with training on such a dataset, why should we reach 100\%, maybe I should add somewhere that this is a good ration, or anywhere higher than 10\%. I will consider that next time, but I think this made sense to me, increase from 5\% to reduce imbalance. I mentioned in the discussion that we evaluated based on entity richness but could evaluate in terms of discrimination, it's a lesson learned.}
 
@@ -200,16 +209,7 @@ For the remainder of the experiments, we use the three most frequent polymers an
 %Having explored the parameters for distance candidate generation, we generate a pool of \num{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \num{1690}, excluding any token found in our test documents. 
 %\logan{Is the 10k entries mentioned in the previous section this set? If so, we need to revise the order of these sections?}
 
-\ian{Can this be reworded to ``We train the initial classifier on the 200 entities 
-the highest similarity scores
-in the previously discussed list of
-\num{10000} candidates.'' [There is no need to explain how you found those entities.]}
-\ian{Then to be consistent, refer to parameters by names as above:
-``parameter values  \texttt{vector}=200 and \texttt{window\_size}=2.'' Remind the reader what these parameters are used for?}
-We train the initial classifier on the 200 entities 
-the highest similarity scores
-in the previously discussed list of
-\num{10000} candidates.
+We train the initial classifier on the 200 entities with the highest similarity scores in the previously discussed list of \num{10000} candidates.
 
 %We arranged the previous list of \num{10000} candidates in decreasing order of similarity scores.
 %We train the initial classifier using the first
@@ -408,7 +408,7 @@ at 74.5\%, but its precision for polymers is, as expected, low at 8.7\%.
 We have previously modified CDE with
 manually defined polymer identification rules~\cite{tchoua2017towards};
 our polymer-enhanced version (CDE+) achieved 42.2\% precision and 68.3\% recall on the same test set.
-We show the precision recall curve for the FastText vector classifier and the CDE+ performance on Figure~\ref{fig:UBS_prcs_fasttext}.
+We show the PR curve for the FastText vector classifier and the CDE+ performance on Figure~\ref{fig:UBS_prcs_fasttext}.
 %as shown in Figure~\ref{fig:UBS_prcs_fasttext}.\ian{Is this a good place for figure reference?}
 We achieve higher recall than CDE and CDE+ using labels from UBS and FastText vectors and intermediate precision with only about five hours of expert labeling.
 
@@ -419,21 +419,27 @@ Also talk about cross checking here somehow since i do not have enough to have a
 Each expert annotates one strategy but we perform crosschecking for 10\% of the first batch of labels to get a measure of agreement between experts.} 
 %We confirm agreement between labels for all but 1 of the set of 20 candidates or an agreement of 95\%.}
 %\logan{The discussion starts out with your last part of the Results section, skipping over anything else you learned. }
-We attribute the increased performance to the character embedding enhancement, which not only recognizes ``poly'' (and yields more names based on this n-gram comparison), but also filters out more anomalous candidates (preceding or following polymer names) generated during tokenization and missed by the filtering steps, such as ``\textit{$A_mB_n$}'' and ``\textit{Mw/Mn=1.36}.'' 
+We attribute the increased performance to the character embedding enhancement, which not only recognizes ``poly'' (and yields more names based on this n-gram comparison), 
+but also filters out more anomalous candidates (preceding or following polymer names) generated during tokenization and missed by the filtering steps, 
+such as ``\textit{$A_mB_n$}'' and ``\textit{Mw/Mn=1.36}.'' 
 In other words, the classifiers of character and (context-based) word embedding vectors perform better than classifiers of only context-based word embedding.
+
 Given this result, one may wonder whether the active learning process itself could benefit from using this enhanced vector embedding. 
-We repeated the active learning experiment using the entire corpus of NLP-filtered candidates and classifying FastText (enhanced) vectors instead of Gensim vectors at each iteration. 
-The classifier's ROC curve did not achieve CDE performance after five iterations and was below random performance.%\logan{Wasn't it also worse than the randomly-selected words?}\roselyne{yes, but doesn't it make you want to see another figure more}
+To determine whether this is the case,
+we repeated the active learning experiment using the entire corpus of NLP-filtered candidates and classifying FastText (enhanced) vectors instead of Gensim vectors at each iteration. 
+However, performance was worse than random.
+%the classifier's ROC curve did not achieve CDE performance after five iterations and was below random performance.%\logan{Wasn't it also worse than the randomly-selected words?}\roselyne{yes, but doesn't it make you want to see another figure more}
 
 These results suggest that character-level information enhances classifier performance only once a certain threshold of context information has been captured by the embedding.
-In FastText, the portion of the word embedding vector generated using context varies depending on how much context is available in the entire corpus. 
+We explain this observation as follows. 
+In FastText, the portion of the word embedding vector generated by using context varies depending on how much context is available in the entire corpus. 
 For words deemed to have enough context, vectors do not include any character-level information. 
 At the other extreme, for previously unseen words, the embedding is generated based solely on character n-gram information and comparison to other words in the corpus.
-During the active learning process, candidates to be labeled by experts are selected by using maximum-entropy based uncertainty sampling (for which the prediction probability is the same for both classes, target and non target).
-These candidates are more likely to lack context. % and for which vectors have been generated using character-level information. 
-%\ian{I don't see why it is a result that the expert often presented with nearly identical candidates.}\roselyne{I've tried to re-add the character information to add sense but without the long sentence}
-and their corresponding vectors have been generated using mostly character-level information.
-As a result, the expert is often presented with several nearly identical candidates (e.g., \textit{PS13k/PMMA12k}, \textit{PS214k/PMMA12k}, and \textit{PS31.6k/PMMA12k}), which hinders the learning process as these candidates are located in close vicinity in terms of the full (character and context) word embedding space.
+During the active learning process, candidates to be labeled by experts are selected by using maximum-entropy based uncertainty sampling: that is, words for which prediction probability is the same for both classes, target and non target.
+Such candidates are more likely to lack context,
+and thus have vectors that are generated using mostly character-level information.
+When all or most of the word embedding vector 
+As a result, the expert is often presented with nearly identical candidates (e.g., \textit{PS13k/PMMA12k}, \textit{PS214k/PMMA12k}, and \textit{PS31.6k/PMMA12k}), which hinders the learning process as these candidates are located in close vicinity in terms of the full (character and context) word embedding space.
 In other words, in this full space, while their uncertainty measure is comparable, these examples are not \textit{diverse}, where diversity is a measure of the distance of the examples to each other or previously labeled instances~\cite{brinker2003incorporating}.
 One solution to explore in future work would be to impose a diversity constraint on the candidates,
 for example by using batch active learning~\cite{settles2009active}.

@@ -18,10 +18,12 @@ Snowball~\cite{agichtein2000snowball} which improved the DIPRE system~\cite{brin
 In the DIPRE system, the intuitive assumption is that, given a few seed entity relations, the text between two known target entities in close proximity of each other describes and consistutes a \textit{pattern} of the relation between the two. 
 Since that is not the case in practice, the system uses a limited set of regular expression to limit useful patterns, hence decreasing the number of false positives.
 A key improvement of Snowball
-is that Snowball's patterns include named-entity tags ({PERSON}, {LOCATION}, \textit{ORAGNIZATION} etc.).
-The authors start with a handful of seed tuples of \textit{ORGANIZATION} and \textit{LOCATION}, Snowball attempts to learn the relation \textit{HeadquarteredIn} by assuming that every time the tuples appear in close proximity to each other, the text in between illustrates the desired relation.
-This text can then be used to discover new tuples, which can in turn be used as seed for the next discovery iteration.
-Of course, organizations may be located but not headquartered in multiple cities, hence it is important to inspect the quality of extraction patters to reduce noise in the generated output.
+is that its patterns include named-entity tags (PERSON, LOCATION, ORGANIZATION, etc.).
+Given a handful of seed tuples of ORGANIZATION and LOCATION, Snowball attempts to learn the relation \textit{HeadquarteredIn} by assuming that each time the tuples appear in close proximity to each other, 
+the text in between illustrates the desired relation.
+This text can then be used to discover new tuples, which can in turn be used as seeds for the next discovery iteration.
+Of course, organizations may be located but not headquartered in multiple cities;
+hence it is important to inspect the quality of extraction patters to reduce noise in the generated output.
 
 \textit{Distant supervision} maps known entities and relations from a structured knowledge 
 base onto unstructured text~\cite{peters2014machine,de2016deepdive}. 
@@ -32,7 +34,7 @@ With freely available structured knowledge base such as DBPedia~\cite{auer2007db
 %lexical, syntactic and named entity tag features. 
 %They use standard multi-class logistic regression as the classification algorithm and reach almost 70\% of precision based on human judgment.
 For the last decade, probabilistic approaches have been proposed to allow the system to select automatically
-For example PaleoDeepDive~\cite{peters2014machine}, built upon DeepDive~\cite{zhang2015deepdive}, automatically extracts
+For example PaleoDeepDive~\cite{peters2014machine}, built upon DeepDive~\cite{de2016deepdive}, automatically extracts
 paleontological data from text, tables, and figures in scientific publications. 
 For good performance, such approaches often rely on and extend large databases: for example,
 PaleoDeepDive uses PaleoDB~\cite{PaleoDB}. 
