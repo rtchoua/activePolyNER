@@ -15,11 +15,11 @@ We integrate an active learning loop into polyNER's architecture to incrementall
 In order to explore whether the use of word vector coordinates as features can accelerate the learning process,
 we define and compare three alternative sampling strategies: a random strategy that we use as a baseline,
 and two NLP-based filtering methods. 
-\ian{Are the three strategies all an integral part of polyNER, or are they alternatives that we compare? Unclear. I reworded to say they are alternatives, is that right?}
+%\ian{Are the three strategies all an integral part of polyNER, or are they alternatives that we compare? Unclear. I reworded to say they are alternatives, is that right?}\roselyne{Yes to alternatives that we compare.}
 We also apply these methods against two different candidate pools, 
-one set of unlabeled nouns and one set of approximately labeled nouns (presented as target entities based on \textit{similarity} to commonly used known entities) from our corpus.
-\ian{The candidate pool reference is confusing to me because in the text that follows you seem to refer to just one
-pool, the ``NLP-filtered candidates."}
+one set of unlabeled nouns and another set of approximately labeled nouns deemed \textit{similar} to commonly used known entities from our corpus.
+%\ian{The candidate pool reference is confusing to me because in the text that follows you seem to refer to just one
+%pool, the ``NLP-filtered candidates."}\roselyne{I specifically describe two pools, the NLP filtered, and the distance NLP-filtered, perhaps too wordy?}
 We describe our sampling strategies and approximate labeling in more details in this section.
 % for maximum entropy uncertainty sampling, which we describe in this section.
 %\logan{We have mentioned these two different pools twice now, but haven't given a hint as to what they are. I think we should describe them succinctly here.}\roselyne{Done I think}
@@ -28,9 +28,9 @@ We also describe the labeling process, and the training and testing configuratio
 
 \begin{figure*}[!t]
 {\includegraphics[width=\textwidth]{figures/architecture.pdf}}
-\caption{\label{fig:architecture} PolyNER system showing NLP-filtering in (1), initial sampling and labeling in (2), candidate sampling strategies in (3), and active learning loop between expert labeling (4) and classification of scientific named entities (5). 
-\ian{(1) It is really important to be consistent in how your refer to things. Here, the figure says ``Bootstrapping and Initial Labeling" for (1), but the caption says ``initial sampling and labeling.'' Pick one and use it consistently. (2) You are inconsistent in capitalization. (3) The caption mostly repeats the labels in the figure, which seems redundant.
-It could be higher level.}
+\caption{\label{fig:architecture} PolyNER system showing the different phases of polyNER including the NLP-filtering step, the initial sampling and the newly integrated active learning loop to classify scientific named entities. 
+%\ian{(1) It is really important to be consistent in how your refer to things. Here, the figure says ``Bootstrapping and Initial Labeling" for (1), but the caption says ``initial sampling and labeling.'' Pick one and use it consistently. (2) You are inconsistent in capitalization. (3) The caption mostly repeats the labels in the figure, which seems redundant.
+%It could be higher level.}
 	%\logan{Should we differentiate between the "initial sampling" strategy done to bootstrap our training set and the "active learning sampling" strategy used to identify the next things to label? Mixing the two up is going to confuse people}\roselyne{OK will adapt the rest of the text and section titles too.}
 }
 \end{figure*}
@@ -47,16 +47,17 @@ It could be higher level.}
 %\logan{Make section labels line up with the names in the figures}
 First, we define an
 NLP filtering preprocessing step to filter out
-words\ian{Maybe the wrong term, as the first example is ``polyethylene;'', which is not a ``word'' but a string?} in scientific publications that are unlikely to be polymer referents. 
+string
+%\ian{Maybe the wrong term, as the first example is ``polyethylene;'', which is not a ``word'' but a string?}
+ in scientific publications that are unlikely to be polymer referents. 
 %In other words, we remove obvious non-candidates.
 First, we remove
 unwanted characters (e.g. `:', `.', `,', `:', `-') from the beginning and the end of each
 candidate and eliminate numbers (including numbers followed by common units).
-This step allows us to recognize, for example, ``polyethylene;'' (which fails the
-exact string comparison test against ``polyethylene'').
-\ian{I can't tell what you are saying in the preceding. Can we simply say, ``thus, for example,
-we can eliminate ``polyethylene;'' as a string distinct from ``polyethylene.'' [I am not sure if I have worded this
-right.]}
+This step allows us to recognize, for example, ``polyethylene;'' and eliminate it as yet another unique (erroneous) candidate. 
+%\ian{I can't tell what you are saying in the preceding. Can we simply say, ``thus, for example,
+%we can eliminate ``polyethylene;'' as a string distinct from ``polyethylene.'' [I am not sure if I have worded this
+%right.]}\roselyne{not sure I understand that better, but I think I can rephrase}
 Hypothesizing that names of scientific entities will not, in general, be English
 vocabulary words, we remove words found in the SpaCy dictionaries
 of commonly used English words~\cite{choi2015depends}. (We manually remove common polymer
@@ -71,14 +72,14 @@ We refer to the set of words that result when these filtering operations are app
 
 
 \subsection{Initial Labeling}
-While the previous steps\ian{Should this be singular?}
+While the previous step%\ian{Should this be singular?}
  reduce the numbers of candidates and the imbalance of the dataset (target vs.\ non-target entity ratio), 
  there still remains a relatively large pool of potential candidates from which entities are to be selected.
 In our experience, the ratio of polymers-to-non-polymers in NLP-filtered words in publications is $\sim$5\%.\ian{I don't think that a ratio can be a percentage. You may mean ``only 5\% of NLP-filtered words are polymer names.}
 In order to avoid presenting experts with mostly negative examples, hindering meaningful classification,
 we attempt to boost the number of polymer entities in the first batch of candidates to be annotated by using word vector similarity metrics between candidates and commonly used known entities as observed in a subset of publications or as suggested by experts.
 We discuss this distance metric in more details below.
-\ian{You refer to similarity metrics in one sentence and distance metric in the next. Be consistent!}
+\ian{You refer to similarity metrics in one sentence and distance metric in the next. Be consistent!}\roselyne{Leave this here to check everywhere}
 %Candidate batch sizes are determined based on labeling time estimates and availability of expert curators.
 Based on preliminary experiments, we set the size of each batch of strings to be labeled to 200, 
 or about an hour of expert time.
@@ -96,12 +97,11 @@ We apply each of these strategies to our NLP-filtered candidates to determine wh
 
 \subsubsection{Random Strategy using NLP-Filtered Candidates}
 In the first strategy, we randomly select 200 out of the pool of unlabeled NLP-filtered candidates from the entire corpus of publications.
-Note that the imbalance between polymers and other \textit{tokens} (words or space separated strings) that 
-do not exist in this set is still significant (less than 5\% in our test set).
-We exclude tokens included in our test set.\ian{I have no idea what the preceding text is saying. What does it mean to have an imbalance with things that do not exist?
-Could this paragraph simply be, ``As a baseline, we will present results for a random selection strategy,
-in which 200 candidates are selected at random from the NLP-filtered candidates.''}
-\ian{Separate issue: as far as I know, you have not introduced the concept of a test set, so the reference to test set is confusing.}
+Note that the imbalance between polymers and other NLP-filtered \textit{tokens} (words or space separated strings)  is still significant (less than 5\% in our test set).
+%We exclude tokens included in our test set.\ian{I have no idea what the preceding text is saying. What does it mean to have an imbalance with things that do not exist?
+%Could this paragraph simply be, ``As a baseline, we will present results for a random selection strategy,
+%in which 200 candidates are selected at random from the NLP-filtered candidates.''}\roselyne{It's missing dictionary, that do not exist in the dictionary}
+%\ian{Separate issue: as far as I know, you have not introduced the concept of a test set, so the reference to test set is confusing.}
 
 \subsubsection{Uncertainty-Based Sampling using NLP-Filtered Candidates (UBS)}
 Our second strategy applies maximum entropy sampling to the NLP-filtered candidates. % from the full corpus of documents used in the random strategy.
@@ -110,23 +110,27 @@ As previously mentioned, maximum entropy selection is an uncertainty sampling me
 identifies data points for which a classifier predicts outcomes that lie near the decision boundary 
 between classes. 
 
-\ian{I don't understand the next text. Could we write, 
-``For example, when predicting whether or not a word vector represents a polymer, 
-maximum entropy arises when the classifier assigns equal probability to the polymer and not-polymer cases.''}
-
-For example, in our case, when predicting whether or not a word vector represents a polymer, 
-the classifier assigns equal probability to either case.
-\ian{Can we say, ``As we have two classes" rather than ``in the binary case"?}
-In the binary case, probabilities range from 0 to 0.5. 
-\ian{Why can't you have a probability of 1, for say ``polystyrene''?}
+%\ian{I don't understand the next text. Could we write, 
+%``For example, when predicting whether or not a word vector represents a polymer, 
+%maximum entropy arises when the classifier assigns equal probability to the polymer and not-polymer cases.''}
+For example, when predicting whether or not a word vector represents a polymer, maximum entropy arises when the classifier assigns equal probability to the polymer and not-
+polymer cases.
+As we have two classes, this equal probability is 0.5.
+%For example, in our case, when predicting whether or not a word vector represents a polymer, 
+%the classifier assigns equal probability to either case.
+%\ian{Can we say, ``As we have two classes" rather than ``in the binary case"?}
+%In the binary case, probabilities range from 0 to 0.5. 
+%\ian{Why can't you have a probability of 1, for say ``polystyrene''?}\roselyne{You're right, you can have that, and the text is confusing, if you you have a probability of 1, then |1-0.5| gives you 0.5 and this will not be considered as a confusing example, the examples with probability p with |0.5-p| close to 0 are the ones considered confusing} 
 Therefore, we predict outcome for all our NLP-filtered candidates and obtains a probability $p$ for each data point. We compute a list of $0.5-p$ values for all unlabeled data and sort the list in ascending order.
 Points with scores closest to $0$ are most uncertain.
 We select the first 200 entries from this ordered list to be labeled by experts.
 
 \subsubsection{Uncertainty-Based Sampling using NLP-Filtered Distance Candidates (Distance UBS)}
-\ian{It is confusing that for the first two strategies, you refer to them as strategies, and here you switch to talking about a pool. (Further adding to confusion is that earlier you said you had two pools. Here you refer to the ``third pool.'') Can we say, rather: ``Our second strategy selects NLP-filtered candidates that are 
+Our second strategy selects NLP-filtered candidates that are 
 deemed to be most similar to seed entities as determined by vector similarity measures.
-The intuition behind this strategy..."}
+%\ian{It is confusing that for the first two strategies, you refer to them as strategies, and here you switch to talking about a pool. (Further adding to confusion is that earlier you said you had two pools. Here you refer to the ``third pool.'') Can we say, rather: ``Our second strategy selects NLP-filtered candidates that are 
+%deemed to be most similar to seed entities as determined by vector similarity measures.
+%The intuition behind this strategy..."}\roselyne{This is an error, there is no third pool}
 The third pool is composed of NLP-filtered candidates deemed to be most similar to seed entities as determined by vector similarity measures.
 The intuition behind generating this pool of candidates is to increase the likelihood that a candidate is a target referent (name, acronym, synonym, etc.) by comparing its vector to that of a known entity.
 Our goal is to determine whether polymers are used in a consistent context that can be used to detect and classify their corresponding context-aware vectors.
@@ -134,7 +138,7 @@ For example, the polymer name ``polystyrene'' in a sentence ``The
 melting point of polystyrene is ...'' suggests that X may also be a polymer in the
 sentence ``The melting point of X is ...''.
 
-\ian{I added a new paragraph here because I feel that readability suffers due to long paragraphs.}
+%\ian{I added a new paragraph here because I feel that readability suffers due to long paragraphs.}
 
 A word embedding method \ian{You referred to ``vector similarity" but then switch to talking about word embedding.
 Maybe say ``We use word embedding methods to obtain the vectors that we use for determining similarity.''} 
@@ -169,8 +173,8 @@ Here too, we exclude terms that exist in our test set of documents.
 \subsection{Active Learning Loop}
 As we have no prior knowledge of the distribution of target entities in the vector space, 
 we use multiple classifiers at each iteration of the active learning process. 
-\ian{What does it mean to ``save''?}
-We save the best performing classifier on the labeled candidates for subsequent maximum entropy-based uncertainty sampling. 
+%\ian{What does it mean to ``save''?}\roselyne{we use,keep, mark? the classifier that will be used for sampling.}
+We use the best performing classifier on the labeled candidates for subsequent maximum entropy-based uncertainty sampling. 
 %\logan{You have neither defined nor motivated MEU, I think}\roselyne{See if you would add something to the previous strategies (UBS). That's where I've tried to define it, tell me if it's not clear}.
 The requested labels are annotated by humans to serve as addition training data for the next learning iteration. 
 We describes these steps in more details in the following sections.
@@ -220,7 +224,8 @@ The classifiers include the scikit-Learn~\cite{scikit-learn} implementations of 
 %\logan{Something to consider for future: I've been nervous a long time about how we use so many models. How good is your grid search CV for these models? Many (KNN, SVM) are super sensitive to hyperparameters, and I'm worried we are testing 7 models badly and that we'd have better results with tuning 1 really well}
 %\roselyne{Yes, this is definitely a lesson taken. I was just telling Kyle, I know exactly how I would change this experiment and others based on my experience now. Perhaps I need to say that in the discussion!}\roselyne{Added note to include in discussion}
 Our goal here is to explore the word embedding space and determine which classifier(s) works best for detecting our scientific named entities.
-As previously mentioned, we save\ian{that word save again.} the \textit{best-performing} classifier on labeled candidates (prior to updating the word embedding model  with test documents in order to clearly separate the training process from the test set, see step 1 in Figure~\ref{fig:current}).
+As previously mentioned, we select%\ian{that word save again.} 
+the \textit{best-performing} classifier on labeled candidates for subsequent uncertainty sampling.
 When defining best performance, we prioritize recall, or retrieving a maximum of targets, over precise extraction.
 In other words, extracting a higher number of targets potentially requiring additional curation is favored over obtaining fewer correct targets.
 %\logan{Can you express this quantitatively?}\roselyne{I have favored recall, maybe I should just say that? better?}
