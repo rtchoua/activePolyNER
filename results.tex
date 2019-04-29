@@ -16,7 +16,7 @@ positives that labeled correctly.
 We work with a corpus of \num{1690} full-text publications in HTML format from \textit{Macromolecules}, 
 a relevant journal in polymer science.
 These documents comprise \num{381947} sentences and \num{9229417} (\num{253195} unique) words or ``tokens,''
-of which \num{99999}\ian{to be defined} pass the NLP filter of Section~\ref{sec:filter}.
+of which \num{23205} pass the NLP filter of Section~\ref{sec:filter}.
 
 From this corpus, 
 we set aside a test set of 100 documents with  \num{22664} sentences and \num{508391} (\num{36293} unique) tokens,
@@ -30,7 +30,7 @@ We use these 467 names as a gold standard in subsequent subsections.
 
 %\logan{What part of this data can we release, if any?}\roselyne{Hong and I are working on a dataset following a schema we discussed for release, I think we talked about it but didn't update you guys back. However it's more like NLP datasets, where we are releasing sentences with entities and not this exact dataset}
 
-\subsection{Word Embedding Settings}
+\subsection{Word Embedding Settings}\label{sec:wes}
 %\ian{Are you exploring these issues in general, as the first sentence states, 
 %or are you trying to find good values for these settings, for use in subsequent work? I can't tell.}\roselyne{Only for this initial labeling, later in the paper I indicate that we could tune for classification}
 %\logan{Needs better topic sentence. Say why you are doing this more clearly, less about the "what"}

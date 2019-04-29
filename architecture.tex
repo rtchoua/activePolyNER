@@ -35,6 +35,26 @@ We also describe the labeling process, and the training and testing configuratio
 }
 \end{figure*}
 
+\subsection{Computing Word Embeddings}
+
+A word embedding method 
+%\ian{You referred to ``vector similarity" but then switch to talking about word embedding.
+%Maybe say ``We use word embedding methods to obtain the vectors that we use for determining similarity.''} 
+maps a word
+in a document to a vector in an n-dimensional real vector space that
+represents the linguistic context in which the word appears. (This mapping may
+be based, for example, on co-occurrence frequencies of words.) 
+We can then
+determine the similarity between two words by computing the distance between
+their corresponding vectors in the feature space.
+
+We use Word2Vec, a recent, light-weight and easy-to-use implementation of context-based vector representations~\cite{mikolov2013efficient,mikolov2013distributed}.
+Specifically we use the Gensim continuous bag-of-words
+(CBOW) implementation of the Word2Vec
+algorithm~\cite{rehurek2010software} to generate vectors.
+We describe in Section~\ref{sec:wes} how we select appropriate values for the
+Word2Vec (vector) \texttt{size} and \texttt{window_size} parameters
+
 \subsection{NLP-Filtering}\label{sec:filter}
 %\subsubsection{Word Embedding Model}
 %\logan{Why is this titled "Word Embedding Model" and you start by describing a classifier?}
@@ -72,8 +92,8 @@ We refer to the set of words that result when these filtering operations are app
 
 
 \subsection{Initial Labeling}
-While the previous step%\ian{Should this be singular?}
- reduce the numbers of candidates and the imbalance of the dataset (target vs.\ non-target entity ratio), 
+While the previous step %\ian{Should this be singular?}
+ reduces the numbers of candidates and the imbalance of the dataset (target vs.\ non-target entity ratio), 
  there still remains a relatively large pool of potential candidates from which entities are to be selected.
 In our experience, only 5\% of NLP-filtered words are polymer names.
 %\ian{I don't think that a ratio can be a percentage. You may mean ``only 5\% of NLP-filtered words are polymer names.}
@@ -219,8 +239,8 @@ candidates, indicating for each whether it is in fact a polymer referent. % and 
 \centering
 \frame{\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in]{figures/expert_labeling.png}}
 \caption{\label{fig:polyner} Web interface for expert review of candidates.
-The expert indicates whether the name (col 1) is a polymer (col 2), 
-providing notes if desired (col 3). 
+The expert indicates whether the name (column 1) is a polymer (tickbox in column 2), 
+providing notes if desired (column 3). 
 Clicking on ``?'' delivers up to 25 more example sentences.
 }
 \end{figure}
