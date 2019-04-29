@@ -7,12 +7,21 @@ We then discuss the results of initial classification and subsequent four rounds
 Finally, we experiment with word representations enhanced with character-level information using FastText~\cite{bojanowski2016enriching,joulin2016bag}.
 
 \subsection{Dataset}
-We work with a corpus composed of \nistnum{1690} full-text publications in HTML format downloaded from \textit{Macromolecules}, a relevant journal in polymer science.
-These documents comprise \nistnum{381947} sentences and \nistnum{9229417} (\nistnum{253195} unique words or ``tokens'').
-We set aside a test set of  100 documents with  \nistnum{22664} sentences and \nistnum{508391} (\nistnum{36293} unique) tokens. 
-We engaged six experts to identify one-word polymer names from our test set.
-They extracted 467 unique one-word polymer names, which we use as gold standard.
-When testing against this gold standard, we evaluate using a total of 9656 NLP-filtered nouns from the 100 documents.
+We work with a corpus of \num{1690} full-text publications in HTML format from \textit{Macromolecules}, 
+a relevant journal in polymer science.
+These documents comprise \num{381947} sentences and \num{9229417} (\num{253195} unique) words or ``tokens,''
+of which \num{99999}\ian{to be defined} pass the NLP filter of Section~\ref{sec:filter}.
+
+From this corpus, 
+we set aside a test set of 100 documents with  \num{22664} sentences and \num{508391} (\num{36293} unique) tokens,
+of which \num{9656} pass the NLP filter.
+We engaged six experts to identify all one-word polymer names in this test set,
+a process that produced 467 unique one-word polymer names.
+We use these 467 names as a gold standard in subsequent subsections.
+%When testing against this gold standard, 
+%we evaluate using a total of \num{9656} NLP-filtered nouns from the 100 documents.
+
+\ian{Seems odd to have the following text in a subsection on ``Dataset.'' Maybe move to start of this section?}
 We evaluate extraction accuracy in terms of precision and recall.
 Recall refers to the fraction of actual positives that
 are labeled correctly and precision to the fraction of predicted
@@ -20,11 +29,23 @@ positives that labeled correctly.
 %\logan{What part of this data can we release, if any?}\roselyne{Hong and I are working on a dataset following a schema we discussed for release, I think we talked about it but didn't update you guys back. However it's more like NLP datasets, where we are releasing sentences with entities and not this exact dataset}
 
 \subsection{Word Embedding Settings}
+\ian{Are you exploring these issues in general, as the first sentence states, 
+or are you trying to find good values for these settings, for use in subsequent work? I can't tell.}
 %\logan{Needs better topic sentence. Say why you are doing this more clearly, less about the "what"}
-In order to maximize the number of actual entities in the dataset\textemdash and the ratio of target vs non-target entities\textemdash in the intial set of labels,
-we explore how the choice of seed entities, the internal parameters \textit{vector} and \textit{window_size}  impact the number of target entities retrieved using similarity measures.
-To estimate the entity-richness of our large pool of distance candidates and since we do not have manually extracted data for the entire corpus, we create a list of \nistnum{10000} distance candidate vectors most similar to our representative entity vectors and report the fraction of gold standard polymer extracted. 
-In our gold-standard of publications, there are $\sim$ 5 polymers per document (\nistnum{8450} polymers for \nistnum{1690} documents), we can expect a fraction of the polymers found in the 100 gold standard documents to be extracted in the \nistnum{10000} candidates most similar to our seed entities.
+In order to maximize the number of actual entities in the dataset\textemdash and the ratio of target to non-target entities\textemdash in the initial set of labels,
+we explore how the choice of seed entities and the internal parameters \texttt{vector} and \texttt{window_size} impact the number of target entities retrieved using similarity measures.
+
+\ian{Maybe the following would be simpler if written as follows. This seems to say what you are trying to say?: 
+``We use the 467 gold standard polymer names identified by experts in our 100-document test set to
+evaluate the performance of different word embedding settings.
+Specifically, for each choice of settings that we want to evaluate,
+we determine the \num{10000} distance candidate vectors that are most similar to the representative entity vectors 
+and report what fraction of the 467 gold standard names are included in that \num{10000}.
+We use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.}
+
+To estimate the entity-richness of our large pool of distance candidates and since we do not have manually extracted data for the entire corpus, we create a list of \num{10000} distance candidate vectors most similar to our representative entity vectors and report the fraction of gold standard polymers extracted. 
+In our gold-standard of publications, there are $\sim$5 polymers per document (\num{8450} polymers for \num{1690} documents). Thus, we expect a fraction of the polymers found in the 100 gold standard documents to be extracted in the \num{10000} candidates most similar to our seed entities.
+\ian{I have no idea what you are trying to say here $\ddot\smile$. You say ... ``our gold-standard of publications ... 1690 documents'', but previously you define the gold standard as being 100 documents.}
 %\logan{This is confusing. Why are we using a model to estimate the total population of the polymers and not just assuming the gold-standard is a representative sample?}\roselyne{ok, 467/100)}
 We evaluate the entity-richness of polymers in this pool of candidates by measuring the percentage of the 467 manually extracted polymer names that it yields;
 we use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.
@@ -38,7 +59,7 @@ Having built this dictionary, we can identify the 10 most frequently occurring p
 Experts can also suggest these entities based on prior knowledge.
 We assume that frequent polymers provide a large number of example sentences that illustrate context in which polymers are commonly used.
 %\logan{Do you think it would be better to use the gold standard, where we have certainty of the labels, to estimate the most-frequent polymers?}\roselyne{we used the entire corpus, we know the most frequent polymers}
-Hence, we first test the most common, the three most common and the ten most common polymers as seed entities.
+Hence, we first test the most common, the three most common, and the ten most common polymers as seed entities.
 %\logan{The circularness of this strategy makes me uncomfortable. We use an NER model to determine the initial training set for the NER model? How would you address this criticism?}\roselyne{not sure I understand how I am using an NER model to determine the NER model, I'm just testing with various seed entities. As you suggested before, experts can give this info, or we can just measure the frequency of a few known entities. Added a line about this so that no prior work is needed.}
 We experiment with including and excluding their acronyms as corresponding additional seed entities.
 (Note that this modest set of 1, 3 and 10 seed entities could also be suggested by an expert.)
@@ -53,7 +74,7 @@ Using ten instead of three entities however, only slightly increases the yield o
 
 \begin{table}[ht!]
 \centering
-\caption{Fraction of gold standard polymer names extracted from pool of \nistnum{10000} \textit{distance} candidates using different candidate generation methods.\label{tab:candidate_generation}
+\caption{Fraction of gold standard polymer names extracted from pool of \num{10000} \textit{distance} candidates with different candidate generation methods.\label{tab:candidate_generation}\ian{I don'tt hink it is credible to have four significant figures given that there are only 467 gold standard names. Three is plenty.}
 }
 \vspace{2ex}
 %[35.55, 37.69, 46.9, 47.97, 46.47, 48.39, 46.68, 36.4]
@@ -85,7 +106,7 @@ Using ten instead of three entities however, only slightly increases the yield o
 
 In a second set of experiments, we explore the idea of using larger numbers of seed entities to increase the fraction of polymers retrieved in the pool of candidates.
 We have built a small database of polymer properties ($\chi$DB) in previous work~\cite{tchoua2016hybrid,tchoua2016hybridi}. 
-Our corpus of \nistnum{1690} publications included 111 our of 175 $\chi$DB polymers.  
+Our corpus of \num{1690} publications included 111 our of 175 $\chi$DB polymers.  
 We also scraped CrowDB, which lists some polymers and their properties at \url{http://polymerdatabase.com/} for polymer names.
 In this case, 32 out of 295 scraped polymer names were found in our corpus.
 We experiment using these 111 and 32 seed entities to extract polymers. The fraction of polymers from our gold standard is shown on rows seven and eight in Table~\ref{tab:candidate_generation}.
@@ -128,9 +149,9 @@ For the remainder of the experiments, we use the three most frequent polymers an
 %\end{figure}
 
 %\subsubsection{Word Embedding Window and Size Parameters}
-%We generate a pool of \nistnum{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \nistnum{1690}, excluding any token found in our test documents. 
-%As previously mentioned, to measure the entity-richness of our dataset, we compute the fraction of polymers retrieved using the similarity measure to our representative entities in the  \nistnum{10000} candidates.
-%%We measure the impact of the \textit{window} and \textit{size} on the fraction of polymers extracted from the gold standard in the list of \nistnum{10000} candidates most similar to our representative entities. 
+%We generate a pool of \num{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \num{1690}, excluding any token found in our test documents. 
+%As previously mentioned, to measure the entity-richness of our dataset, we compute the fraction of polymers retrieved using the similarity measure to our representative entities in the  \num{10000} candidates.
+%%We measure the impact of the \textit{window} and \textit{size} on the fraction of polymers extracted from the gold standard in the list of \num{10000} candidates most similar to our representative entities. 
 %%\logan{Where are the 10k candidates from again? Could we reference this set by its purpose rather than its size?}\roselyne{Done I think.}
 %%\logan{Need a reason why this is important? Also, this statement again raises my concern about using "fraction extracted from gold standard" as a metric for quality of the initial training set?}\roselyne{same answer as above, trying to increase balance in dataset.}
 %The \textit{window} represents the maximum distance between the current and predicted word within a sentence. In other words, it represents the number of words before and after each word considered by the neural network to generate a vector representation for that word. 
@@ -158,12 +179,18 @@ For the remainder of the experiments, we use the three most frequent polymers an
  %\kyle{Not sure this fig is worth including}\roselyne{Agreed that it's not so interesting but i think it goes with the windows one and i will combine the two figures you think should be together.}\roselyne{May remove as paper gets longer}
 
 \subsubsection{Initial Classifier}
-%Having explored the parameters for distance candidate generation, we generate a pool of \nistnum{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \nistnum{1690}, excluding any token found in our test documents. 
+%Having explored the parameters for distance candidate generation, we generate a pool of \num{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \num{1690}, excluding any token found in our test documents. 
 %\logan{Is the 10k entries mentioned in the previous section this set? If so, we need to revise the order of these sections?}
-The previous list of \nistnum{10,000} candidates are arranged in decreasing order of similarity scores and we use a window size of 2 and a vector size of 200. 
+
+\ian{Can this be reworded to ``We train the initial classifier on the 200 entities in the previously discussed list of
+\num{10000} candidates that have the highest similarity scores.''}
+\ian{Then to be consistent, refer to parameters by names as above:
+``parameter values  \texttt{vector}=200 and \texttt{window\_size}=2.'' Remind the reader what these parameters are used for?}
+
+We arranged the previous list of \num{10000} candidates in decreasing order of similarity scores.
 We train the initial classifier using the first
-200 entities from the above mentioned list.
-Recall that the batch size of 200 was set based on an estimate of 30-60 minutes of expert time.
+200 entities from this list.
+Recall that the batch size of 200 was set based on an estimate of 30--60 minutes of expert time.\ian{You previously said 60 minutes. Be consistent.}
 %\logan{Maybe we can be specific here about how much time it took. "We found that a batch of 200 required ..."}\roselyne{this is an average based on your estimate, but I don't have an exact number from the first test}
 As described on Figure~\ref{fig:current}, in the first step, we train and test on candidates generated from a word embedding model generated using only the training documents. 
 We train the classifier on 80\% of the data and test on 20\%.
@@ -234,7 +261,7 @@ In both types of plots, active learning using NLP-filtered candidates (AL UBS) o
 \end{figure*}
 
 \subsubsection{Discrimination}
-After the initial round of labeling, we experiment with the three strategies mentioned in Section~\ref{sect:apner_architecture}: random sampling (Random), active learning using pool of NLP-filtered nouns from training corpus (UBS), and active learning using pool of \nistnum{10000} distance candidates deemed closest to our seed entities(Distance UBS) \textemdash minus 200 used in initial round).
+After the initial round of labeling, we experiment with the three strategies mentioned in Section~\ref{sect:apner_architecture}: random sampling (Random), active learning using pool of NLP-filtered nouns from training corpus (UBS), and active learning using pool of \num{10000} distance candidates deemed closest to our seed entities(Distance UBS) \textemdash minus 200 used in initial round).
 Given the relatively small batch size, we see no improvement in the PR curve for two rounds of active learning or the first three rounds of labeling. 
 Precision remains under 5\% across all used classifiers as shown in Table~\ref{tab:pr_table}. 
 %\logan{I think the table would be better suited as a plot}\roselyne{I am tempted to remove it, and just indicate that there was not much learning in the first 3 rounds, but Kyle had a comment that people like to see it for themselves and suggested a table. I don't think the plots would look good either has it will bring attention to the problem of using multiple classifiers as previously discussed. I can go back to ommitting this or displaying the last two rounds.}
