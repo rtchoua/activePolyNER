@@ -98,10 +98,10 @@ there still remains a large pool of potential candidates from which entities are
 In our experience, only 5\% of NLP-filtered words are polymer names.
 %\ian{I don't think that a ratio can be a percentage. You may mean ``only 5\% of NLP-filtered words are polymer names.}
 In order to avoid presenting experts with mostly negative examples, hindering meaningful classification,
-we attempt to boost the number of polymer entities in the first batch of candidates to be annotated by using word vector similarity metrics between candidates and commonly used known entities, 
-as observed in a subset of publications or as suggested by experts.
+we attempt to boost the number of polymer entities in the first batch of candidates to be annotated by using word vector distance metrics between candidates and a set of \emph{seed entities}:
+words that are observed to occur frequently  
+in a subset of publications or that are suggested by experts.
 We discuss this distance metric in more details below.
-\ian{You refer to similarity metrics in one sentence and distance metric in the next. Be consistent!}\roselyne{Leave this here to check everywhere}
 %Candidate batch sizes are determined based on labeling time estimates and availability of expert curators.
 Based on preliminary experiments, we set the size of each batch of strings to be labeled to 200, 
 or about an hour of expert time.
@@ -149,11 +149,11 @@ We select the first 200 entries from this ordered list to be labeled by experts.
 
 \subsubsection{Uncertainty-Based Sampling using NLP-Filtered Distance Candidates (Distance UBS)}\label{sec:we}
 Our second strategy selects NLP-filtered candidates that are 
-deemed to be most similar to seed entities as determined by vector similarity measures.
+deemed to be most similar to seed entities as determined by vector distance measures.
 %\ian{It is confusing that for the first two strategies, you refer to them as strategies, and here you switch to talking about a pool. (Further adding to confusion is that earlier you said you had two pools. Here you refer to the ``third pool.'') Can we say, rather: ``Our second strategy selects NLP-filtered candidates that are 
-%deemed to be most similar to seed entities as determined by vector similarity measures.
+%deemed to be most similar to seed entities as determined by vector distance measures.
 %The intuition behind this strategy..."}\roselyne{This is an error, there is no third pool}
-The third pool is composed of NLP-filtered candidates deemed to be most similar to seed entities as determined by vector similarity measures.
+The third pool is composed of NLP-filtered candidates deemed to be most similar to seed entities as determined by vector distance measures.
 The intuition behind generating this pool of candidates is to increase the likelihood that a candidate is a target referent (name, acronym, synonym, etc.) by comparing its vector to that of a known entity.
 Our goal is to determine whether polymers are used in a consistent context that can be used to detect and classify their corresponding context-aware vectors.
 For example, the polymer name ``polystyrene'' in a sentence ``The
@@ -163,14 +163,14 @@ sentence ``The melting point of X is ...''.
 %\ian{I added a new paragraph here because I feel that readability suffers due to long paragraphs.}
 
 A word embedding method 
-%\ian{You referred to ``vector similarity" but then switch to talking about word embedding.
-%Maybe say ``We use word embedding methods to obtain the vectors that we use for determining similarity.''} 
+%\ian{You referred to ``vector distance" but then switch to talking about word embedding.
+%Maybe say ``We use word embedding methods to obtain the vectors that we use for determining distance.''} 
 maps each word
 in a sentence or document to a vector in an n-dimensional real vector space to
 represent the linguistic context in which the word appears. (This mapping may
 be based, for example, on co-occurrence frequencies of words.) 
 We can then
-determine the similarity between two words by computing the distance between
+determine the distance between two words by computing the distance between
 their corresponding vectors in the feature space.
 We use Word2Vec, a recent, light-weight and easy-to-use implementation of context-based vector representations~\cite{mikolov2013efficient,mikolov2013distributed}.
 Specifically we use the Gensim continuous bag-of-words
@@ -181,7 +181,7 @@ in a similar context to the representative\ian{Your referred above to ``seed ent
 between the word's vector and those for our known representative entities. 
 We experiment with one and more seed entities; when dealing with multiple representative entities,
 %\ian{Be clear: do we use one or many?}\roselyne{we experiment with both, hence the phrasing, will be more specific}
-we use the highest similarity score for ranking candidates.
+we use the lowest distance score for ranking candidates.
 %Here too, we exclude terms that exist in our test set of documents.
 
 \begin{figure}

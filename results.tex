@@ -1,6 +1,6 @@
 \section{Evaluation}
 \label{sect:apner_results}
-We first report on a study in which we evaluate the generation of candidate entities using the vector similarity measures and representative (commonly used) entities. 
+We first report on a study in which we evaluate the generation of candidate entities using vector distances from representative (frequently used) entities. 
 %\logan{Would using "candidate entities" rather than "distance candidates" make more sense?}
 %\logan{If F\ref{fig:current} describes your setup. Why not reference it here?}\roselyne{That is the set up for the active learning but I also evaluate the candidate generation, so I think for now, I'll leave it out but see if I refer to it in the sections below.}
 We then discuss the results of initial classification and subsequent four rounds of active learning using multiple word vector classifiers and our three sampling strategies: random, UBS, and Distance UBS.
@@ -37,7 +37,7 @@ We use these 467 names as a gold standard in subsequent subsections.
 Recall from Section~\ref{sec:we} that the first step of the polyNER pipeline involves the use of the
  Word2Vec word embedding tool to compute a word vector for each word.
 In order to maximize the number of actual entities in the dataset\textemdash and the ratio of target to non-target entities\textemdash in the initial set of labels,
-we explore how the choice of seed entities and the Word2Vec parameters (vector) \texttt{size} and \texttt{window_size} impact the number of target entities retrieved. %  using similarity measures.
+we explore how the choice of seed entities and the Word2Vec parameters (vector) \texttt{size} and \texttt{window_size} impact the number of target entities retrieved. %  using distance measures.
 %XXX_IAN don't understand next sentence
 While we cannot expect meaningful classification using only positive examples, given the imbalance in the whole dataset, we aim to select the Word2Vec parameters that yield the highest ratio of polymers in this initial batch of candidates.
 
@@ -177,7 +177,7 @@ Thus, in all subsequent experiments, we use the three most frequent polymers and
 
 %\subsubsection{Word Embedding Window and Size Parameters}
 %We generate a pool of \num{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \num{1690}, excluding any token found in our test documents. 
-%As previously mentioned, to measure the entity-richness of our dataset, we compute the fraction of polymers retrieved using the similarity measure to our representative entities in the  \num{10000} candidates.
+%As previously mentioned, to measure the entity-richness of our dataset, we compute the fraction of polymers retrieved using the distance measure to our representative entities in the  \num{10000} candidates.
 %%We measure the impact of the \textit{window} and \textit{size} on the fraction of polymers extracted from the gold standard in the list of \num{10000} candidates most similar to our representative entities. 
 %%\logan{Where are the 10k candidates from again? Could we reference this set by its purpose rather than its size?}\roselyne{Done I think.}
 %%\logan{Need a reason why this is important? Also, this statement again raises my concern about using "fraction extracted from gold standard" as a metric for quality of the initial training set?}\roselyne{same answer as above, trying to increase balance in dataset.}
@@ -209,13 +209,9 @@ Thus, in all subsequent experiments, we use the three most frequent polymers and
 %Having explored the parameters for distance candidate generation, we generate a pool of \num{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \num{1690}, excluding any token found in our test documents. 
 %\logan{Is the 10k entries mentioned in the previous section this set? If so, we need to revise the order of these sections?}
 
-We train the initial classifier on the 200 entities with the highest similarity scores in the previously discussed list of \num{10000} candidates.
+We train the initial classifier on the 200 entities with the lowest distance scores in the previously discussed list of \num{10000} candidates.
 
-%We arranged the previous list of \num{10000} candidates in decreasing order of similarity scores.
-%We train the initial classifier using the first
-%200 entities from this list.
 Recall that the batch size of 200 was set based on an estimate of 60 minutes of expert time.
-%\ian{You previously said 60 minutes. Be consistent.}
 %\logan{Maybe we can be specific here about how much time it took. "We found that a batch of 200 required ..."}\roselyne{this is an average based on your estimate, but I don't have an exact number from the first test}
 As described on Figure~\ref{fig:current}, in the first step, we train and test on candidates generated from a word embedding model generated using only the training documents. 
 We train the classifier on 80\% of the data and test on 20\%.
