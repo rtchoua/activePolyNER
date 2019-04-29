@@ -75,7 +75,8 @@ We refer to the set of words that result when these filtering operations are app
 While the previous step%\ian{Should this be singular?}
  reduce the numbers of candidates and the imbalance of the dataset (target vs.\ non-target entity ratio), 
  there still remains a relatively large pool of potential candidates from which entities are to be selected.
-In our experience, the ratio of polymers-to-non-polymers in NLP-filtered words in publications is $\sim$5\%.\ian{I don't think that a ratio can be a percentage. You may mean ``only 5\% of NLP-filtered words are polymer names.}
+In our experience, only 5\% of NLP-filtered words are polymer names.
+%\ian{I don't think that a ratio can be a percentage. You may mean ``only 5\% of NLP-filtered words are polymer names.}
 In order to avoid presenting experts with mostly negative examples, hindering meaningful classification,
 we attempt to boost the number of polymer entities in the first batch of candidates to be annotated by using word vector similarity metrics between candidates and commonly used known entities as observed in a subset of publications or as suggested by experts.
 We discuss this distance metric in more details below.
