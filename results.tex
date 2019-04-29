@@ -72,13 +72,13 @@ Here we use this dictionary to identify the 10 most frequently occurring polymer
 %Experts can also suggest these entities based on prior knowledge.
 We assume that frequent polymers provide a large number of example sentences that illustrate context in which polymers are commonly used.
 %\logan{Do you think it would be better to use the gold standard, where we have certainty of the labels, to estimate the most-frequent polymers?}\roselyne{we used the entire corpus, we know the most frequent polymers}
-Hence, we first test the most common, the three most common, and the ten most common polymers as seed entities.
+Hence, we first test the most frequent, the three most frequent, and the ten most frequent polymers as seed entities.
 %\logan{The circularness of this strategy makes me uncomfortable. We use an NER model to determine the initial training set for the NER model? How would you address this criticism?}\roselyne{not sure I understand how I am using an NER model to determine the NER model, I'm just testing with various seed entities. As you suggested before, experts can give this info, or we can just measure the frequency of a few known entities. Added a line about this so that no prior work is needed.}
 We experiment with including and excluding their acronyms as additional seed entities.
 (Note that this modest set of 1, 3 and 10 seed entities could also be suggested by an expert.)
 
 Rows 1--6 of Table~\ref{tab:candidate_generation} shows the results for these experiments.
-When using \textit{polystyrene} (the most commonly used name) as a seed entity, the pool of candidates contained 33.55\% of the 467 gold standard polymers.
+When using \textit{polystyrene} (the most frequently used name) as a seed entity, the pool of candidates contained 33.55\% of the 467 gold standard polymers.
 %\logan{Another potential criticism: Would I need a gold standard to build the NER method? I thought your method is supposed to help me avoid having to do the work for generating a gold standard?}\roselyne{There is no way to evaluate if you don't have a gold standard is there?}
 We note a 2\% increase in the fraction of polymers retrieved when using both \textit{polystyrene} and \textit{PS}, 
 when compared to using \textit{polystyrene} alone. % (37.69\%).
