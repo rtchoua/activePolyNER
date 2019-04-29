@@ -62,7 +62,9 @@ Another selection criterion addresses representativeness, which measures how wel
 
 
 \subsection{Placing polyNER in Context}
-\ian{I feel that it is clearer to have a subsection here. Also: I think the goal is to put polyNER in context, but I am not sure that it does so clearly, yet. It seems to me to be currently a rather hard-to-follow statement of the polyNER approach, which I would expect to find elsewhere.}
+%\ian{I feel that it is clearer to have a subsection here. Also: I think the goal is to put polyNER in context, but I am not sure that it does so clearly, yet. It seems to me to be currently a rather hard-to-follow statement of the polyNER approach, which I would expect to find elsewhere.}
+%\roselyne{This was a subsection, but was removed as some found it strange here, but the purpose was indeed to relate polyNER to the previous paragraphs, giving it a second read.}
+%\roselyne{The main purpose also was to indicate that there was already work on polyNER and we are extending the work here}
 PolyNER extends previous work to create a low-cost scientific fact extraction system. 
 %We ask: how can we quickly generate annotated data for scientific named entity recognition?
 Specifically, we address two challenges: 
@@ -70,24 +72,29 @@ Specifically, we address two challenges:
 (2) the need for domain expert curators, which impedes the use of crowdsourcing platforms such as Amazon Mechanical Turk~\cite{buhrmester2011amazon} or Figure8~(\url{https://www.figure-eight.com/}).
 \ian{I find it odd that we are introducing the challenges that polyNER addresses here. It seems that we have
 already done that, to some extent, in the introduction and the background. Ideally that would be in one place.}
-
-\ian{The text alternates between third person and first person. Maybe be consistent third person: ``The polyNER approach ..." not ``our approach"?}
+\roselyne{Come back to this, after rereading intro and intro to architecture. This was supposed to clearly separate polyNER form the other systems.}
+%\ian{The text alternates between third person and first person. Maybe be consistent third person: ``The polyNER approach ..." not ``our approach"?}
 PolyNER has in common with prior work that it combines semi-supervised and active learning~\cite{nguyen2004active,basu2004active}.
-\ian{In the intro, the three stage are named candidate generation, labeling, and classification. Perhaps use those terms here too?}
-In its first stage, our approach is similar to bootstrapping but applied to named entities rather than entity pairs. 
+%\ian{In the intro, the three stage are named candidate generation, labeling, and classification. Perhaps use those terms here too?}
+In the first phase, the candidate generation is similar to bootstrapping but applied to named entities rather than entity pairs. 
 %\logan{Confusing. If PolyNER is similar to bootstrapping, why are are you describing it in the active learning section? I'm generally not sure why this paragraph is in "Related Work"}\roselyne{This was its own section, related polyner to all previous sections including bootstrapping and not just active learning, but felt a bit weird to Kyle, so we moved it to motivation, perhaps it fits before current changes to architecture to motivate what we are doing now. Will just try to do this link between our work and related work in each section and have a polyNER paragraph in architecture.}
-\ian{I want to confirm that the next sentence is correct. It states that you generate approximate labels by extracting
-words similar to seed entities, implying (to me) that this process somehow generates labels (automatically?). I thought this was the
-candidate generation phase.}
-We generate approximate labels by extracting targets similar to a few seed entities, 
+%\ian{I want to confirm that the next sentence is correct. It states that you generate approximate labels by extracting
+%words similar to seed entities, implying (to me) that this process somehow generates labels (automatically?). I thought this was the
+%candidate generation phase.}
+The initial batch of labels contains strings deemed \textit{similar} to a few seed entities, 
 with similarity determined by using word representations and vector similarity measures.
-\ian{In the next sentence, I have no idea what ``noise in the output'' means, and I wonder if other readers will?}
-We subsequently use active learning to address noise in the output and continue obtaining more accurate labels.
-To address noise in the output, expert label small batches of candidates, 
-which can be used\ian{the term ``can be used'' confuses me. Is the training that is defined here part of your system?}
- to train a word vector classifier and propose final\ian{what does ``final'' mean?} scientific named entities.
+%\ian{In the next sentence, I have no idea what ``noise in the output'' means, and I wonder if other readers will?}
+This approach is approximate and likely to include errors (words that have similar context to entities but are not actual entities),
+therefore, the next phase is expert labeling. 
+Subsequent batches of labels are obtained via active learning and used 
+%To address noise in the output, expert label small batches of candidates, 
+%which can be used\ian{the term ``can be used'' confuses me. Is the training that is defined here part of your system?}
+ to train a context-aware word vector classifier in the last phrase.
+%\ian{what does ``final'' mean?}\roselyne{the idea here is that candidates from the candidate generation phase are loosely labeled polymers, but subsequently corrected by experts, the real assignments are done at the classification. Will rephrase.}
+%scientific named entities.
 %\kyle{Somewhat hesitant to include the next sentences. Doesnt feel like it belongs here}\roselyne{I think it's ok here if we're trying to emphasize how it is different, but I guess you want to phrase it as a contribution and it may need to be repeated in the intro/conclusion. Making a note for tomorrow}
-PolyNER could provide a scientific entity tagger (i.e., recognizer) to be used with data programming to extract polymer properties.\ian{I am not sure what this sentence is here for. I think that you are trying to explain how polyNER can 
-complement other approaches. If so, then how about a paragraph that speaks to that directly. E.g., ``PolyNER can be used in a way that complements other scientific NER approaches. For example, it could be used as a scientific entity tagger (i.e., recognizer) to be used with data programming to extract polymer properties.}
+PolyNER can be used in a way that complements other scientific NER approaches. For example, it could be used as a scientific entity tagger (i.e., recognizer) to be used with data programming to extract polymer properties.
+%PolyNER could provide a scientific entity tagger (i.e., recognizer) to be used with data programming to extract polymer properties.\ian{I am not sure what this sentence is here for. I think that you are trying to explain how polyNER can 
+%complement other approaches. If so, then how about a paragraph that speaks to that directly. E.g., ``PolyNER can be used in a way that complements other scientific NER approaches. For example, it could be used as a scientific entity tagger (i.e., recognizer) to be used with data programming to extract polymer properties.}
 An example rule could be defined as: \textit{if a sentence contains a polymer name and the words ``glass transition,'' then extract number(s) in the sentence as potential glass transition temperature(s) for that polymer.}
 %We discuss the architecture of our system in more details in the next section.
