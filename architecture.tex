@@ -153,16 +153,17 @@ For example, the polymer name ``polystyrene'' in a sentence ``The
 melting point of polystyrene is ...'' suggests that X may also be a polymer in the
 sentence ``The melting point of X is ...''.
 
-We use the word embeddings introduced in Section~\ref{sec:wes} to capture this notion of context,
+We use the word embeddings introduced in Section~\ref{sec:we} to capture this notion of context,
 and vector distance between word vectors as a measure of similarity.
 Whether or not this approach works in practice will depend on whether 
 polymer names are in fact used in consistent contexts that is captured by our 
 word embedding  vectors. 
 
 We can then determine, for each NLP-filtered word, the extent to which it occurs
-in a similar context to the representative\ian{Your referred above to ``seed entities.'' Now you switch to ``representative polymers'' and ``representative entities.'' I recommend sticking to one term and using it consistently.} polymers, by computing the similarities
-between the word's vector and those for our known representative entities. 
-We experiment with one and more seed entities; when dealing with multiple representative entities,
+in a similar context to the seed entities, by computing the similarities
+between the word's vector and those for our known seed entities. 
+As we explain in Section~\ref{sec:wes}, we experiment with one and more seed entities; 
+when dealing with multiple seed entities,
 we use the lowest distance score for ranking candidates.
 %Here too, we exclude terms that exist in our test set of documents.
 
