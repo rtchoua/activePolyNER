@@ -53,6 +53,8 @@ we use lower-case exact string matching between the gold standard polymer names 
 
 \subsubsection{Representative Candidates}
 Here, we focus on how the choice of seed entities affects the fraction of polymers in the candidates, which we take as a measure of the entity-richness of the pool of candidates.
+\ian{I think that having said above how we define performance, 
+we can say ``We first investigate how the choice of seed entities affects performance.''}
 %\logan{This is confusing. Is the fraction of polymers in the candidate pool not the recall?}\roselyne{yes, why? I've replaced the word recall.}
 In previous work using the same corpus~\cite{tchoua2016hybrid,tchoua2016hybridi}, we build a dictionary of polymer names by using a rule-based approach and aggregating synonyms across ChemDataExtractor records. (A record consists of all information found about a chemical entity in a document.)  
 Here we use this dictionary to identify the 10 most frequently occurring polymers in our corpus and their acronyms.
@@ -63,14 +65,16 @@ Hence, we first test the most common, the three most common, and the ten most co
 %\logan{The circularness of this strategy makes me uncomfortable. We use an NER model to determine the initial training set for the NER model? How would you address this criticism?}\roselyne{not sure I understand how I am using an NER model to determine the NER model, I'm just testing with various seed entities. As you suggested before, experts can give this info, or we can just measure the frequency of a few known entities. Added a line about this so that no prior work is needed.}
 We experiment with including and excluding their acronyms as additional seed entities.
 (Note that this modest set of 1, 3 and 10 seed entities could also be suggested by an expert.)
-Rows 1--6 of Table~\ref{tab:candidate_generation} shows the results for this set of experiments.
+
+Rows 1--6 of Table~\ref{tab:candidate_generation} shows the results for these experiments.
 When using \textit{polystyrene} (the most commonly used name) as a seed entity, the pool of candidates contained 33.55\% of the 467 gold standard polymers.
 %\logan{Another potential criticism: Would I need a gold standard to build the NER method? I thought your method is supposed to help me avoid having to do the work for generating a gold standard?}\roselyne{There is no way to evaluate if you don't have a gold standard is there?}
-We note a 2\% increase in the fraction of polymers retrieved when using \textit{polystyrene} and its acronym compared to using \textit{polystyrene} alone.% (37.69\%).
+We note a 2\% increase in the fraction of polymers retrieved when using \textit{polystyrene} and its acronym compared to using \textit{polystyrene} alone. % (37.69\%).
 %\logan{Is this an important detail? Why does it need to stay [I think this section is a little dense]}\roselyne{well, before Kyle thought this was a bit vague, so I added lots of numbers, I may come back and remove this}\roselyne{Removing details from here}
-The fraction of polymers increases by 10\% when using the three most frequent polymers as representative entities; %(from 33.55\% to 46.9\% and 47.97\% with acronyms); 
-the three most frequent polymers in our datasets are \textit{polystyrene},\textit{poly(methyl methacrylate)},\textit{polyethylene}.% and their acronyms (\textit{PS}, \textit{PMMA} and \textit{PE})
-Using ten instead of three entities however, only slightly increases the yield of polymers by less than 1\%.%, from 47.97\% for three frequent polymers with acronyms to 48.39\% for ten frequent polymers with acronyms.
+The fraction of polymers increases by 10\% when we use three representative entities 
+%(from 33.55\% to 46.9\% and 47.97\% with acronyms); 
+(the three most frequent polymers in our datasets are \textit{polystyrene}, \textit{poly(methyl methacrylate)}, and \textit{polyethylene}), % and their acronyms (\textit{PS}, \textit{PMMA} and \textit{PE})
+but by less than 1\% when using 10 instead of three entities.%, from 47.97\% for three frequent polymers with acronyms to 48.39\% for ten frequent polymers with acronyms.
 
 \begin{table}[ht!]
 \centering
@@ -208,31 +212,38 @@ Figure~\ref{fig:roc_init}. %shows the Receiver Operating Characteristic (ROC) cu
 %The area under the curve (AUC) measures the area under the ROC.
 %Ideally the AUC of a learning algorithm is above 0.5. 
 The AUC can be misleading for imbalanced dataset as it takes into account true negatives or correctly predicted non-polymers (inverse ratio).
-For example if a dataset contains 90\% of sample A and 10\% of sample B, if a classifier predicts every sample as belonging to the first class (A), the accuracy reported will be of 90\% but this classifier is not useful in practice.
+For example, if a dataset contains 90\% of class A and 10\% of class B, 
+a classifier that predicts every sample as belonging to class A has an accuracy of 90\%, 
+but is not useful in practice.
 %Since AUC takes into account true negatives or correctly predicted non-polymers and our dataset is imbalanced containing more non-polymers than polymers, 
-Therefore, we also plot the Precision Recall (PR) curve to visualize the tradeoff between precision and recall.%\logan{A little wordy, can you streamline this sentence?}
+Therefore, we also plot the Precision Recall (PR) curve to show the tradeoff between precision and recall.%\logan{A little wordy, can you streamline this sentence?}
 %\logan{This paragraph contains no conclusions, it just explains the ROC. Add something about the results.}\roselyne{I explain below? will elaborate}
-While the AUC for the initial base KNN classifier is above random performance (0.5) in Figure~\ref{fig:roc_init}, the initial PRC shows poor precision regardless of recall (see Figure~\ref{fig:prc_init}).
+While the AUC for the initial base KNN classifier is above random performance (0.5) in Figure~\ref{fig:knn_init}, 
+the initial PRC shows poor precision regardless of recall.
 We have obtained better performance with more labels (897) in our previous implementation~\cite{tchoua2019polyner}, these preliminary results point to the fact that the classifier is beginning to learn but 80\% of 200 labels is not have enough training data to perform well in practice yet.
 %\logan{Better topic sentence. It provides a hit of what to look for. But, you do not follow it up with any details supporting this claim}\roselyne{yes this is where i was doing some explaining for the paragraph, will elabotate}
 %\logan{This is a long section for just describing how you made the classifier and that it is pretty bad. Do we need this section?}\roselyne{I will shorten and improve next, the main reason for poor performance is small sample data, because we know this works better with 800 data points, from previous polyNER paper.}
 
-\ian{Presumably you will fix the layout and figure labels for Figs~\ref{fig:prc_init} etc.}
+%\ian{Presumably you will fix the layout and figure labels for Figs~\ref{fig:prc_init} etc.}
 
-\ian{You refer in different places to ``Receiver Operating Characteristic Curve," ``Receiver Operating Curve,''
-and Receiver Operation Curve.'' I changed all to ROC curve to be consistent.}
+%\ian{You refer in different places to ``Receiver Operating Characteristic Curve," ``Receiver Operating Curve,''
+%and Receiver Operation Curve.'' I changed all to ROC curve to be consistent.}
 
 \begin{figure*}
 \centering
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/roc_init.png}
-\caption{ROC curve for KNN model for initial round of labels.}\label{fig:roc_init}
+%\caption{ROC curve for KNN model for initial round of labels.}\label{fig:roc_init}
 \end{minipage}\qquad
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prc_init.png}
-\caption{PR curve for KNN model for initial round of labels.}\label{fig:prc_init}
+%\caption{PR curve for KNN model for initial round of labels.}
+%\label{fig:prc_init}
 \end{minipage}
+\caption{ROC (left) and PR (right) curves for KNN model for initial round of labels.\ian{expand caption.}\label{fig:knn_init}}
+\end{figure*}
 
+\begin{figure*}
 \centering
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/rocs_round5_new.png}
@@ -250,7 +261,7 @@ and Receiver Operation Curve.'' I changed all to ROC curve to be consistent.}
 %\caption{PR curves for last round of active learning.}
 \label{fig:prcs_round5}
 \end{minipage}
-\setcounter{figure}{8}  
+%\setcounter{figure}{8}  
 \caption{ROC (left) and PR (right) curves for last round of active learning. 
 ROC curves improved from the initial round: AUCs for active learning are 0.74 and 0.7 compared to initial 0.62. 
 The classifier based on random sampling does not indicate learning based on AUC. PR curves also show improvement over initial poor performance,
@@ -273,17 +284,17 @@ Precision remains under 5\% across all used classifiers as shown in Table~\ref{t
 }
 \vspace{2ex}
 %[35.55, 37.69, 46.9, 47.97, 46.47, 48.39, 46.68, 36.4]
-\setlength\tabcolsep{4pt}
+\setlength\tabcolsep{6pt}
 %\begin{tabular}{*4c}
-\begin{tabular}{|c|c|c|c|c|}
+\begin{tabular}{|c| l | r | r | r |}
 \hline
-& & \multicolumn{3}{c|}{\textbf{Strategies}} \\
- \textbf{Round \#} & \textbf{Metric} & \textbf{Random} & \textbf{UBS}  & \textbf{Distance UBS}  \\
+& & \multicolumn{3}{c|}{\textbf{Strategy}} \\
+ \textbf{Round} & \textbf{Metric} & \textbf{Random} & \textbf{UBS}  & \textbf{Distance UBS}  \\
 %\hline
 %Round 0\ \ & \multicolumn{3}{c|}{} \\
 \hline
 0 & Precision &        \multicolumn{3}{c|}{6.53\%} \\
-0 & Recall\ \ \ \ \ &               \multicolumn{3}{c|}{19.1\%} \\
+0 & Recall\ \ \ \ \ &               \multicolumn{3}{c|}{19.10\%} \\
 %\hline
 %Round 1\ \  & \multicolumn{3}{c|}{} \\
 \hline
@@ -321,14 +332,15 @@ Intuitively, basic UBS is able to find \textit{useful} instances (target and non
 We selected seed entities based on their frequency in our corpus, and the yield of target entities during the candidate generation.
 Instead, this observation suggests that we could also study how the choice of seed entities impact of the performance of the classifier during the active learning process. 
 We revisit this concept of \textit{diversity} of labels in more details in the Section~\ref{sec:discussion}. 
-It is worth noting that with limited training data and based solely on context, the classifiers retrieves 45.64\% (more than one third) of the gold standard polymers with a precision of 18.21\%; this after about five hours of expert labeling. 
+It is worth noting that with limited training data and based solely on context, the classifiers retrieves 45.64\% (more than one third) of the gold standard polymers with a precision of 18.21\%, after about five hours of expert labeling. 
 For comparison, an attempt to extract polymer names using the rule: \textit{if the name contains ``poly'' extract it as a polymer}, would score a precision of 34\% and a recall of 41\% on the same dataset.
-We conclude that with our relatively small dataset, we are able to achieve close to rule-based performance, using active learning and minimal amount of labeling (under 5 hours).
+We conclude that with our relatively small dataset, we are able to achieve close to rule-based performance, using active learning and a minimal (five hours) amount of labeling.
 %\logan{I think we should show this point on the plot for context. Also, state what you conclude from the comparison. Don't leave it up to the reader to state the conclusion.}
 
 \subsection{Using Active Learning Labels with Character-Level Enhanced Embeddings}
-Having used just 1000 labels or 5 hours of expert labeling, the context-based classifier using active learning and a pool of NLP-filtered candidates reached numbers comparable to rule-based performance, but not quite the performance obtained by our reference of state-of-the-art chemistry-aware NLP-toolkit.
-Next, we train a word embedding model enhanced with sub-word information using polyNER's labels. 
+Having used just 1000 labels or five hours of expert labeling, the context-based classifier using active learning and a pool of NLP-filtered candidates achieved performance comparable to rule-based performance, 
+but not quite to the state-of-the-art chemistry-aware NLP-toolkit.
+Next, we train a word embedding model enhanced with sub-word information using polyNER labels. 
 %\logan{Why are you doing this? You need some motivation for this section, otherwise it kinds of jumps out of nowhere and begs the question: Why did you not use this through the entire study? Maybe you can say this section is devoted to "further tuning the model now that you have a large-enough pool of data to make selections statistically-reasonable"?}
 We compare the performance to a state-of-the-art chemistry-aware NLP toolkit. %and we end with a discussion of the results.
 FastText uses word representations enriched with character-level information.
@@ -345,21 +357,20 @@ Therefore, we generate a FastText word embedding model, and generate character-e
 Next, we train a KNN classifier using vectors for these candidates labeled through active learning using a pool of NLP-filtered candidates (identified as best-performing in previous experiments).
 %\logan{Confusing. Is UBS not active learning?}\roselyne{it's the sampling method}
 We test the classifier against NLP-filtered nouns from our 100-document test set.
-The KNN classifier performance improves when using these word vectors as shown in Figure%\ref{fig:UBS_rocs_fasttext} and
-~\ref{fig:UBS_prcs_fasttext}.
+The KNN classifier performance improves when using these word vectors, as shown in Figure~\ref{fig:UBS_prcs_fasttext}.
 %\logan{Why sow both figures if you say PRC is better.}\roselyne{I will end up taking them off, as I'm now at 12 pages}
 In this case, the classifier achieves 29.7\% precision and 81.9\% recall. 
 These numbers are comparable to those achieved by ChemDataExtractor (CDE), a state-of-the-art chemical NLP tool.
 As CDE aims to extract all
 chemical compounds, not just polymers, it serves only as a demonstration of an
-alternative approach in the absence of a polymer NER system (Note that CDE also extracts properties). 
+alternative approach in the absence of a polymer NER system. % (Note that CDE also extracts properties). 
 Its recall is high
-at 74.5\% but its precision is, as expected, low at 8.7\%. 
+at 74.5\%, but its precision for polymers is, as expected, low at 8.7\%. 
 %\loganfussingaboutrecallandprecision \roselyne{comes with PRC so should be good here}
 We have previously modified CDE with
-manually defined polymer identification rules~\cite{tchoua2017towards},
-and our polymer-enhanced version of the software (CDE+) achieved 42.2\% precision and 68.3\% recall on the same test set. 
-We achieve higher recall than CDE and CDE+ using labels from UBS and FastText vectors and intermediate precision with only $\sim$ five hours of expert labeling.
+manually defined polymer identification rules~\cite{tchoua2017towards};
+our polymer-enhanced version (CDE+) achieved 42.2\% precision and 68.3\% recall on the same test set. 
+We achieve higher recall than CDE and CDE+ using labels from UBS and FastText vectors and intermediate precision with only about five hours of expert labeling.
 
 \subsection{Discussion and Future Work}
 \label{sec:discussion}
@@ -372,16 +383,19 @@ We attribute the increased performance to the character embedding enhancement, w
 In other words, the classifiers of character and (context-based) word embedding vectors performs better than classifiers of only context-based word embedding.
 Given this result, one may wonder whether the active learning process itself could benefit from using this enhanced vector embedding. 
 We repeated the active learning experiment using the entire corpus of NLP-filtered candidates and classifying FastText (enhanced) vectors instead of Gensim vectors at each iteration. 
-The classifier's ROC curve did not achieve CDE performance after 5 iterations and was below random performance.%\logan{Wasn't it also worse than the randomly-selected words?}\roselyne{yes, but doesn't it make you want to see another figure more}
+The classifier's ROC curve did not achieve CDE performance after five iterations and was below random performance.%\logan{Wasn't it also worse than the randomly-selected words?}\roselyne{yes, but doesn't it make you want to see another figure more}
+
 These results suggest that the character-level information enhances the classifier's performance only once a certain threshold of context information has been captured by the embedding.
 In FastText, the portion of the word embedding vector generated using context varies depending on how much context is available in the entire corpus. 
 For words deemed to have \textit{enough} context, vectors do not include any character-level information. 
-At the other extreme, for previously unseen words, the embedding is generated solely based on character n-gram information and comparison to other words in the corpus.
-During the active learning process, candidates to be labeled by experts are selected using maximum-entropy based uncertainty sampling (for which the prediction probability is the same for both classes, target and non target);
-these are also more likely to be candidates which lack context and for which vectors have been generated using character-level information. 
-As a result, the expert is presented with several nearly identical candidates (e.g. \textit{PS13k/PMMA12k}, \textit{PS214k/PMMA12k}, and \textit{PS31.6k/PMMA12k}) hindering the learning process as they are located in close vicinity in terms of the full (character and context) word embedding space.
+At the other extreme, for previously unseen words, the embedding is generated based solely on character n-gram information and comparison to other words in the corpus.
+During the active learning process, candidates to be labeled by experts are selected by using maximum-entropy based uncertainty sampling (for which the prediction probability is the same for both classes, target and non target);
+these candidates are more likely to lack context. % and for which vectors have been generated using character-level information. 
+\ian{I don't see why it is a result that the expert often presented with nearly identical candidates.}
+As a result, the expert is often presented with several nearly identical candidates (e.g., \textit{PS13k/PMMA12k}, \textit{PS214k/PMMA12k}, and \textit{PS31.6k/PMMA12k}), which hinders the learning process as these candidates are located in close vicinity in terms of the full (character and context) word embedding space.
 In other words, in this full space, while their uncertainty measure is comparable, these examples are not \textit{diverse}, where diversity is a measure of the distance of the examples to each other or previously labeled instances~\cite{brinker2003incorporating}.
-One solution to explore in the future, would be to impose a diversity constraint on the candidates using batch active learning for example~\cite{settles2009active}.
+One solution to explore in future work would be to impose a diversity constraint on the candidates,
+for example by using batch active learning~\cite{settles2009active}.
 %\logan{There are batch active learning papers, and surely a review. Cite one so that people do not think you're planning to reinvent such methods.}\roselyne{Definitely planned on adding citation but hadn't reread that part, thanks}
 %\logan{This seem more like a "Future Work/Can we do even better!?" section than an actual discussion. Should we rename the section accordingly}
 
@@ -395,7 +409,7 @@ One solution to explore in the future, would be to impose a diversity constraint
 %\end{minipage}\qquad
 %\begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in]{figures/fasttext_prc_al_corpus_round5_100}
-\caption{PR curve for KNN model trained using active learning labels and word representations enriched with character-level information.}\label{fig:UBS_prcs_fasttext}
+\caption{PR curve for KNN model trained with active learning labels and word representations enriched with character-level information.\ian{I am curious why the line is straight for recall from 0 to 0.4?}}\label{fig:UBS_prcs_fasttext}
 %\end{minipage}
 \end{figure}
 
