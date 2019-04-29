@@ -264,17 +264,19 @@ We have obtained better performance with more labels (897) in our previous imple
 %\setcounter{figure}{8}  
 \caption{ROC (left) and PR (right) curves for last round of active learning. 
 ROC curves improved from the initial round: AUCs for active learning are 0.74 and 0.7 compared to initial 0.62. 
-The classifier based on random sampling does not indicate learning based on AUC. PR curves also show improvement over initial poor performance,
-the random strategy has only shows two probabilities for target and non-targets predictions; the other two active learning strategies are lifting away from the bottom corner and indicating discriminative capacities.
+The classifier based on random sampling does not indicate learning based on AUC. 
+PR curves also show improvement over initial poor performance,
+the random strategy has only shows two probabilities for target and non-target predictions; 
+the other two active learning strategies are lifting away from the bottom corner, indicating discriminative capacities.
 In both types of plots, active learning using NLP-filtered candidates (AL UBS) outperforms the active learning using distance candidates (AL D-UBS) and approaches rule-based performance.
 % AL-1 refers to active learning using NLP-filtered nouns. AL-2 refers to active learning using candidates deemed similar to representative entities.  %\logan{<soapbox>Is it standard practice to use such uninformativ figure captions in CS? I was taught to make the captions almost standalone from the text</soapbox>}
 }\label{fig:rocs_prcs_round5}
 \end{figure*}
 
 \subsubsection{Discrimination}
-After the initial round of labeling, we experiment with the three strategies mentioned in Section~\ref{sect:apner_architecture}: random sampling (Random), active learning using pool of NLP-filtered nouns from training corpus (UBS), and active learning using pool of \num{10000} distance candidates deemed closest to our seed entities(Distance UBS) \textemdash minus 200 used in initial round).
-Given the relatively small batch size, we see no improvement in the PR curve for two rounds of active learning or the first three rounds of labeling. 
-Precision remains under 5\% across all used classifiers as shown in Table~\ref{tab:pr_table}. 
+After the initial round of labeling, we experiment with the three strategies described in Section~\ref{sect:apner_architecture}: random sampling (Random), active learning using pool of NLP-filtered nouns from training corpus (UBS), and active learning using the \num{10000} distance candidates deemed closest to our seed entities (Distance UBS). %\textemdash minus the 200 used in the initial round).
+We see no improvement in the PR curve for two rounds of active learning or the first three rounds of labeling. 
+Precision remains under 5\% across all classifiers, as shown in Table~\ref{tab:pr_table}. 
 %\logan{I think the table would be better suited as a plot}\roselyne{I am tempted to remove it, and just indicate that there was not much learning in the first 3 rounds, but Kyle had a comment that people like to see it for themselves and suggested a table. I don't think the plots would look good either has it will bring attention to the problem of using multiple classifiers as previously discussed. I can go back to ommitting this or displaying the last two rounds.}
 %\loganfussingaboutrecallandprecision \roselyne{I actually read that this is what people use many times for imbalanced datasets, but I get the point and we have ROCS to got with the last two rounds}
 
@@ -319,40 +321,44 @@ Precision remains under 5\% across all used classifiers as shown in Table~\ref{t
 \end{tabular}
 \end{table}
 
-
-However in the third iteration of active learning, we notice an increase in precision in UBS (see Table~\ref{tab:pr_table}). 
-This learning is sustained in the following iteration as illustrated on Figures~\ref{fig:rocs_prcs_round5}. 
+However, in the third iteration of active learning, we notice an increase in precision in UBS (see Table~\ref{tab:pr_table}). 
+This learning is sustained in the following iteration as illustrated in Figure~\ref{fig:rocs_prcs_round5}. 
 The AUC for UBS is 0.74 and that of Distance UBS is 0.70. 
-The PRCs for both are improved (lifting away from the lower left corner of the graph) over the first round with active learning with UBS showing better tradeoff than with Distance UBS and Random strategies.
+The PRCs for both are improved (lifting away from the lower left corner of the graph) over the first round, 
+with active learning better tradeoff with UBS showing than with Distance UBS and Random strategies.
 %After round 3 and 4, we observe and confirm some, albeit moderate, level context-based predictive ability.
 %We also determine that the classifier, which uses UBS is performing better than with the two other strategies.
-When tested against our gold standard of 467 one-word polymer names the KNN classifier achieves 18.21\% precision and  45.64\% recall. 
+When tested against our gold standard of 467 one-word polymer names, the KNN classifier achieves 18.21\% precision and  45.64\% recall. 
 While the candidate generation helps insure that the classes are balanced in the initial batch of labels, using a pool of distance candidates (Distance UBS) does not yield better results than using active learning with a pool of all NLP-filtered candidates (UBS).
-Intuitively, basic UBS is able to find \textit{useful} instances (target and non-targets) to be labeled from the entire word embedding space, while examples from Distance UBS are clustered around the seed entities which may be colocated in that space.
-We selected seed entities based on their frequency in our corpus, and the yield of target entities during the candidate generation.
-Instead, this observation suggests that we could also study how the choice of seed entities impact of the performance of the classifier during the active learning process. 
+Intuitively, basic UBS can find \textit{useful} instances (target and non-targets) to be labeled from the entire word embedding space, while examples from Distance UBS are clustered around the seed entities that may be colocated in that space.
+
+We selected seed entities based on their frequency in our corpus and the yield of target entities during the candidate generation.
+This observation suggests that we could also study how the choice of seed entities impact of the performance of the classifier during the active learning process. 
 We revisit this concept of \textit{diversity} of labels in more details in the Section~\ref{sec:discussion}. 
 It is worth noting that with limited training data and based solely on context, the classifiers retrieves 45.64\% (more than one third) of the gold standard polymers with a precision of 18.21\%, after about five hours of expert labeling. 
 For comparison, an attempt to extract polymer names using the rule: \textit{if the name contains ``poly'' extract it as a polymer}, would score a precision of 34\% and a recall of 41\% on the same dataset.
-We conclude that with our relatively small dataset, we are able to achieve close to rule-based performance, using active learning and a minimal (five hours) amount of labeling.
+We conclude that with our relatively small dataset, we are able to achieve close to rule-based performance, 
+using active learning and minimal (five hours) labeling.
 %\logan{I think we should show this point on the plot for context. Also, state what you conclude from the comparison. Don't leave it up to the reader to state the conclusion.}
 
-\subsection{Using Active Learning Labels with Character-Level Enhanced Embeddings}
-Having used just 1000 labels or five hours of expert labeling, the context-based classifier using active learning and a pool of NLP-filtered candidates achieved performance comparable to rule-based performance, 
-but not quite to the state-of-the-art chemistry-aware NLP-toolkit.
+%\subsection{Using Active Learning Labels with Character-Level Enhanced Embeddings}
+\subsection{Active Learning Labels + Character-Level Embeddings}
+After just 1000 labels, or five hours of expert labeling, the context-based classifier using active learning and a pool of NLP-filtered candidates achieved performance comparable to rule-based performance, 
+but not quite to the state-of-the-art chemistry-aware NLP-toolkit, CDE+.
 Next, we train a word embedding model enhanced with sub-word information using polyNER labels. 
 %\logan{Why are you doing this? You need some motivation for this section, otherwise it kinds of jumps out of nowhere and begs the question: Why did you not use this through the entire study? Maybe you can say this section is devoted to "further tuning the model now that you have a large-enough pool of data to make selections statistically-reasonable"?}
-We compare the performance to a state-of-the-art chemistry-aware NLP toolkit. %and we end with a discussion of the results.
+%We compare the performance to a state-of-the-art chemistry-aware NLP toolkit. 
+%and we end with a discussion of the results.
 FastText uses word representations enriched with character-level information.
 This word embedding method considers sub-word information as well as
 context, allowing it to consider word morphology differences, such as prefixes
 and suffixes. Sub-word information is especially useful for words for which
 context information is lacking, as words can still be compared to morphologically similar
 existing words. We set the length of the sub-word used for comparison\textemdash
-FastText's n_gram parameter\textemdash to five characters, based on our intuition that
+FastText's \texttt{n_gram} parameter\textemdash to five characters, based on our intuition that
 many polymers begin with the prefixes ``poly'' or ``poly(.'' 
-Therefore, we generate a FastText word embedding model, and generate character-enhanced vectors for our UBS-labeled candidates.
-
+Therefore, we generate a FastText word embedding model, 
+and generate character-enhanced vectors for our UBS-labeled candidates.
 
 Next, we train a KNN classifier using vectors for these candidates labeled through active learning using a pool of NLP-filtered candidates (identified as best-performing in previous experiments).
 %\logan{Confusing. Is UBS not active learning?}\roselyne{it's the sampling method}
@@ -385,9 +391,9 @@ Given this result, one may wonder whether the active learning process itself cou
 We repeated the active learning experiment using the entire corpus of NLP-filtered candidates and classifying FastText (enhanced) vectors instead of Gensim vectors at each iteration. 
 The classifier's ROC curve did not achieve CDE performance after five iterations and was below random performance.%\logan{Wasn't it also worse than the randomly-selected words?}\roselyne{yes, but doesn't it make you want to see another figure more}
 
-These results suggest that the character-level information enhances the classifier's performance only once a certain threshold of context information has been captured by the embedding.
+These results suggest that character-level information enhances classifier performance only once a certain threshold of context information has been captured by the embedding.
 In FastText, the portion of the word embedding vector generated using context varies depending on how much context is available in the entire corpus. 
-For words deemed to have \textit{enough} context, vectors do not include any character-level information. 
+For words deemed to have enough context, vectors do not include any character-level information. 
 At the other extreme, for previously unseen words, the embedding is generated based solely on character n-gram information and comparison to other words in the corpus.
 During the active learning process, candidates to be labeled by experts are selected by using maximum-entropy based uncertainty sampling (for which the prediction probability is the same for both classes, target and non target);
 these candidates are more likely to lack context. % and for which vectors have been generated using character-level information. 
