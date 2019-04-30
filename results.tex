@@ -210,9 +210,9 @@ Thus, in all subsequent experiments, we use the three most frequent polymers and
 \subsection{The Initial Classifier}
 Recall from Section~\ref{sec:bootstrap} that we use an initial set of 200 NLP-filtered entities that are close
 to seed entities to bootstrap our labeling process.
-Once those data are labeled by our experts, we train our initial KNN classifier.
-\ian{I am not sure what Figure~\ref{fig:knn_init} is showing. Is this the results evaluated on the 20\% of hold out data
-from the bootstrap set? On the 467 polymers in the test set?}
+Once those data are labeled by our experts, we train our initial KNN classifier using 80\% of the candidates and validate on the 20\% hold out data. 
+We then test the classifier against all NLP-filtered candidates from the 100-documents test set.
+%\ian{I am not sure what Figure~\ref{fig:knn_init} is showing. Is this the results evaluated on the 20\% of hold out data from the bootstrap set? On the 467 polymers in the test set?}
 We observe a better-than-random behavior on the Receiver Operating Characteristic (ROC) curve with an AUC of 0.62, as shown in 
 Figure~\ref{fig:knn_init}. %shows the Receiver Operating Characteristic (ROC) curve for the initial classifier with highest recall when evaluating on the test corpus.
 %\logan{I do not like this as a topic sentence because it doesn't offer any indication of what to draw from the figure. I prefer ones that are "We found that X, as shown in Figure Y." Topic sentences with some editorial comments worked in help keep the narrative of the purpose of your study alive.}
