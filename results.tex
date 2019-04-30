@@ -31,14 +31,16 @@ We use these 467 names as a gold standard in subsequent subsections.
 
 %\logan{What part of this data can we release, if any?}\roselyne{Hong and I are working on a dataset following a schema we discussed for release, I think we talked about it but didn't update you guys back. However it's more like NLP datasets, where we are releasing sentences with entities and not this exact dataset}
 
-\subsection{Word Embedding Settings}\label{sec:wes}
+\subsection{Seed Entities}\label{sec:wes}
 %\ian{Are you exploring these issues in general, as the first sentence states, 
 %or are you trying to find good values for these settings, for use in subsequent work? I can't tell.}\roselyne{Only for this initial labeling, later in the paper I indicate that we could tune for classification}
 %\logan{Needs better topic sentence. Say why you are doing this more clearly, less about the "what"}
 Recall from Section~\ref{sec:wordembeddings} that polyNER uses
  Word2Vec word embedding tool to compute a word vector for each word.
 In order to maximize the number of actual entities in the dataset\textemdash and the ratio of target to non-target entities\textemdash in the initial set of labels,
-we explore how the choice of seed entities and the Word2Vec parameters (vector) \texttt{size} and \texttt{window_size} impact the number of target entities retrieved. %  using distance measures.
+we explore how the choice of seed entities
+% and the Word2Vec parameters (vector) \texttt{size} and \texttt{window_size} 
+impact the number of target entities retrieved. %  using distance measures.
 %XXX_IAN don't understand next sentence
 While we cannot expect meaningful classification using only positive examples, given the imbalance in the whole dataset, we aim to select the Word2Vec parameters that yield the highest ratio of polymers in this initial batch of candidates.
 
@@ -50,8 +52,7 @@ While we cannot expect meaningful classification using only positive examples, g
 %and report what fraction of the 467 gold standard names are included in that \num{10000}.
 %We use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.}
 %\roselyne{Thank you. I want to justify the number 10000, will rephrase because your text is better but it doesn't answer the question why 10000 necessarily}
-
-\ian{This section is just about seed entities, which only applied to Distance UBS. So it should renamed, I think?}
+%\ian{This section is just about seed entities, which only applied to Distance UBS. So it should renamed, I think?}
 
 In the experiments that follow,
 we use the 467 gold standard polymer names identified by experts in our 100-document test set to
@@ -70,7 +71,7 @@ We use lower-case exact string matching between the gold standard polymer names 
 %We evaluate the entity-richness of polymers in this pool of candidates by measuring the percentage of the 467 manually extracted polymer names that it yields;
 %we use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.
 
-\roselyne{Since I removed parameter tuning, add choices of parameters here?}\ian{I'd suggest putting it in in Section~\ref{sec:wordembeddings}.}
+
 
 %\subsubsection{Seed entities}
 We investigate how the choice of seed entities affects performance.
@@ -470,7 +471,18 @@ for example by using batch active learning~\cite{settles2009active}.
 \end{figure}
 
 \subsection{Labeling}\label{sec:labeling}
-\ian{Here will be the labeling discussion that Roselyne says she will add.}
+We perform preliminary labeling tests to estimate time. %and insure agreement between experts.
+One expert labels candidates from a subset of documents in our corpus achieving an average of 60 minutes per 200 labels (two labeling sessions of $\sim$30 minutes for 100 labels).%\roselyne{This is the number I remember but I have not written it anywhere}
+Based on expert feedback, we also improve the interface across rounds to further facilitate and speed up labeling.
+For example, we increase the number of example sentences available to provide context, to decrease the number of occurences in which experts have to look up original publications for candidates.
+We also increase the size of checkmarks to make it easier to reject erroneous candidates.
+%Having performed these initial tests, and considering that expert time is expensive, we allow annotators to save their progress and come back to labeling anytime within a week's time. \roselyne{Is this only going to add confusion?}
+In the initial labeling round, we
+we perform crosschecking for 10\% of the batch of labels. 
+We confirm agreement between labels for all but 1 of the set of 20 candidates or an agreement of 95\%.
+
+%\logan{The inter-relater score is a result, not part of the architecture}\roselyne{ok, don't remove, come back to this to make sure I add it later}
+%\ian{Here will be the labeling discussion that Roselyne says she will add.}
 
 
 

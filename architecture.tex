@@ -36,7 +36,6 @@ We also describe the labeling process, and the training and testing configuratio
 \end{figure*}
 
 \subsection{Computing Word Embeddings}\label{sec:wordembeddings}
-
 A word embedding method 
 %\ian{You referred to ``vector similarity" but then switch to talking about word embedding.
 %Maybe say ``We use word embedding methods to obtain the vectors that we use for determining similarity.''} 
@@ -52,8 +51,11 @@ We use Word2Vec, a recent, light-weight and easy-to-use implementation of contex
 Specifically we use the Gensim continuous bag-of-words
 (CBOW) implementation of the Word2Vec
 algorithm~\cite{rehurek2010software} to generate vectors.
-We describe in Section~\ref{sec:wes} how we select appropriate values for the
-Word2Vec (vector) \texttt{size} and \texttt{window_size} parameters
+Based on prior parameter tuning we set the 
+%We describe in Section~\ref{sec:wes} how we select appropriate values for the
+Word2Vec \texttt{size} parameter to 100 and the \texttt{window_size} to 2; 
+where \texttt{size}  is the size of the vector, and \texttt{window_size}
+is an adjustable window of surrounding context word used to compute each embedding.
 
 \subsection{NLP-Filtering}\label{sec:filter}
 %\subsubsection{Word Embedding Model}
