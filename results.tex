@@ -471,8 +471,9 @@ for example by using batch active learning~\cite{settles2009active}.
 \end{figure}
 
 \subsection{Labeling}\label{sec:labeling}
-We perform preliminary labeling tests to estimate time. %and insure agreement between experts.
-One expert labels candidates from a subset of documents in our corpus achieving an average of 60 minutes per 200 labels (two labeling sessions of $\sim$30 minutes for 100 labels).%\roselyne{This is the number I remember but I have not written it anywhere}
+We estimate labeling time based on previous experiments~\ref{tchoua2019polyner}.
+\roselyne{I think we need to use the time reported in polyNER, I will change the time in the paper accordingly, 
+we reporeted 2 hours for 897 labels}
 Based on expert feedback, we also improve the interface across rounds to further facilitate and speed up labeling.
 For example, we increase the number of example sentences available to provide context, to decrease the number of occurences in which experts have to look up original publications for candidates.
 We also increase the size of checkmarks to make it easier to reject erroneous candidates.
