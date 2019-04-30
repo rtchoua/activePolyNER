@@ -170,8 +170,8 @@ we use the lowest distance score for ranking candidates.
 %\scalebox{0.4}{\includegraphics{figures/al_setup.pdf}}
 \includegraphics[trim=0.15in 0.1in 0in 0.in,clip,width=3.5in]{figures/al_setup.pdf}
 \caption{\label{fig:current} Active learning experiment set up. 1) We generate an unsupervised word embedding model using our entire corpus. 2) We propose NLP-filtered candidate entities to untrained and expert annotators before classifying their word vectors. 3) We select the best-performing classifier for uncertainty-based sampling of labels for the next round of active learning. 4) We evaluate this word vector classifier on all NLP-filtered words from a set of test documents. 
-\ian{1) Maybe the ``save'' part in lower left should say ``Classifier for use in next round''?
-2) There are many other things I don't understand in the figure. Why does it look like the Word Embedding model produces NLP-filtered candidates? Why are NLP-filtered candidates in two places? What does \#4 show? Where is the flow for the whol thing? It seems that we start at top and then end up stopping, via different routes, at \#3 and \#4?}
+%\ian{1) Maybe the ``save'' part in lower left should say ``Classifier for use in next round''?
+%2) There are many other things I don't understand in the figure. Why does it look like the Word Embedding model %produces NLP-filtered candidates? Why are NLP-filtered candidates in two places? What does \#4 show? Where is %the flow for the whol thing? It seems that we start at top and then end up stopping, via different routes, at \#3 and %\#4?}
 %\logan{What are the blue docs? Why don't they have an arrow? Where do the NLP candidates for 2 come from?}
 %\roselyne{They come from the entire pool of NLP-filtered candidates (excluding the test set, will make sure this is clear}
 }
