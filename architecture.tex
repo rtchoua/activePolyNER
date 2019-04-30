@@ -104,7 +104,7 @@ We discuss this distance metric in more detail below.
 Based on preliminary experiments, we set the size of each batch of strings to be labeled to 200, 
 or about an hour of expert time.
 
-\subsection{Sampling Strategies}
+\subsection{Sampling Strategies}\label{sec:sampling}
 %While the previous steps reduces the numbers of candidates and the imbalance of the dataset (target vs. non-target entity ration), there still remains a relatively large pool of potential candidates to select entities from.
 %In order to achieve higher classification accuracy\textemdash
 %by decreasing the number of potential false positives (candidates incorrectly identified as targets by our classifier)
@@ -143,8 +143,10 @@ We predict outcomes for all NLP-filtered candidates and, for each, obtain a prob
 We select the 200 entries for which $p$ is closest to 0.5 to be labeled by experts.
 
 \subsubsection{Uncertainty-Based Sampling using NLP-Filtered Distance Candidates (Distance UBS)}
-Our second strategy selects NLP-filtered candidates that are used in similar contexts to known entities.
-The intuition here is that a candidate is more likely to be a target referent (a name, acronym, synonym, etc.) if it used in a similar context.
+Our third strategy is identical to UBS, except that it works with just a subset of the NLP-filtered candidates,
+namely the \num{10000} that are closest to a set of seed entities. 
+The intuition here is that a candidate is more likely to be a target referent 
+(a name, acronym, synonym, etc.) if it used in a similar context.
 For example, the polymer name ``polystyrene'' in a sentence ``The
 melting point of polystyrene is ...'' suggests that X may also be a polymer in the
 sentence ``The melting point of X is ...''.
@@ -176,6 +178,21 @@ we use the lowest distance score for ranking candidates.
 \end{figure}
 
 \subsection{Active Learning Loop}
+We now discuss our active learning process. 
+As discussed in Section~\ref{sec:related}, the basic idea here is that we repeatedly select a set of
+candidate entities (a ``sample'') for expert labeling, 
+based on what we have learned from previously labeled entities.
+We run this process three times in parallel, with no information passing between separate runs,
+in order to compare the performance of the Random, UBS, and Distance UBS sampling strategies.
+
+Not specified in Section~\ref{sec:sampling} is the nature of the classifier that the UBS and Distance UBS strategies
+use to estimate, for each entity in their candidate set, that entity's probability of being a polymer.
+(The Random strategy does not use a classifier, as it selects candidates at random.)
+
+
+
+Probably I will confuse things here further. At each phase of the AL cycle (200 labels) we train many classifiers (KNN, RF, other ones that I forget). We then take the best performing one (by recall I gather above) and use that to select the candidates for the next round. That process continues in each iteration. So in some rounds we might have KNN being used, in others it might be RF. I understand that it somewhat converges on KNN in the later rounds.
+
 As we have no prior knowledge of the distribution of target entities in the vector space, 
 we use multiple classifiers at each iteration of the active learning process. 
 We use the best performing classifier on the labeled candidates for subsequent maximum entropy-based uncertainty sampling. 
