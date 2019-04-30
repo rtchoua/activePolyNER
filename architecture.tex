@@ -217,11 +217,12 @@ In each case, we use the word embedding for each string as input features.
 In each round $i$, we train these seven classifiers on the sample data gathered in rounds $j, j<i$,
 and then use the classifier with the highest recall to determine the $p$ scores that UBS and Distance use when
 assembling their 200-entity sample in that step.
+When defining best performance, we prioritize recall, or retrieving a maximum of targets, over precise extraction.
+In other words, extracting a higher number of targets potentially requiring additional curation is favored over obtaining fewer correct targets.
+%\ian{I have not included the following text, as I am not sure it makes sense. Don't the classifiers return a real number, not a class label? -- ``When defining best performance, we prioritize recall, or retrieving a maximum of targets, over precise extraction.
+%In other words, extracting a higher number of targets potentially requiring additional curation is favored over obtaining fewer correct targets.''}\roselyne{The text is correct}
 
-\ian{I have not included the following text, as I am not sure it makes sense. Don't the classifiers return a real number, not a class label? -- ``When defining best performance, we prioritize recall, or retrieving a maximum of targets, over precise extraction.
-In other words, extracting a higher number of targets potentially requiring additional curation is favored over obtaining fewer correct targets.''}
-
-\ian{I suspect that I have not got my rounds quite right in the preceding sentence.}
+%\ian{I suspect that I have not got my rounds quite right in the preceding sentence.}\roselyne{that's right, we train with labels selected from the previous round}
 %\ian{text from Kyle: Probably I will confuse things here further. At each phase of the AL cycle (200 labels) we train many classifiers (KNN, RF, other ones that I forget). We then take the best performing one (by recall I gather above) and use that to select the candidates for the next round. That process continues in each round. So in some rounds we might have KNN being used, in others it might be RF. I understand that it somewhat converges on KNN in the later rounds.}
 %As we have no prior knowledge of the distribution of target entities in the vector space, 
 %we use multiple classifiers at each round of the active learning process. 
@@ -275,10 +276,10 @@ Clicking on ``?'' delivers up to 25 more example sentences.
 }
 \end{figure}
 
-\subsubsection{Classification or Candidate Discrimination}
-We use multiple classifiers that we concurrently trained and test on the same data in steps 1, 2, and 3 of Figure~\ref{fig:current}.
-\ian{I think that this subsubsection can be removed, as the rest of its contents are now above. 
-I am just not sure about the remaining sentence. I don't understand Figure 2, so I am not sure if it adds information.}
+%\subsubsection{Classification or Candidate Discrimination}
+%We use multiple classifiers that we concurrently trained and test on the same data in steps 1, 2, and 3 of Figure~\ref{fig:current}.
+%\ian{I think that this subsubsection can be removed, as the rest of its contents are now above. 
+%I am just not sure about the remaining sentence. I don't understand Figure 2, so I am not sure if it adds information.}\roselyne{Agreed and it is referring to an old version of the figure. I also fits in the active learning loop, so no need to have a new one.}
 %The classifiers include the scikit-Learn~\cite{scikit-learn} implementations of Decision Tree (DT), Gradient Boosting (GB), K-Nearest Neighbor (KNN), Logistic Regression (LR), Linear Support Vector Machine (SVM), Naive Bayes (NB), and Random Forest (RF). 
 %\logan{Something to consider for future: I've been nervous a long time about how we use so many models. How good is your grid search CV for these models? Many (KNN, SVM) are super sensitive to hyperparameters, and I'm worried we are testing 7 models badly and that we'd have better results with tuning 1 really well}
 %\roselyne{Yes, this is definitely a lesson taken. I was just telling Kyle, I know exactly how I would change this experiment and others based on my experience now. Perhaps I need to say that in the discussion!}\roselyne{Added note to include in discussion}
