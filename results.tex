@@ -7,9 +7,10 @@ We then discuss the results of initial classification and subsequent four rounds
 Finally, we experiment with word representations enhanced with character-level information using FastText~\cite{bojanowski2016enriching,joulin2016bag}.
 
 In this work, we evaluate extraction accuracy in terms of precision and recall.
-Recall refers to the fraction of actual positives that
-are labeled correctly and precision to the fraction of predicted
-positives that labeled correctly.
+\emph{Precision} refers to the fraction of predicted
+positives that are labeled correctly and
+\emph{recall} to the fraction of actual positives that
+are labeled correctly.
 
 \subsection{Dataset}
 
@@ -96,9 +97,7 @@ These results suggest that there is little value to using more than a few seed e
 
 \begin{table}[ht!]
 \centering
-\caption{Fraction of gold standard polymer names extracted from pool of \num{10000} \textit{distance} candidates with different candidate generation methods.\label{tab:candidate_generation}
-%\ian{I don'tt hink it is credible to have four significant figures given that there are only 467 gold standard names. Three is plenty.}
-%\ian{It seems to me that these are not different candidate generation methods, but rather different seed entities?}
+\caption{Fraction of gold standard polymer names extracted from pool of \num{10000} \textit{distance} candidates with different candidate generation methods. \ian{I realize that I am confused by the term ``candidate generation'', which is not defined in Section~IV, but introduced here without comment. I \textbf{think} it is a synonym for what you call ``sampling'' in Section~IV?}\label{tab:candidate_generation}
 }
 \vspace{2ex}
 %[35.55, 37.69, 46.9, 47.97, 46.47, 48.39, 46.68, 36.4]
@@ -213,7 +212,7 @@ We train the initial classifier on the 200 entities with the lowest distance sco
 
 Recall that the batch size of 200 was set based on an estimate of 60 minutes of expert time.
 %\logan{Maybe we can be specific here about how much time it took. "We found that a batch of 200 required ..."}\roselyne{this is an average based on your estimate, but I don't have an exact number from the first test}
-As described on Figure~\ref{fig:current}, in the first step, we train and test on candidates generated from a word embedding model generated using only the training documents. 
+As shown in Figure~\ref{fig:current}, in the first step, we train and test on candidates generated from a word embedding model generated using only the training documents. 
 We train the classifier on 80\% of the data and test on 20\%.
 
 We observe a better-than-random behavior on the Receiver Operating Characteristic (ROC) curve with an AUC of 0.62, as shown in 
@@ -294,32 +293,35 @@ In both types of plots, active learning using NLP-filtered candidates (AL UBS) o
 \end{figure*}
 
 \subsubsection{Discrimination}
-After the initial round of labeling, we experiment with the three strategies described in Section~\ref{sect:apner_architecture}: random sampling (Random), 
-active learning using the NLP-filtered nouns from the training corpus (UBS), 
-and active learning using the \num{10000} distance candidates deemed closest to our seed entities (Distance UBS). %\textemdash minus the 200 used in the initial round).
-
-Results, in Table~\ref{tab:pr_table}, show 
-no improvement in the first two rounds: % of active learning or the first three rounds of labeling. 
-precision remains under 5\% for all strategies.
-However, in the third iteration, we observe increases in precision,
+After the initial round of labeling, we experiment with the three strategies described in Section~\ref{sect:apner_architecture}: Random, UBS, and Distance UBS,
+performing four rounds of active learning for each.
+Results, in Table~\ref{tab:pr_table}, show
+no improvement in the first two rounds for any strategy: % of active learning or the first three rounds of labeling. 
+precision remains under 5\% for all.
+However, in the third round, we observe increases in precision,
 an improvement that  
-is sustained in the fourth iteration for UBS.
+is sustained in the fourth round for UBS.
 Figure~\ref{fig:rocs_prcs_round5} shows ROC and PR curves for the three strategies after four rounds. 
 The AUC for UBS is 0.74 and that of Distance UBS is 0.70. 
 The PR curves for both are improved (lifting away from the lower left corner of the graph) over the first round, 
-with active learning better tradeoff with UBS showing than with Distance UBS and Random strategies.
+with active learning performing better with UBS than with Distance UBS.
 %After round 3 and 4, we observe and confirm some, albeit moderate, level context-based predictive ability.
 %We also determine that the classifier, which uses UBS is performing better than with the two other strategies.
-When tested against our gold standard of 467 one-word polymer names, the KNN classifier achieves 18.21\% precision and  45.64\% recall. 
-While the candidate generation helps insure that the classes are balanced in the initial batch of labels, using a pool of distance candidates (Distance UBS) does not yield better results than using active learning with a pool of all NLP-filtered candidates (UBS).
-Intuitively, basic UBS can find \textit{useful} instances (target and non-targets) to be labeled from the entire word embedding space, while examples from Distance UBS are clustered around the seed entities that may be colocated in that space.
+When tested against our gold standard of 467 one-word polymer names, 
+the KNN classifier achieves 18.2\% precision and  45.6\% recall. 
+
+We conclude that while the candidate generation step
+helps insure that the classes are balanced in the initial batch of labels, 
+restricting ourselves to just distance candidates, as is done by Distance UBS, does not yield better results than using active learning with all NLP-filtered candidates (UBS).
+Intuitively, basic UBS can find \textit{useful} instances (target and non-targets) to be labeled from the entire word embedding space, 
+while examples from Distance UBS are clustered around the seed entities that may be colocated in that space.
 
 %\logan{I think the table would be better suited as a plot}\roselyne{I am tempted to remove it, and just indicate that there was not much learning in the first 3 rounds, but Kyle had a comment that people like to see it for themselves and suggested a table. I don't think the plots would look good either has it will bring attention to the problem of using multiple classifiers as previously discussed. I can go back to ommitting this or displaying the last two rounds.}
 %\loganfussingaboutrecallandprecision \roselyne{I actually read that this is what people use many times for imbalanced datasets, but I get the point and we have ROCS to got with the last two rounds}
 
 \begin{table}[ht!]
 \centering
-\caption{Precision and recall when tested against ground truth documents for classifiers at each active learning round.\label{tab:pr_table}
+\caption{Precision and recall when tested against gold standard for classifiers at each active learning round.\label{tab:pr_table}
 }
 \vspace{2ex}
 %[35.55, 37.69, 46.9, 47.97, 46.47, 48.39, 46.68, 36.4]
@@ -337,48 +339,50 @@ Intuitively, basic UBS can find \textit{useful} instances (target and non-target
 %\hline
 %Round 1\ \  & \multicolumn{3}{c|}{} \\
 \hline
-\multirow{2}{*}{1}  & Precision     & 3.75\%       &      3.18\%      &  5.28\% \\
- & Recall\ \ \ \ \ & 0.29\%      &   93.62\%     &  56.81\% \\
+\multirow{2}{*}{1}  & Precision     & 3.75\%       &      3.18\%      &  \textbf{5.28\%} \\
+ & Recall\ \ \ \ \ & 0.29\%      &   \textbf{93.62\%}     &  56.81\% \\
 %\hline
 %Round 2\ \  & \multicolumn{3}{c|}{} \\
 \hline
-\multirow{2}{*}{2} & Precision      & 1.49\%           &      3.79\%      &  5.35\% \\
-& Recall\ \ \ \ \ & 1.45\%           &    46.38\%      &  10.14\% \\
+\multirow{2}{*}{2} & Precision      & 1.49\%           &      3.79\%      &  \textbf{5.35\%} \\
+& Recall\ \ \ \ \ & 1.45\%           &    \textbf{46.38\%}      &  10.14\% \\
 %\hline
 %Round 3\ \  & \multicolumn{3}{c|}{} \\
 \hline
-\multirow{2}{*}{3}  & Precision      & 6.02\%              &    21.23\%      &  3.93\% \\
- & Recall\ \ \ \ \ & 44.64\%            &    40.00\%      &  84.35\%  \\
+\multirow{2}{*}{3}  & Precision      & 6.02\%              &    \textbf{21.23\%}      &  3.93\% \\
+ & Recall\ \ \ \ \ & 44.64\%            &    40.00\%      &  \textbf{84.35\%}  \\
 %\hline
 %Round 4\ \  & \multicolumn{3}{c|}{} \\
 \hline
-\multirow{2}{*}{4} & Precision     & 7.06\%          &    18.21\%      &  7.20\% \\
-& Recall\ \ \ \ \ & 40.70\%         &     45.64\%     &  51.88\% \\
+\multirow{2}{*}{4} & Precision     & 7.06\%          &    \textbf{18.21\%}      &  7.20\% \\
+& Recall\ \ \ \ \ & 40.70\%         &     45.64\%     &  \textbf{51.88\%} \\
 \hline
 \end{tabular}
 \end{table}
 
-
-We selected seed entities based on their frequency in our corpus and the yield of target entities during the candidate generation.
+We selected seed entities based on their frequency in our corpus and the yield of target entities during the candidate generation.\ian{I thought that you said above that you picked the most frequent words?}
 This observation suggests that we could also study how the choice of seed entities impact of the performance of the classifier during the active learning process. 
-We revisit this concept of \textit{diversity} of labels in more details in the Section~\ref{sec:discussion}. 
-It is worth noting that with limited training data and based solely on context, the classifiers retrieves 45.64\% (more than one third) of the gold standard polymers with a precision of 18.21\%, after about five hours of expert labeling. 
-For comparison, an attempt to extract polymer names using the rule: \textit{if the name contains ``poly'' extract it as a polymer}, would score a precision of 34\% and a recall of 41\% on the same dataset.
+We revisit this concept of \textit{diversity} of labels in the Section~\ref{sec:discussion}. 
+Note that with limited training data and based solely on context, the classifier retrieves 45.6\% (more than one third) of the gold standard polymers with a precision of 18.2\%, after about five hours of expert labeling. 
+For comparison, an attempt to extract polymer names using the rule: 
+\textit{if the name contains ``poly'' extract it as a polymer}, gets recall of 41\% and precision of 34\% on the same dataset.
 We conclude that with our relatively small dataset, we are able to achieve close to rule-based performance, 
-using active learning and minimal (five hours) labeling.
+using active learning and little labeling.
 %\logan{I think we should show this point on the plot for context. Also, state what you conclude from the comparison. Don't leave it up to the reader to state the conclusion.}
 
 %\subsection{Using Active Learning Labels with Character-Level Enhanced Embeddings}
 \subsection{Active Learning Labels + Character-Level Embeddings}
-After just 1000 labels, or five hours of expert labeling, the context-based classifier using active learning and a pool of NLP-filtered candidates achieved performance comparable to rule-based performance, 
-but not quite to the state-of-the-art chemistry-aware NLP-toolkit, CDE+.
-Next, we train a word embedding model enhanced with sub-word information using polyNER labels. 
+After just 1000 labels, or five hours of expert labeling, the context-based classifier using active learning applied to NLP-filtered candidates achieved performance comparable to rule-based performance, 
+but not quite to the polymer-enhanced CDE+.
+With the goal of further improving polyNER performance,
+we experiment with the use of an alternative word embedding model, FastText, which 
+%Next, we train a word embedding model enhanced with sub-word information using polyNER labels. 
 %\logan{Why are you doing this? You need some motivation for this section, otherwise it kinds of jumps out of nowhere and begs the question: Why did you not use this through the entire study? Maybe you can say this section is devoted to "further tuning the model now that you have a large-enough pool of data to make selections statistically-reasonable"?}
 %We compare the performance to a state-of-the-art chemistry-aware NLP toolkit. 
 %and we end with a discussion of the results.
-FastText uses word representations enriched with character-level information.
-This word embedding method considers sub-word information as well as
-context, allowing it to consider word morphology differences, such as prefixes
+uses word representations enriched with sub-word (character-level) information.
+Because FastText considers sub-word information as well as
+context, it can consider word morphology differences, such as prefixes
 and suffixes. Sub-word information is especially useful for words for which
 context information is lacking, as words can still be compared to morphologically similar
 existing words. We set the length of the sub-word used for comparison\textemdash
@@ -387,26 +391,29 @@ many polymers begin with the prefixes ``poly'' or ``poly(.''
 Therefore, we generate a FastText word embedding model, 
 and generate character-enhanced vectors for our UBS-labeled candidates.
 
-Next, we train a KNN classifier using vectors for these candidates labeled through active learning from a pool of NLP-filtered candidates (identified as best-performing in previous experiments).
+\ian{Next is confusing to me as (it seems to me) you refer to things in roundabout ways:
+e.g., I am not clear what are ``these candidates'' or what it is that is ``identified as best-performing in previous experiments''.}
+Next, we train a KNN classifier using vectors for these candidates labeled through active learning from the NLP-filtered candidates (identified as best-performing in previous experiments).
 %\logan{Confusing. Is UBS not active learning?}\roselyne{it's the sampling method}
 We test the classifier against NLP-filtered nouns from our 100-document test set.
 KNN classifier performance improves when using these word vectors, 
-achieving 29.7\% precision and 81.9\% recall.
+achieving 29.7\% precision and 81.9\% recall,
 %\logan{Why sow both figures if you say PRC is better.}\roselyne{I will end up taking them off, as I'm now at 12 pages}
 %In this case, the classifier achieves 29.7\% precision and 81.9\% recall. 
-These numbers are comparable to those achieved by ChemDataExtractor (CDE), a state-of-the-art chemical NLP tool.
-As CDE aims to extract all
-chemical compounds, not just polymers, it serves only as a demonstration of an
-alternative approach in the absence of a polymer NER system. % (Note that CDE also extracts properties). 
-Its recall is high
-at 74.5\%, but its precision for polymers is, as expected, low at 8.7\%. 
+comparable to those achieved by CDE (see Section~\ref{sec:cde}).
+% although as CDE aims to extract all
+%chemical compounds, not just polymers, it serves only as a demonstration of an
+%alternative approach in the absence of a polymer NER system. % (Note that CDE also extracts properties). 
+CDE's recall is high
+at 74.5\%, but its precision for polymers is, as expected, low at 8.7\%, as it does not incorporate polymer knowledge. 
 %\loganfussingaboutrecallandprecision \roselyne{comes with PRC so should be good here}
-We have previously modified CDE with
-manually defined polymer identification rules~\cite{tchoua2017towards};
-our polymer-enhanced version (CDE+) achieved 42.2\% precision and 68.3\% recall on the same test set.
-We show the PR curve for the FastText vector classifier and the CDE+ performance on Figure~\ref{fig:UBS_prcs_fasttext}.
+In Figure~\ref{fig:UBS_prcs_fasttext}, we show the PR curve for the FastText vector classifier
+and also results for the polymer-enhanced CDE+
+which achieve 42.2\% precision and 68.3\% recall on the same test set.\ian{rewording ok here?}
+%We show the PR curve for the FastText vector classifier and the CDE+ performance in Figure
 %as shown in Figure~\ref{fig:UBS_prcs_fasttext}.\ian{Is this a good place for figure reference?}
-We achieve higher recall than CDE and CDE+ using labels from UBS and FastText vectors and intermediate precision with only about five hours of expert labeling.
+We achieve higher recall than CDE and CDE+ using labels from UBS and FastText vectors 
+and intermediate precision, with only about five hours of expert labeling.
 
 \subsection{Discussion and Future Work}
 \label{sec:discussion}
@@ -422,7 +429,7 @@ In other words, the classifiers of character and (context-based) word embedding 
 
 Given this result, one may wonder whether the active learning process itself could benefit from using this enhanced vector embedding. 
 To determine whether this is the case,
-we repeated the active learning experiment using the entire corpus of NLP-filtered candidates and classifying FastText (enhanced) vectors instead of Gensim vectors at each iteration. 
+we repeated the active learning experiment using the entire corpus of NLP-filtered candidates and classifying FastText (enhanced) vectors instead of Gensim vectors at each round. 
 However, performance was worse than random.
 %the classifier's ROC curve did not achieve CDE performance after five iterations and was below random performance.%\logan{Wasn't it also worse than the randomly-selected words?}\roselyne{yes, but doesn't it make you want to see another figure more}
 
@@ -453,12 +460,14 @@ for example by using batch active learning~\cite{settles2009active}.
 %\begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in]{figures/fasttext_prc_al_corpus_round5_100}
 \caption{PR curve for KNN model trained with active learning labels and word representations enriched with character-level information. Results for CDE+ are also shown.
-\ian{I am curious why the line is straight for recall from 0 to 0.4?}}
+\ian{I'd be interested in Kyle's views, but I feel that we need some explanation of why the line is straight for recall from 0 to 0.4.}
+}
 \label{fig:UBS_prcs_fasttext}
 %\end{minipage}
 \end{figure}
 
-
+\subsection{Labeling}\label{sec:labeling}
+\ian{Here will be the labeling discussion that Roselyne says she will add.}
 
 
 

@@ -52,7 +52,7 @@ While writing concise scripts to define rules may seem to be a more reasonable t
 than exhaustively annotating text, it still requires expert guidance.  
 In data programming as in boostrapping and distant supervision it is important to evaluate the quality of functions and extraction patters to decrease noisy patterns.
 
-\subsection{Active Learning}
+\subsection{Active Learning}\label{sec:active}
 Active learning~\cite{zhou2017brief} assumes that gold standard labels for unlabeled instances can be obtained by
 querying an oracle (domain expert or source of knowledge).
 The goal of active learning is to decrease labeling costs by requesting a limited number of labels from the oracle, that have been deemed most valuable by the learner.
@@ -62,6 +62,16 @@ In the case of multiple learners, query-by-committee requests labels for unlabel
 Uncertainty sampling and query-by-committee are representative approaches based on informativeness, where informativeness measure show well an unlabeled instance helps reduce the uncertainty. 
 Another selection criterion addresses representativeness, which measures how well an instance helps represent the structure of input patterns; in this case selection is made by querying data from unlabeled clusters of data~\cite{nguyen2004active,dasgupta2008hierarchical}.
 
+\subsection{CDE and CDE+}\label{sec:cde}
+We introduce briefly ChemDataExtractor (CDE), 
+a state-of-the-art chemical NLP tool that combines a dictionary, expert-created
+rules, and machine learning algorithms.
+In previous work, we modified CDE with
+manually defined polymer identification rules~\cite{tchoua2017towards}, creating what we term here CDE+.
+CDE+ was trained on the CHEMDNER corpus:
+a collection of \num{10000} PubMed abstracts with \num{84355} chemical entity mentions labeled manually by expert chemistry literature curators, following annotation guidelines specifically defined for this task~\cite{krallinger2015chemdner}. \ian{i took the preceding from the conclusion because I feel that we should
+stick all info about CDE and CDE+ in one place. I want to confirm, though, that you trained CDE+ on the CHEMDNER corpus, as written here? Or is this actually a statement about CDE?}
+We compare our methods against both CDE and CDE+ in Section~\ref{sec:results}.
 
 \subsection{Placing polyNER in Context}
 %\ian{I feel that it is clearer to have a subsection here. Also: I think the goal is to put polyNER in context, but I am not sure that it does so clearly, yet. It seems to me to be currently a rather hard-to-follow statement of the polyNER approach, which I would expect to find elsewhere.}

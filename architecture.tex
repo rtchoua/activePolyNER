@@ -111,12 +111,12 @@ or about an hour of expert time.
 %\textemdash we want to carefully select examples to be labeled by experts.
 %\logan{Why is labeling "false positives" bad?}\roselyne{It just takes more time from the expert, also we can't give the expert only negative examples.}
 We implement three sampling strategies, which we refer to as \textit{Random}, \textit{Uncertainty-Based Sampling (UBS)} and \textit{Distance Uncertainty-Based Sampling (Distance UBS)}.
-We apply each of these strategies to our NLP-filtered candidates to determine which candidates to label.
+We apply each of these strategies to our NLP-filtered candidates to determine which candidates to present to experts for labeling.
 %Based on preliminary experiments, we set the size of batches of strings to be labeled to 200 or about an hour of expert time.
 %\logan{As my comment in F\ref{fig:architecture}, we have two different kinds of sampling strategies and I think we should describe them separately. What do you think?}\roselyne{I'm separating the initial sampling and adding it to the figure}
 
-\subsubsection{Random Strategy using NLP-Filtered Candidates}
-In the first strategy, we randomly select 200 of the NLP-filtered candidates from the entire corpus of publications.
+\subsubsection{Random}
+Here, we randomly select 200 of the NLP-filtered candidates.
 %IAN removed next two lines as we just said that above.
 %Note that the imbalance between polymers and other NLP-filtered \textit{tokens} 
 %(words or space-separated strings) is still significant (around 5\% in our experience).
@@ -125,7 +125,7 @@ In the first strategy, we randomly select 200 of the NLP-filtered candidates fro
 %in which 200 candidates are selected at random from the NLP-filtered candidates.''}\roselyne{It's missing dictionary, that do not exist in the dictionary}
 %\ian{Separate issue: as far as I know, you have not introduced the concept of a test set, so the reference to test set is confusing.}
 
-\subsubsection{Uncertainty-Based Sampling using NLP-Filtered Candidates (UBS)}
+\subsubsection{Uncertainty-Based Sampling (UBS)}
 Our second strategy applies maximum entropy sampling to the NLP-filtered candidates. % from the full corpus of documents used in the random strategy.
 %\logan{Same pool}
 As previously mentioned, maximum entropy selection is an uncertainty sampling method that
@@ -142,7 +142,7 @@ As we have two classes, this equal probability is 0.5.
 We predict outcomes for all NLP-filtered candidates and, for each, obtain a probability $p$. 
 We select the 200 entries for which $p$ is closest to 0.5 to be labeled by experts.
 
-\subsubsection{Uncertainty-Based Sampling using NLP-Filtered Distance Candidates (Distance UBS)}
+\subsubsection{Uncertainty-Based Sampling with Distance Ranking (Distance UBS)}
 Our third strategy is identical to UBS, except that it works with just a subset of the NLP-filtered candidates,
 namely the \num{10000} that are closest to a set of seed entities. 
 The intuition here is that a candidate is more likely to be a target referent 
@@ -172,14 +172,12 @@ we use the lowest distance score for ranking candidates.
 \caption{\label{fig:current} The active learning experiment set up. 1) We generate an unsupervised word embedding model using our entire corpus. 2) We propose NLP-filtered candidate entities to untrained and expert annotators before classifying their word vectors. 3) We select the best-performing classifier for uncertainty-based sampling of labels for the next round of active learning. 4) We evaluate this word vector classifier on all NLP-filtered words from a set of test documents. 
 %\logan{What are the blue docs? Why don't they have an arrow? Where do the NLP candidates for 2 come from?}
 %\roselyne{They come from the entire pool of NLP-filtered candidates (excluding the test set, will make sure this is clear}
-%\ian{Could this fit in a single column?}
-%\ian{Here and in other figure, I find it confusing to have the description precede the number.}
 }
 \end{figure}
 
 \subsection{Active Learning Loop}
 We now discuss our active learning process. 
-As discussed in Section~\ref{sec:related}, the basic idea here is that we repeatedly select a set of
+As discussed in Section~\ref{sec:active}, the basic idea here is that we repeatedly select a set of
 candidate entities (a ``sample'') for expert labeling, 
 based on what we have learned from previously labeled entities.
 We run this process three times in parallel, with no information passing between separate runs,
@@ -189,9 +187,7 @@ Not specified in Section~\ref{sec:sampling} is the nature of the classifier that
 use to estimate, for each entity in their candidate set, that entity's probability of being a polymer.
 (The Random strategy does not use a classifier, as it selects candidates at random.)
 
-
-
-Probably I will confuse things here further. At each phase of the AL cycle (200 labels) we train many classifiers (KNN, RF, other ones that I forget). We then take the best performing one (by recall I gather above) and use that to select the candidates for the next round. That process continues in each iteration. So in some rounds we might have KNN being used, in others it might be RF. I understand that it somewhat converges on KNN in the later rounds.
+\ian{text from Kyle: Probably I will confuse things here further. At each phase of the AL cycle (200 labels) we train many classifiers (KNN, RF, other ones that I forget). We then take the best performing one (by recall I gather above) and use that to select the candidates for the next round. That process continues in each iteration. So in some rounds we might have KNN being used, in others it might be RF. I understand that it somewhat converges on KNN in the later rounds.}
 
 As we have no prior knowledge of the distribution of target entities in the vector space, 
 we use multiple classifiers at each iteration of the active learning process. 
@@ -206,7 +202,7 @@ We engage two domain experts to annotate the candidates generated by the
 \textit{UBS} and \textit{Distance UBS} sampling strategies. 
 Each expert annotates one strategy;
 we also perform crosschecking for 10\% of the first batch of labels, to get a measure of agreement between experts,
-with results reported in Section~\ref{sec:xx}. 
+with results reported in Section~\ref{sec:labeling}. 
 %We confirm agreement between labels for all but 1 of the set of 20 candidates or an agreement of 95\%.
 %\logan{The inter-relater score is a result, not part of the architecture}\roselyne{ok, don't remove, come back to this to make sure I add it later}
 Experts use a web interface (see Figure~\ref{fig:polyner}) to approve or reject candidates,
