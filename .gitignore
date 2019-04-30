@@ -1,0 +1,8 @@
+*.aux
+*.lof
+*.log
+*.bbl
+*.blg
+*.synctex.gz
+
+alpolyner.pdf
