@@ -79,7 +79,7 @@ Web interface;
 %\ian{You say that polyNER uses active learning, then you say that you enhance it with AL in this paper. 
 %Inconsistent?}\roselyne{yes thank you, made some changes (too fast) after Kyle pointed out that we had already introduced polymer in the now accepted paper}.
 % approach;
-the resulting labels are used to train context-based word vector classifiers. %after each iteration.
+the resulting labels are used to train context-based word vector classifiers. %after each round.
 PolyNER's labels can also be used to train other machine learning models to leverage other features in addition to context, such as word morphology
 to recognize target entities.
 %\ian{The reference to ``beyond their context'' doesn't make sense to me; I wonder if it will to other readers.}
@@ -88,15 +88,19 @@ to substitute the labor-intensive processes of assembling a large
 manually annotated corpus (and reduce costs) by using small numbers of carefully selected candidates to be labeled via focused expert input. 
 
 In this paper, we seek to improve polyNER's performance in each of its three steps:
-candidate generation, 
-labeling, and classification.
+candidate generation,\ian{I note that in the architecture section, you refer to this phase as sampling, so I changed 
+the text in the results section to be consistent. Not sure if you want to change here too, or change other secitons back,
+but should be consistent.}
+labeling, and classification.\ian{Classification is not shown as a step elsewhere. Also, I note that Figure~1 has a
+``candidate discrimination'' step, which is a term not used much elsewhere.}
 In the candidate generation step,
-we experiment with different \textit{representative} (commonly used) entities. % to generate candidates;
+we experiment with different \textit{representative} (commonly used) entities.\ian{I think that the representative/seed entity thing is mainly relevant for bootstrapping. Maybe we should say ``used in the bootstrapping phase.'''}
+ % to generate candidates;
 % and tune the word embedding model parameters to increase the yield of actual scientific entities among candidates; 
 In the labeling and classification steps,
 %\ian{is this rewording correct? I think that as you say you improve each step,
 %you should be explicit about what you did to improve in each step.}\roselyne{yes correct}
-we use active learning with maximum entropy uncertainty sampling and two different pools of unlabeled data to train classifiers, and compare their learning rate after five iterations. 
+we use active learning with maximum entropy uncertainty sampling and two different pools of unlabeled data to train classifiers, and compare their learning rate after five rounds. 
 %\logan{"seed entities" is not a standard term, right? If it is not standard, maybe use something less metaphorical "ways to generate initial candidates for labeling"}\roselyne{I don't think so standard but I picked it up from similar works in NER, snowball, do you mean not to use it in the intro or the whole paper. Will search and see how many times I use it. I had started using representative entities, which I also have to define.} 
 Using labels generated via active learning, we train word vector classifiers and achieve NER performance comparable to 
 a modified version of a state-of-the art rule-based chemical entity extraction

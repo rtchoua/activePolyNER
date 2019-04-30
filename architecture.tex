@@ -139,8 +139,8 @@ As we have two classes, this equal probability is 0.5.
 %\ian{Can we say, ``As we have two classes" rather than ``in the binary case"?}
 %In the binary case, probabilities range from 0 to 0.5. 
 %\ian{Why can't you have a probability of 1, for say ``polystyrene''?}\roselyne{You're right, you can have that, and the text is confusing, if you you have a probability of 1, then |1-0.5| gives you 0.5 and this will not be considered as a confusing example, the examples with probability p with |0.5-p| close to 0 are the ones considered confusing} 
-We predict outcomes for all NLP-filtered candidates and, for each, obtain a probability $p$. 
-We select the 200 entries for which $p$ is closest to 0.5 to be labeled by experts.
+We use the classifier to obtain a probability $p$ for each NLP-filtered candidate. 
+We select the 200 entries for which $p$ is closest to 0.5 as our sample.
 
 \subsubsection{Uncertainty-Based Sampling with Distance Ranking (Distance UBS)}
 Our third strategy is identical to UBS, except that it works with just a subset of the NLP-filtered candidates,
@@ -169,32 +169,67 @@ we use the lowest distance score for ranking candidates.
 \centering
 %\scalebox{0.4}{\includegraphics{figures/al_setup.pdf}}
 \includegraphics[trim=0.15in 0.1in 0in 0.in,clip,width=3.5in]{figures/al_setup.pdf}
-\caption{\label{fig:current} The active learning experiment set up. 1) We generate an unsupervised word embedding model using our entire corpus. 2) We propose NLP-filtered candidate entities to untrained and expert annotators before classifying their word vectors. 3) We select the best-performing classifier for uncertainty-based sampling of labels for the next round of active learning. 4) We evaluate this word vector classifier on all NLP-filtered words from a set of test documents. 
+\caption{\label{fig:current} Active learning experiment set up. 1) We generate an unsupervised word embedding model using our entire corpus. 2) We propose NLP-filtered candidate entities to untrained and expert annotators before classifying their word vectors. 3) We select the best-performing classifier for uncertainty-based sampling of labels for the next round of active learning. 4) We evaluate this word vector classifier on all NLP-filtered words from a set of test documents. 
+\ian{1) Maybe the ``save'' part in lower left should say ``Classifier for use in next round''?
+2) There are many other things I don't understand in the figure. Why does it look like the Word Embedding model produces NLP-filtered candidates? Why are NLP-filtered candidates in two places? What does \#4 show? Where is the flow for the whol thing? It seems that we start at top and then end up stopping, via different routes, at \#3 and \#4?}
 %\logan{What are the blue docs? Why don't they have an arrow? Where do the NLP candidates for 2 come from?}
 %\roselyne{They come from the entire pool of NLP-filtered candidates (excluding the test set, will make sure this is clear}
 }
 \end{figure}
 
+%\subsubsection{Initial Classifier}
+\subsection{Bootstrapping}\label{sec:bootstrap}
+%Having explored the parameters for distance candidate generation, we generate a pool of \num{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \num{1690}, excluding any token found in our test documents. 
+%\logan{Is the 10k entries mentioned in the previous section this set? If so, we need to revise the order of these sections?}
+The UBS and Distance UBS sampling methods use a classifier to 
+determine which NLP-filtered entities should be chosen next for expert labeling.
+This classifier must be trained, and initially we have no labeled data.
+We could choose a set of NLP-filtered entities at random for initial labeling, 
+but that choice is unlikely to perform well due to the low proportion of polymers (just 5\%) in the NLP-filtered corpus.
+Instead, therefore, we create an initial bootstrap set comprising the 200 NLP-filtered entities 
+with the lowest distance scores.
+\ian{I assert that there is no need to mention the \num{10000} number here: you just take the 200 with the lowest score, as the 10000 is just the ones with the lowest distance scores, yes?}
+(Recall that we use a batch size of 200 based on an estimate of 60 minutes of expert time required for labeling.)
+We then train the initial classifier on this bootstrap set, using 80\% of the data for training and 20\% for testing.
+% in the previously discussed list of \num{10000} candidates.
+%\logan{Maybe we can be specific here about how much time it took. "We found that a batch of 200 required ..."}\roselyne{this is an average based on your estimate, but I don't have an exact number from the first test}
+%As shown in Figure~\ref{fig:current}, in the first step, we train and test on candidates generated from a word embedding model generated using only the training documents. 
+%We train the classifier on 80\% of the data and test on 20\%.
+
 \subsection{Active Learning Loop}
 We now discuss our active learning process. 
-As discussed in Section~\ref{sec:active}, the basic idea here is that we repeatedly select a set of
+As discussed in Section~\ref{sec:active}, the basic idea here is that we repeatedly select a set of 200
 candidate entities (a ``sample'') for expert labeling, 
 based on what we have learned from previously labeled entities.
-We run this process three times in parallel, with no information passing between separate runs,
-in order to compare the performance of the Random, UBS, and Distance UBS sampling strategies.
+We run this process independently with the Random, UBS, and Distance UBS sampling strategies,
+in order to compare their performance.
+%We describe these steps in more details in the following sections.
 
+\subsubsection{Use and Evaluation of Classifiers}
 Not specified in Section~\ref{sec:sampling} is the nature of the classifier that the UBS and Distance UBS strategies
-use to estimate, for each entity in their candidate set, that entity's probability of being a polymer.
+use to estimate the probability of each entity in the NLP-filtered corpus (or, for Distance UBS,
+the \num{10000}-entity subset of the NLP-filtered corpus) being a polymer.
 (The Random strategy does not use a classifier, as it selects candidates at random.)
-
-\ian{text from Kyle: Probably I will confuse things here further. At each phase of the AL cycle (200 labels) we train many classifiers (KNN, RF, other ones that I forget). We then take the best performing one (by recall I gather above) and use that to select the candidates for the next round. That process continues in each iteration. So in some rounds we might have KNN being used, in others it might be RF. I understand that it somewhat converges on KNN in the later rounds.}
-
 As we have no prior knowledge of the distribution of target entities in the vector space, 
-we use multiple classifiers at each iteration of the active learning process. 
-We use the best performing classifier on the labeled candidates for subsequent maximum entropy-based uncertainty sampling. 
+we consider seven distinct classifiers in each round of the active learning process:
+the scikit-Learn~\cite{scikit-learn} implementations of Decision Tree (DT), Gradient Boosting (GB), K-Nearest Neighbor (KNN), Logistic Regression (LR), Linear Support Vector Machine (SVM), Naive Bayes (NB), and Random Forest (RF).
+In each case, we use the word embedding for each string as input features.
+In each round $i$, we train these seven classifiers on the sample data gathered in rounds $j, j<i$,
+and then use the classifier with the highest recall to determine the $p$ scores that UBS and Distance use when
+assembling their 200-entity sample in that step.
+
+\ian{I have not included the following text, as I am not sure it makes sense. Don't the classifiers return a real number, not a class label? -- ``When defining best performance, we prioritize recall, or retrieving a maximum of targets, over precise extraction.
+In other words, extracting a higher number of targets potentially requiring additional curation is favored over obtaining fewer correct targets.''}
+
+\ian{I suspect that I have not got my rounds quite right in the preceding sentence.}
+%\ian{text from Kyle: Probably I will confuse things here further. At each phase of the AL cycle (200 labels) we train many classifiers (KNN, RF, other ones that I forget). We then take the best performing one (by recall I gather above) and use that to select the candidates for the next round. That process continues in each round. So in some rounds we might have KNN being used, in others it might be RF. I understand that it somewhat converges on KNN in the later rounds.}
+%As we have no prior knowledge of the distribution of target entities in the vector space, 
+%we use multiple classifiers at each round of the active learning process. 
+%We use the best performing classifier on the labeled candidates for subsequent maximum entropy-based uncertainty sampling. 
 %\logan{You have neither defined nor motivated MEU, I think}\roselyne{See if you would add something to the previous strategies (UBS). That's where I've tried to define it, tell me if it's not clear}.
-The requested labels are annotated by humans to serve as addition training data for the next learning iteration. 
-We describes these steps in more details in the following sections.
+The 200 entities in the new sample are passed to experts for annotation,
+and the annotated data are added to the set of training data used in the next learning round.
+
 
 \subsubsection{Expert (and Non-expert) Labeling}
 %As explained in Section~\ref{sect:background}, recognizing polymers can require more or less domain expertise.
@@ -242,16 +277,15 @@ Clicking on ``?'' delivers up to 25 more example sentences.
 
 \subsubsection{Classification or Candidate Discrimination}
 We use multiple classifiers that we concurrently trained and test on the same data in steps 1, 2, and 3 of Figure~\ref{fig:current}.
-The classifiers include the scikit-Learn~\cite{scikit-learn} implementations of Decision Tree (DT), Gradient Boosting (GB), K-Nearest Neighbor (KNN), Logistic Regression (LR), Linear Support Vector Machine (SVM), Naive Bayes (NB), and Random Forest (RF). 
+\ian{I think that this subsubsection can be removed, as the rest of its contents are now above. 
+I am just not sure about the remaining sentence. I don't understand Figure 2, so I am not sure if it adds information.}
+%The classifiers include the scikit-Learn~\cite{scikit-learn} implementations of Decision Tree (DT), Gradient Boosting (GB), K-Nearest Neighbor (KNN), Logistic Regression (LR), Linear Support Vector Machine (SVM), Naive Bayes (NB), and Random Forest (RF). 
 %\logan{Something to consider for future: I've been nervous a long time about how we use so many models. How good is your grid search CV for these models? Many (KNN, SVM) are super sensitive to hyperparameters, and I'm worried we are testing 7 models badly and that we'd have better results with tuning 1 really well}
 %\roselyne{Yes, this is definitely a lesson taken. I was just telling Kyle, I know exactly how I would change this experiment and others based on my experience now. Perhaps I need to say that in the discussion!}\roselyne{Added note to include in discussion}
-Our goal here is to explore the word embedding space and determine which classifier(s) works best for detecting our scientific named entities.
-As previously mentioned, we select 
-the best-performing classifier on labeled candidates for subsequent uncertainty sampling.
-When defining best performance, we prioritize recall, or retrieving a maximum of targets, over precise extraction.
-In other words, extracting a higher number of targets potentially requiring additional curation is favored over obtaining fewer correct targets.
+%Our goal here is to explore the word embedding space and determine which classifier(s) works best for detecting our scientific named entities.
+%As previously mentioned, we select the best-performing classifier on labeled candidates for subsequent uncertainty sampling.
+
 %\logan{Can you express this quantitatively?}\roselyne{I have favored recall, maybe I should just say that? better?}
-In each case, we use the word embedding for each string as input features.
 %\logan{Do you mean "use the word embedding for each word as input"? All word vectors should have the same dimensions}\roselyne{yes, they do, I want to indicate exactly that the valye of the dimensions word vector itself is used as features, I wasn't sure if the embedding for each word as input was clear enough.}
 
 

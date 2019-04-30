@@ -21,7 +21,7 @@ A key improvement of Snowball
 is that its patterns include named-entity tags (PERSON, LOCATION, ORGANIZATION, etc.).
 Given a handful of seed tuples of ORGANIZATION and LOCATION, Snowball attempts to learn the relation \textit{HeadquarteredIn} by assuming that each time the tuples appear in close proximity to each other, 
 the text in between illustrates the desired relation.
-This text can then be used to discover new tuples, which can in turn be used as seeds for the next discovery iteration.
+This text can then be used to discover new tuples, which can in turn be used as seeds for the next discovery round.
 Of course, organizations may be located but not headquartered in multiple cities;
 hence it is important to inspect the quality of extraction patters to reduce noise in the generated output.
 
