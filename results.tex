@@ -257,7 +257,8 @@ However, 160 labels (80\% of 200) is not yet enough. % training data to perform 
 %\caption{PR curve for KNN model for initial round of labels.}
 %\label{fig:prc_init}
 \end{minipage}
-\caption{ROC (left) and PR (right) curves for KNN model for initial round of labels.\ian{expand caption.}\label{fig:knn_init}}
+\caption{ROC (left) and PR (right) curves for KNN model for initial round of labels. The PR curve shows that precision is low regardless of recall, indicating that we need more data.%\ian{expand caption.}\label{fig:knn_init}
+}
 \end{figure*}
 
 \begin{figure*}
@@ -280,8 +281,10 @@ However, 160 labels (80\% of 200) is not yet enough. % training data to perform 
 \end{minipage}
 %\setcounter{figure}{8}  
 \caption{ROC (left) and PR (right) curves after four rounds of active learning. 
-AUCs for active learning are 0.74 and 0.7 \ian{for UBS and Distance UBS?} compared to initial 0.62\ian{you mean after one round?}. 
-The classifier based on random sampling does not indicate learning based on AUC\ian{I don't understand what you mean here. It is doing better than random. It seems to me that, in general, you are using this graph to make a number of assertions about improvement over initial performance that are not supported by the graph, because you do not show the lines for ``initial performance." All the graph shows is that they all do better than random, with UBS better than Distance UBS, which is in turn better than Random.} 
+AUCs for active learning are 0.74 and 0.7 for UBS and Distance UBS compared to 0.62 AUC for the initial classifier.
+%\ian{you mean after one round?}\roselyne{compared to the graph above, initial labeling}
+The classifier based on random sampling has a similar AUC than the initial classifier (0.59).
+%\ian{I don't understand what you mean here. It is doing better than random. It seems to me that, in general, you are using this graph to make a number of assertions about improvement over initial performance that are not supported by the graph, because you do not show the lines for ``initial performance." All the graph shows is that they all do better than random, with UBS better than Distance UBS, which is in turn better than Random.} 
 PR curves also show improvement over initial poor performance,
 the random strategy has only shows two probabilities for target and non-target predictions; 
 the other two active learning strategies are lifting away from the bottom corner, indicating discriminative capacities.
@@ -358,7 +361,7 @@ while examples from Distance UBS are clustered around the seed entities that may
 \end{tabular}
 \end{table}
 
-We selected seed entities based on their frequency in our corpus and the yield of target entities during sampling.\ian{I thought that you said above that you picked the most frequent words?}
+We selected seed entities based on their frequency in our corpus. %and the yield of target entities during sampling.%\ian{I thought that you said above that you picked the most frequent words?}\roselyne{Yes, but we also experimented with them, top, vs, top3, vs top10, but it is not necessary.}
 This observation suggests that we could also study how the choice of seed entities impact of the performance of the classifier during the active learning process. 
 We revisit this concept of \textit{diversity} of labels in the Section~\ref{sec:discussion}. 
 Note that with limited training data and based solely on context, the classifier retrieves 45.6\% (more than one third) of the gold standard polymers with a precision of 18.2\%, after about five hours of expert labeling. 
@@ -389,9 +392,9 @@ many polymers begin with the prefixes ``poly'' or ``poly(.''
 Therefore, we generate a FastText word embedding model, 
 and generate character-enhanced vectors for our UBS-labeled candidates.
 
-\ian{Next is confusing to me as (it seems to me) you refer to things in roundabout ways:
-e.g., I am not clear what are ``these candidates'' or what it is that is ``identified as best-performing in previous experiments''.}
-Next, we train a KNN classifier using vectors for these candidates labeled through active learning from the NLP-filtered candidates (identified as best-performing in previous experiments).
+%\ian{Next is confusing to me as (it seems to me) you refer to things in roundabout ways:
+%e.g., I am not clear what are ``these candidates'' or what it is that is ``identified as best-performing in previous experiments''.}
+Next, we train a KNN classifier using vectors for the candidates labeled through active learning from the NLP-filtered candidates (the active learning strategy identified as best-performing in Figure~\ref{fig:prcs_round5}).
 %\logan{Confusing. Is UBS not active learning?}\roselyne{it's the sampling method}
 We test the classifier against NLP-filtered nouns from our 100-document test set.
 KNN classifier performance improves when using these word vectors, 
@@ -411,7 +414,9 @@ which achieve 42.2\% precision and 68.3\% recall on the same test set.%\ian{rewo
 %We show the PR curve for the FastText vector classifier and the CDE+ performance in Figure
 %as shown in Figure~\ref{fig:UBS_prcs_fasttext}.\ian{Is this a good place for figure reference?}
 We achieve higher recall than CDE and CDE+ using labels from UBS and FastText vectors 
-and intermediate\ian{I don't know how to interpret this word.} precision, with only about five hours of expert labeling.
+and in-between (higher than CDE and lower than CDE+)
+%\ian{I don't know how to interpret this word.}\roselyne{I thought that would be better "than in-between" precision}
+precision, with only about five hours of expert labeling.
 
 \subsection{Discussion and Future Work}
 \label{sec:discussion}
