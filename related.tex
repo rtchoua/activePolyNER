@@ -76,18 +76,18 @@ We compare our methods against both CDE and CDE+ in Section~\ref{sect:apner_resu
 %\ian{I feel that it is clearer to have a subsection here. Also: I think the goal is to put polyNER in context, but I am not sure that it does so clearly, yet. It seems to me to be currently a rather hard-to-follow statement of the polyNER approach, which I would expect to find elsewhere.}
 %\roselyne{This was a subsection, but was removed as some found it strange here, but the purpose was indeed to relate polyNER to the previous paragraphs, giving it a second read.}
 %\roselyne{The main purpose also was to indicate that there was already work on polyNER and we are extending the work here}
-PolyNER extends previous work to create a low-cost scientific fact extraction system. 
-%We ask: how can we quickly generate annotated data for scientific named entity recognition?
-Specifically, we address two challenges: 
-(1) lack of (expensive) training data in some fields, including our own polymer science application which lacks free access to large polymer databases; and 
-(2) the need for domain expert curators, which impedes the use of crowdsourcing platforms such as Amazon Mechanical Turk~\cite{buhrmester2011amazon} or Figure8~(\url{https://www.figure-eight.com/}).
-\ian{I find it odd that we are introducing the challenges that polyNER addresses here. It seems that we have
-already done that, to some extent, in the introduction and the background. Ideally that would be in one place.}
-\roselyne{Come back to this, after rereading intro and intro to architecture. This was supposed to clearly separate polyNER form the other systems.}
+%PolyNER extends previous work to create a low-cost scientific fact extraction system. 
+%%We ask: how can we quickly generate annotated data for scientific named entity recognition?
+%Specifically, we address two challenges: 
+%(1) lack of (expensive) training data in some fields, including our own polymer science application which lacks free access to large polymer databases; and 
+%(2) the need for domain expert curators, which impedes the use of crowdsourcing platforms such as Amazon Mechanical Turk~\cite{buhrmester2011amazon} or Figure8~(\url{https://www.figure-eight.com/}).
+%\ian{I find it odd that we are introducing the challenges that polyNER addresses here. It seems that we have
+%already done that, to some extent, in the introduction and the background. Ideally that would be in one place.}
+%\roselyne{Come back to this, after rereading intro and intro to architecture. This was supposed to clearly separate polyNER form the other systems. I think this section can start with sentence below. Would be nice to put text above in intro if it fits, it states clearly why we designed polyNER}
 %\ian{The text alternates between third person and first person. Maybe be consistent third person: ``The polyNER approach ..." not ``our approach"?}
 PolyNER has in common with prior work that it combines semi-supervised and active learning~\cite{nguyen2004active,basu2004active}.
 %\ian{In the intro, the three stage are named candidate generation, labeling, and classification. Perhaps use those terms here too?}
-In the first phase, the candidate generation is similar to bootstrapping but applied to named entities rather than entity pairs. 
+In the first phase, the if initial sampling of unlabeled data is similar to bootstrapping but applied to named entities rather than entity pairs. 
 %\logan{Confusing. If PolyNER is similar to bootstrapping, why are are you describing it in the active learning section? I'm generally not sure why this paragraph is in "Related Work"}\roselyne{This was its own section, related polyner to all previous sections including bootstrapping and not just active learning, but felt a bit weird to Kyle, so we moved it to motivation, perhaps it fits before current changes to architecture to motivate what we are doing now. Will just try to do this link between our work and related work in each section and have a polyNER paragraph in architecture.}
 %\ian{I want to confirm that the next sentence is correct. It states that you generate approximate labels by extracting
 %words similar to seed entities, implying (to me) that this process somehow generates labels (automatically?). I thought this was the

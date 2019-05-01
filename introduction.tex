@@ -68,7 +68,7 @@ chemistry are of little value.
 Scientists and engineers lack access to a freely available large database of polymers and their properties.
 %\kyle{should cite our previous papers about polyNER. ANd change phrasing here to make it sound like polyner is now well established
 %and what we are doing here is enhancing it with active learning. }
-To address these challenges, we have previously designed polyNER~\cite{tchoua2019polyner}, a system for generating training data for scientific NER using semi-supervised and active learning.
+To address these challenges, we have previously designed polyNER~\cite{tchoua2018towards,tchoua2019polyner}, a system for generating training data for scientific NER using semi-supervised and supervised learning.
 PolyNER uses NLP to produce sets of candidate entities, which
 experts 
 %iteratively 
@@ -90,6 +90,9 @@ We aim in our work to slash the expert time and effort required to achieve state
 in a new field.
 
 In this paper, we seek to improve polyNER's performance by improving the labeling process and the classification of entity word vectors. 
+Specifically, we address two challenges: 
+(1) lack of (expensive) training data in some fields, including our own polymer science application which lacks free access to large polymer databases; and 
+(2) the need for domain expert curators, which impedes the use of crowdsourcing platforms such as Amazon Mechanical Turk~\cite{buhrmester2011amazon} or Figure8~(\url{https://www.figure-eight.com/}).
 %\ian{I note that in the architecture section, you refer to this phase as sampling, so I changed 
 %the text in the results section to be consistent. Not sure if you want to change here too, or change other secitons back,
 %but should be consistent.}
@@ -123,7 +126,9 @@ in Section~\ref{sect:apner_results}. We summarize and discuss future work in Sec
 %\logan{<soapbox>I only see CS have this "table of contents" paragraph. Is it explicitly required, or just an idiosyncrasy of the CS community? Also, does everyone skip over them while reading anyway?</soapbox>}\roselyne{Very common in computer science paper I think, I'll let Ian and Kyle confirm.}
 
 
-%\roselyne{Moved this to intro as it is repeated in background bu may be clearer than current text in intro}
+
+
+%\roselyne{Moved this to intro and used some of the text as it is repeated in background bu may be clearer than current text in intro}
 %\ian{I edited the following a bit to avoid what seemed to me to be repetition with preceding sections.
 %One concern: I wonder if the end of this paragraph repeats (perhaps more clearly!) what we say in the introduction
 %about the goals of the paper?}
@@ -134,3 +139,10 @@ in Section~\ref{sect:apner_results}. We summarize and discuss future work in Sec
 %precision or recall on par with a well-performing hybrid NER model
 %that combines a dictionary, expert-created rules, and machine learning algorithms~\cite{tchoua2019polyner}. 
 %In this paper, we describe how we further improve polyNER's performance by using active learning.
+
+%\roselyne{Again moved this to intro to see if I can use it here instead of in related work}
+%PolyNER extends previous work to create a low-cost scientific fact extraction system. 
+%We ask: how can we quickly generate annotated data for scientific named entity recognition?
+%Specifically, we address two challenges: 
+%(1) lack of (expensive) training data in some fields, including our own polymer science application which lacks free access to large polymer databases; and 
+%(2) the need for domain expert curators, which impedes the use of crowdsourcing platforms such as Amazon Mechanical Turk~\cite{buhrmester2011amazon} or Figure8~(\url{https://www.figure-eight.com/}).
