@@ -15,7 +15,7 @@ to label a selected batch of unlabeled data.
 \subsection{Semi-supervised Approaches}
 \textit{Bootstrapping} is a semi-supervised technique, which starts from a small set of seed relation instances and iteratively learns more relation instances and extraction patterns.
 Snowball~\cite{agichtein2000snowball} which improved the DIPRE system~\cite{brin1998extracting}, used an intuitive idea to collect new entity relations using a set of seed entity pairs.
-In the DIPRE system, the intuitive assumption is that, given a few seed entity relations, the text between two known target entities in close proximity of each other describes and consistutes a \textit{pattern} of the relation between the two. 
+In the DIPRE system, the intuitive assumption is that, given a few seed entity relations, the text between two known target entities in close proximity of each other describes and constitutes a \textit{pattern} of the relation between the two. 
 Since that is not the case in practice, the system uses a limited set of regular expression to limit useful patterns, hence decreasing the number of false positives.
 A key improvement of Snowball
 is that its patterns include named-entity tags (PERSON, LOCATION, ORGANIZATION, etc.).
@@ -34,7 +34,7 @@ With freely available structured knowledge base such as DBPedia~\cite{auer2007db
 %lexical, syntactic and named entity tag features. 
 %They use standard multi-class logistic regression as the classification algorithm and reach almost 70\% of precision based on human judgment.
 Over the past decade, probabilistic approaches have been proposed to allow automatic selection.
-For example PaleoDeepDive~\cite{peters2014machine}, built upon DeepDive~\cite{de2016deepdive}, automatically extracts
+For example, PaleoDeepDive~\cite{peters2014machine}, built upon DeepDive~\cite{de2016deepdive}, automatically extracts
 paleontological data from text, tables, and figures in scientific publications. 
 For good performance, such approaches often rely on and extend large databases: for example,
 PaleoDeepDive uses PaleoDB~\cite{PaleoDB}. 
@@ -50,7 +50,7 @@ addressed by learning and modeling the accuracies of the labeling functions.
 Under certain conditions, data programming achieves results on par with those of supervised learning methods.
 While writing concise scripts to define rules may seem to be a more reasonable task for annotators 
 than exhaustively annotating text, it still requires expert guidance.  
-In data programming as in boostrapping and distant supervision it is important to evaluate the quality of functions and extraction patters to decrease noisy patterns.
+In data programming as in bootstrapping and distant supervision it is important to evaluate the quality of functions and extraction patters to decrease noisy patterns.
 
 \subsection{Active Learning}\label{sec:active}
 Active learning~\cite{zhou2017brief} assumes that gold standard labels for unlabeled instances can be obtained by

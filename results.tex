@@ -69,7 +69,7 @@ we built a dictionary of polymer names by using a rule-based approach and aggreg
 Here we use this dictionary to identify the 10 most frequently occurring polymers in our corpus and their acronyms.
 %\ian{Table says ``most frequent,'' text says ``most common.'' Be consistent.}\roselyne{check everywhere.}
 %Experts can also suggest these entities based on prior knowledge.
-We assume that frequent polymers provide a large number of example sentences that illustrate context in which polymers are commonly used.
+We assume that frequent polymers provide a large number of sentences that illustrate context in which polymers are commonly used.
 %\logan{Do you think it would be better to use the gold standard, where we have certainty of the labels, to estimate the most-frequent polymers?}\roselyne{we used the entire corpus, we know the most frequent polymers}
 Hence, we first test the most frequent, the three most frequent, and the ten most frequent polymers as seed entities.
 %\logan{The circularness of this strategy makes me uncomfortable. We use an NER model to determine the initial training set for the NER model? How would you address this criticism?}\roselyne{not sure I understand how I am using an NER model to determine the NER model, I'm just testing with various seed entities. As you suggested before, experts can give this info, or we can just measure the frequency of a few known entities. Added a line about this so that no prior work is needed.}
@@ -86,7 +86,7 @@ when compared to using \textit{polystyrene} alone. % (37.69\%).
 The fraction of polymers increases by 10\% when we use three representative entities 
 %(from 33.55\% to 46.9\% and 47.97\% with acronyms); 
 (the three most frequent polymers in our datasets are \textit{polystyrene}, \textit{poly(methyl methacrylate)}, and \textit{polyethylene}), % and their acronyms (\textit{PS}, \textit{PMMA} and \textit{PE})
-but by less than 1\% when using 10 instead of three entities.%, from 47.97\% for three frequent polymers with acronyms to 48.39\% for ten frequent polymers with acronyms.
+but by less than 1\% when using 10 instead of three entities. %, from 47.97\% for three frequent polymers with acronyms to 48.39\% for ten frequent polymers with acronyms.
 These results suggest that there is little value to using more than a few seed entities.
 
 \begin{table}[ht!]
@@ -206,7 +206,7 @@ Based on user feedback, we also improve the labeling Web interface after the abo
 For example, we increase the number of example sentences available to provide context, to decrease the number of occurences in which experts have to look up original publications for candidates.
 We also increase the size of checkmarks to make it easier to reject erroneous candidates.
 %Having performed these initial tests, and considering that expert time is expensive, we allow annotators to save their progress and come back to labeling anytime within a week's time. \roselyne{Is this only going to add confusion?}
-In the initial labeling round, we
+In the initial labeling round, 
 we perform crosschecking for 10\% of the batch of labels. 
 We confirm agreement between labels for all but one of 20: an agreement rate of 95\%.
 
@@ -232,7 +232,7 @@ shows better-than-random behavior, with an area under curve (AUC) of 0.62.
 %The area under the curve (AUC) measures the area under the ROC.
 %Ideally the AUC of a learning algorithm is above 0.5. 
 AUC can be misleading for imbalanced datasets, 
-as it takes into account true negatives or correctly predicted non-polymers (inverse ratio).
+as it considers true negatives or correctly predicted non-polymers (inverse ratio).
 For example, if a dataset contains 90\% of class A and 10\% of class B, 
 a classifier that predicts every sample as belonging to class A has an accuracy of 90\%, 
 but is not useful in practice.
@@ -312,7 +312,7 @@ We conclude that while the sampling step
 helps insure that the classes are balanced in the initial batch of labels, 
 restricting ourselves to just distance candidates, as is done by Distance UBS, does not yield better results than using active learning with all NLP-filtered candidates (UBS).
 Intuitively, basic UBS can find \textit{useful} instances (target and non-targets) to be labeled from the entire word embedding space, 
-while examples from Distance UBS are clustered around the seed entities that may be colocated in that space.
+while examples from Distance UBS are clustered around the seed entities that may be collocated in that space.
 
 %\logan{I think the table would be better suited as a plot}\roselyne{I am tempted to remove it, and just indicate that there was not much learning in the first 3 rounds, but Kyle had a comment that people like to see it for themselves and suggested a table. I don't think the plots would look good either has it will bring attention to the problem of using multiple classifiers as previously discussed. I can go back to ommitting this or displaying the last two rounds.}
 %\loganfussingaboutrecallandprecision \roselyne{I actually read that this is what people use many times for imbalanced datasets, but I get the point and we have ROCS to got with the last two rounds}
@@ -410,7 +410,8 @@ at 74.5\%, but its precision for polymers is, as expected, low at 8.7\%, as it d
 %\loganfussingaboutrecallandprecision \roselyne{comes with PRC so should be good here}
 In Figure~\ref{fig:UBS_prcs_fasttext}, we show the PR curve for the FastText vector classifier
 and also results for the polymer-enhanced CDE+
-which achieve 42.2\% precision and 68.3\% recall on the same test set.%\ian{rewording ok here?}\roselyne{yes}
+which achieve 42.2\% precision and 68.3\% recall on the same test set.
+%\ian{rewording ok here?}\roselyne{yes}
 %We show the PR curve for the FastText vector classifier and the CDE+ performance in Figure
 %as shown in Figure~\ref{fig:UBS_prcs_fasttext}.\ian{Is this a good place for figure reference?}
 We achieve higher recall than CDE and CDE+ using labels from UBS and FastText vectors 
@@ -422,7 +423,7 @@ precision.%, with only about five hours of expert labeling.
 \label{sec:discussion}
 We have previously used seed entities to bootstrap classifiers of context-based word vectors. 
 Using an ensemble of classifiers, polyNER allowed users to tradeoff precision and recall.
-In this attempt to improve performance, while efficiently using experts' time, we used active learning to obtain more labels.%\roselyne{Repeating again}
+In this attempt to improve performance, while efficiently using experts' time, we used active learning to obtain more labels. %\roselyne{Repeating again, may need to remove.}
 However, we do not observe an increase of precision over the 5\% fraction of polymers until the third round of active learning with NLP-filtered words (800 labels). 
 This suggests that our label batch size is lower than the minimum number of labels necessary to start the learning process.
 More detailed study of performance vs. label batch size will help pinpoint the appropriate number of labels and level of bootstrapping required for learning.
@@ -449,7 +450,7 @@ We explain this observation as follows.
 In FastText, the portion of the word embedding vector generated by using context varies depending on how much context is available in the entire corpus. 
 For words deemed to have enough context, vectors do not include any character-level information. 
 At the other extreme, for previously unseen words, the embedding is generated based solely on character n-gram information and comparison to other words in the corpus.
-During the active learning process, candidates to be labeled by experts are selected by using maximum-entropy-based uncertainty sampling: that is, words for which prediction probability is similar for target and non target.
+During the active learning process, candidates to be labeled by experts are selected by using maximum-entropy-based uncertainty sampling: that is, words for which prediction probability is similar for target and non-target.
 Such candidates are more likely to lack context
 and thus have vectors that use mostly character-level information.
 %When all or most of the word embedding vector 
@@ -481,8 +482,8 @@ for example by using batch active learning~\cite{settles2009active}.
 %We conduct some experiments to estimate labeling time. 
 %We ask two polymer scientists to label 200 candidates from a subset of our corpus.
 %One expert reports 30 minutes, the other 45 minutes. We overestimate the time to label 200 candidates at one hour of expert time.
-%Based on user feedback, we also improve the labeling Web interface after the above mentioned test rounds to further facilitate and speed up labeling.
-%For example, we increase the number of example sentences available to provide context, to decrease the number of occurences in which experts have to look up original publications for candidates.
+%Based on user feedback, we also improve the labeling Web interface after the above-mentioned test rounds to further facilitate and speed up labeling.
+%For example, we increase the number of example sentences available to provide context, to decrease the number of occurrences in which experts have to look up original publications for candidates.
 %We also increase the size of checkmarks to make it easier to reject erroneous candidates.
 %%Having performed these initial tests, and considering that expert time is expensive, we allow annotators to save their progress and come back to labeling anytime within a week's time. \roselyne{Is this only going to add confusion?}
 %In the initial labeling round, we

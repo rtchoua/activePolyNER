@@ -8,7 +8,7 @@
 Our work is generally motivated by the need to extract previously unmined scientific entities;
 our initial goal is to enable machine-learned extraction of polymer names. 
 The challenges of polymer science NER are similar to those in biomedicine~\cite{krallinger2015chemdner,kim2004introduction}. 
-Entities can be described with multiple referrents (synonymy).
+Entities can be described with multiple referents (synonymy).
 Conversely, the same word may refer to different concepts depending on context (polysemy).
 For example,
 \textit{polystyrene} is often referred to as \textit{PS}, but \textit{polystyrenes} can also be referred to as \textit{GPPS}, \textit{HIPS}, and \textit{EPS}; combined with other monomers yielding \textit{SBR}, \textit{SBS}, and \textit{ABS}; or used to describe polystyrene derivatives such as \textit{PAMS}, \textit{PMS}, and \textit{PSS}.
@@ -17,7 +17,7 @@ For example,
 While standards for naming polymers exist (e.g., International Union of Pure and Applied Chemistry (IUPAC~\cite{hiorns2013brief}) naming conventions), they are not always followed in practice~\cite{tamames2006success}. 
 Instead, polymer names may be reported as source-based names (based on the monomer name), structure-based names (based on the repeat unit), common names (requiring domain specific knowledge), trade names (based on the manufacturer), and names based on chemical groups within the polymer (requiring context to fully specify the chemistry), generating variability in naming conventions.
 Typographical variants (e.g., alternative uses of hyphens, brackets, spacing) and alternative component orders cause more variations between polymer names in the literature.
-The origin of these different naming conventions is linked to the desire for clarity within a journal article, coupled with the often complicated monomeric structures~\cite{audus2017polymer}.
+The origin of these different naming conventions is linked to the desire for clarity within a journal article, coupled with the often-complicated monomeric structures~\cite{audus2017polymer}.
 %For example, sequence-defined polymers, where multiple monomers are chemically bound in a well-defined sequence as in proteins, often defy normal naming practices as it is not possible to concisely list every monomer and the respective position of the monomer~\cite{lutz2014polymer}. 
 %Another class of polymers that often suffer from complicated names are conjugated polymers, which exhibit useful optical and electrical properties. 
 %Conjugated polymers are complex due to the co-polymerization of multiple monomers (donor/acceptor units), the type and position of side chains along the polymer backbone and the coupling between monomer units to control regioregularity~\cite{himmelberger2015engineering}.
@@ -41,7 +41,7 @@ the successes that have been achieved have required much human effort to generat
 %trainable statistical NER systems~\cite{krallinger2015chemdner}. 
 Previous work has also found that even state-of-the-art NER systems do
 not typically perform well when applied to different domains~\cite{krallinger2013overview}. 
-Therefore the problem of training machine learning models to recognize new scientific entities in a new field, such as polymer science, remains challenging.
+Therefore, the problem of training machine learning models to recognize new scientific entities in a new field, such as polymer science, remains challenging.
 
 
 
