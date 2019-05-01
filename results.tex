@@ -246,8 +246,8 @@ However, 160 labels (80\% of 200) is not yet enough. % training data to perform 
 %\logan{Better topic sentence. It provides a hit of what to look for. But, you do not follow it up with any details supporting this claim}\roselyne{yes this is where i was doing some explaining for the paragraph, will elabotate}
 %\logan{This is a long section for just describing how you made the classifier and that it is pretty bad. Do we need this section?}\roselyne{I will shorten and improve next, the main reason for poor performance is small sample data, because we know this works better with 800 data points, from previous polyNER paper.}
 
-\ian{What do you think about adding the initial classifier lines to Figure~\ref{fig:rocs_prcs_round5}?
-It will be more crowded, but the comparison will be clearer.} 
+%\ian{What do you think about adding the initial classifier lines to Figure~\ref{fig:rocs_prcs_round5}?
+%It will be more crowded, but the comparison will be clearer.} \roselyne{I think that's why I have kept them in the same figure, we can use AUC and the difference is clearer for the PR curve. I can see maybe including such a figure for the best-performing strategy (round 0 and round 4) to show improvement over initial. Making note for my draft.}
 
 \begin{figure*}
 \centering
@@ -471,7 +471,7 @@ for example by using batch active learning~\cite{settles2009active}.
 %\end{minipage}\qquad
 %\begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in]{figures/fasttext_prc_al_corpus_round5_100}
-\caption{PR curve for KNN model trained with active learning labels and word representations enriched with character-level information. Results for CDE+ are also shown.
+\caption{PR curve for KNN model trained with active learning labels and word representations enriched with character-level information. Results for CDE+ are also shown. 
 \ian{I'd be interested in Kyle's views, but I feel that we need some explanation of why the line is straight for recall from 0 to 0.4.}
 }
 \label{fig:UBS_prcs_fasttext}
