@@ -457,19 +457,16 @@ for example by using batch active learning~\cite{settles2009active}.
 \end{figure}
 
 \subsection{Labeling}\label{sec:labeling}
-We estimate labeling time based on previous experiments~\cite{tchoua2019polyner}.
-\roselyne{I think we need to use the time reported in polyNER, I will change the time in the paper accordingly, 
-we reported 2 hours for 897 labels}
-Based on expert feedback, we also improve the interface across rounds to further facilitate and speed up labeling.
+We conduct some experiments to estimate labeling time. 
+We ask two polymer scientists to label 200 candidates from a subset of our corpus.
+One expert reports 30 minutes, the other 45 minutes. We overestimate the time to label 200 candidates at one hour of expert time.
+Based on user feedback, we also improve the labeling Web interface after the above mentioned test rounds to further facilitate and speed up labeling.
 For example, we increase the number of example sentences available to provide context, to decrease the number of occurences in which experts have to look up original publications for candidates.
 We also increase the size of checkmarks to make it easier to reject erroneous candidates.
 %Having performed these initial tests, and considering that expert time is expensive, we allow annotators to save their progress and come back to labeling anytime within a week's time. \roselyne{Is this only going to add confusion?}
 In the initial labeling round, we
 we perform crosschecking for 10\% of the batch of labels. 
 We confirm agreement between labels for all but one of 20: an agreement rate of 95\%.
-
-%\logan{The inter-relater score is a result, not part of the architecture}\roselyne{ok, don't remove, come back to this to make sure I add it later}
-%\ian{Here will be the labeling discussion that Roselyne says she will add.}
 
 
 
