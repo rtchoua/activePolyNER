@@ -87,17 +87,17 @@ The goal is
 to substitute the labor-intensive processes of assembling a large
 manually annotated corpus (and reduce costs) by using small numbers of carefully selected candidates to be labeled via focused expert input. 
 
-In this paper, we seek to improve polyNER's performance in each of its three steps:
-candidate generation,\ian{I note that in the architecture section, you refer to this phase as sampling, so I changed 
-the text in the results section to be consistent. Not sure if you want to change here too, or change other secitons back,
-but should be consistent.}
-labeling, and classification.\ian{Classification is not shown as a step elsewhere. Also, I note that Figure~1 has a
-``candidate discrimination'' step, which is a term not used much elsewhere.}
-In the candidate generation step,
-we experiment with different \textit{representative} (commonly used) entities.\ian{I think that the representative/seed entity thing is mainly relevant for bootstrapping. Maybe we should say ``used in the bootstrapping phase.'''}
+In this paper, we seek to improve polyNER's performance by improving the labeling process and the classification of entity word vectors. 
+%\ian{I note that in the architecture section, you refer to this phase as sampling, so I changed 
+%the text in the results section to be consistent. Not sure if you want to change here too, or change other secitons back,
+%but should be consistent.}
+%labeling, and classification.\ian{Classification is not shown as a step elsewhere. Also, I note that Figure~1 has a
+%``candidate discrimination'' step, which is a term not used much elsewhere.}\roselyne{Noted! I changed figure 1 and will check that we don't use discrimination elsewhere. Also remove any mention of the candidate generation since now we only do it at the initial labeling.}
+In the initial labeling phase, 
+we experiment with different \textit{representative} (commonly used) entities to increase the fraction of target entities in the dataset to be labeled and bootstrap the context-based word vectors classifiers.%\ian{I think that the representative/seed entity thing is mainly relevant for bootstrapping. Maybe we should say ``used in the bootstrapping phase.'''}
  % to generate candidates;
 % and tune the word embedding model parameters to increase the yield of actual scientific entities among candidates; 
-In the labeling and classification steps,
+In the subsequent labeling and classification steps,
 %\ian{is this rewording correct? I think that as you say you improve each step,
 %you should be explicit about what you did to improve in each step.}\roselyne{yes correct}
 we use active learning with maximum entropy uncertainty sampling and two different pools of unlabeled data to train classifiers, and compare their learning rate after five rounds. 
