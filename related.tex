@@ -87,15 +87,15 @@ We compare our methods against both CDE and CDE+ in Section~\ref{sect:apner_resu
 %\ian{The text alternates between third person and first person. Maybe be consistent third person: ``The polyNER approach ..." not ``our approach"?}
 PolyNER has in common with prior work that it combines semi-supervised and active learning~\cite{nguyen2004active,basu2004active}.
 %\ian{In the intro, the three stage are named candidate generation, labeling, and classification. Perhaps use those terms here too?}
-In the first phase, the if initial sampling of unlabeled data is similar to bootstrapping but applied to named entities rather than entity pairs. 
+The initial sampling of unlabeled data is similar to bootstrapping but applied to named entities rather than entity pairs. 
 %\logan{Confusing. If PolyNER is similar to bootstrapping, why are are you describing it in the active learning section? I'm generally not sure why this paragraph is in "Related Work"}\roselyne{This was its own section, related polyner to all previous sections including bootstrapping and not just active learning, but felt a bit weird to Kyle, so we moved it to motivation, perhaps it fits before current changes to architecture to motivate what we are doing now. Will just try to do this link between our work and related work in each section and have a polyNER paragraph in architecture.}
 %\ian{I want to confirm that the next sentence is correct. It states that you generate approximate labels by extracting
 %words similar to seed entities, implying (to me) that this process somehow generates labels (automatically?). I thought this was the
 %candidate generation phase.}
 The initial batch of labels contains strings deemed \textit{similar} to a few seed entities, 
 with similarity determined by using word representations and vector distance measures.
-%\ian{In the next sentence, I have no idea what ``noise in the output'' means, and I wonder if other readers will?}
-As this approach is approximate and is likely to include errors (words that have similar context to entities but are not actual entities), the next phase is expert labeling. 
+As this approach is approximate and is likely to include errors 
+(words that have similar context to entities but are not actual entities), the next phase is expert labeling. 
 Subsequent batches of labels are obtained via active learning and used 
 %To address noise in the output, expert label small batches of candidates, 
 %which can be used\ian{the term ``can be used'' confuses me. Is the training that is defined here part of your system?}
