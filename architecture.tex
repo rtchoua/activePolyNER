@@ -36,15 +36,11 @@ We also describe the labeling process, and the training and testing configuratio
 \end{figure*}
 
 \subsection{Computing Word Embeddings}\label{sec:wordembeddings}
-A word embedding method 
-%\ian{You referred to ``vector similarity" but then switch to talking about word embedding.
-%Maybe say ``We use word embedding methods to obtain the vectors that we use for determining similarity.''} 
-maps each word
+A word embedding method maps each word
 in a document to a vector in an n-dimensional real vector space that
 represents the linguistic context in which the word appears. (This mapping may
 be based, for example, on co-occurrence frequencies of words.) 
-We can then
-determine the similarity between two words by computing the distance between
+We can then determine the similarity between two words by computing the distance between
 their corresponding vectors in the feature space.
 
 We use Word2Vec, a recent, light-weight and easy-to-use implementation of context-based vector representations~\cite{mikolov2013efficient,mikolov2013distributed}.
@@ -66,9 +62,7 @@ is an adjustable window of surrounding context word used to compute each embeddi
 %We generate an unsupervised word embedding model using out entire corpus and train classifiers on vector representations using labels generated via the active learning(step 3 of Figure~\ref{fig:current}).
 %Finally, in step 4, we test our classifiers against all the NLP-filtered words from the test corpus, as shown on Figure~\ref{fig:current}.
 
-%\logan{Make section labels line up with the names in the figures}
 The NLP filtering preprocessing step removes strings that are unlikely to be polymer referents. 
-%In other words, we remove obvious non-candidates.
 First, we remove
 unwanted characters (e.g. `:', `.', `,', `:', `-') from the beginning and the end of each
 candidate, and eliminate numbers (including numbers followed by common units).
@@ -83,28 +77,27 @@ SpaCy's part-of-speech tagging functionality to remove non-nouns.
 Finally, we remove plurals (e.g.,
 polyamides, polynorbornenes), as they can represent polymer family names.
 Note that these steps are generalizable and applicable to multiple science fields.
-%\logan{2 is the only number that does not start with "We remove." Should you make this a bulleted list?}\roselyne{Good point, but then this is hardly a section I think, I will try and see how it looks. Also some of the bullet text is short and some is long. e.g. numbers vs, entire sentence.}
 We refer to the set of words that results when these filtering operations are applied to our corpus 
 as the \emph{NLP-filtered candidates}.
 This set is the output of step 1 in Figure~\ref{fig:architecture}.
 
-
-\subsection{Initial Labeling}
-The previous step %\ian{Should this be singular?}
-reduces the numbers of candidates and the target vs.\ non-target entity ratio.
+\subsection{Initial Labeling}\label{sec:initial}
+NLP filtering reduces the number of entities to be considered, and increases the target vs.\ non-target entity ratio.
 However, there still remain a large pool of potential candidates from which entities are to be selected,
 of which, in our experience, only 5\% are polymer names.
-%\ian{I don't think that a ratio can be a percentage. You may mean ``only 5\% of NLP-filtered words are polymer names.}
 In order to avoid presenting experts with mostly negative examples, hindering meaningful classification,
-we attempt to boost the number of polymer entities in the first batch of candidates to be annotated.
-To this end, we select candidate strings with low word vector distance (see Section~\ref{sec:wordembeddings}) from
+we boost the number of polymer entities in the first batch of candidates to be annotated by
+selecting strings with low word vector distance (see Section~\ref{sec:wordembeddings}) from
 a set of \emph{seed entities}:
 words that are observed to occur frequently  
 in a subset of publications, or that are suggested by experts.
 We discuss this distance metric in more detail below.
-%Candidate batch sizes are determined based on labeling time estimates and availability of expert curators.
 Based on preliminary experiments, we set the size of each batch of strings to be labeled to 200, 
 or about an hour of expert time.
+\ian{I will come back and look at this later, but I want to make a note for now.
+Section~\ref{sec:initial} and Section~\ref{sec:bootstrap} are basically duplicates: they both describe
+the bootstrap process. We need to work out whether this is better stated before or after the sampling
+strategy material.}
 
 \subsection{Sampling Strategies}\label{sec:sampling}
 %While the previous steps reduces the numbers of candidates and the imbalance of the dataset (target vs. non-target entity ration), there still remains a relatively large pool of potential candidates to select entities from.
@@ -185,11 +178,11 @@ we use the lowest distance score for ranking candidates.
 %\logan{Is the 10k entries mentioned in the previous section this set? If so, we need to revise the order of these sections?}
 The UBS and Distance UBS sampling methods use a classifier to 
 determine which NLP-filtered entities should be chosen next for expert labeling.
-This classifier must be trained, and initially we have no labeled data.
-We could choose a set of NLP-filtered entities at random for initial labeling, 
+This classifier must be trained, and thus we need an initial set of entities to bootstrap this process.
+We could choose NLP-filtered entities at random for initial labeling, 
 but that choice is unlikely to perform well due to the low proportion of polymers (just 5\%) in the NLP-filtered corpus.
 Instead, therefore, we create an initial bootstrap set comprising the 200 NLP-filtered entities 
-with the lowest distance scores.
+that are closest, in word distance vectors, to a set of seed entities.
 %\ian{I assert that there is no need to mention the \num{10000} number here: you just take the 200 with the lowest score, as the 10000 is just the ones with the lowest distance scores, yes?}\roselyne{yes, or highest similarity, I wonder if I should change my preference for distance, because distance implies, minimal distance but Word2Vec and FastText give similarity values, discuss.}
 (Recall that we use a batch size of 200 based on an estimate of 60 minutes of expert time required for labeling.)
 We then train the initial classifier on this bootstrap set, using 80\% of the data for training and 20\% for testing.
@@ -214,17 +207,25 @@ the \num{10000}-entity subset of the NLP-filtered corpus) being a polymer.
 (The Random strategy does not use a classifier, as it selects candidates at random.)
 As we have no prior knowledge of the distribution of target entities in the vector space, 
 we consider seven distinct classifiers in each round of the active learning process:
-the scikit-Learn~\cite{scikit-learn} implementations of Decision Tree (DT), Gradient Boosting (GB), K-Nearest Neighbor (KNN), Logistic Regression (LR), Linear Support Vector Machine (SVM), Naive Bayes (NB), and Random Forest (RF).
+the scikit-Learn~\cite{scikit-learn} implementations of Decision Tree,
+%(DT), 
+Gradient Boosting,
+% (GB), 
+K-Nearest Neighbor (KNN), 
+Logistic Regression, 
+%(LR), 
+Linear Support Vector Machine,
+% (SVM), 
+Naive Bayes, 
+%(NB), 
+and Random Forest. % (RF).
 In each case, we use the word embedding for each string as input features.
-In each round $i$, we train these seven classifiers on the sample data gathered in rounds $j, j<i$,
-and then use the classifier with the highest recall to determine the $p$ scores that UBS and Distance use when
+In each round $i$, we train these seven classifiers on the sample data gathered in rounds $j$, $j$<$i$,
+and then use the classifier with the highest recall to determine the $p$ scores that UBS and Distance UBS use when
 assembling their 200-entity sample in that step.
-When defining best performance, we prioritize recall, or retrieving a maximum of targets, over precise extraction.
-In other words, extracting a higher number of targets potentially requiring additional curation is favored over obtaining fewer correct targets.
-%\ian{I have not included the following text, as I am not sure it makes sense. Don't the classifiers return a real number, not a class label? -- ``When defining best performance, we prioritize recall, or retrieving a maximum of targets, over precise extraction.
-%In other words, extracting a higher number of targets potentially requiring additional curation is favored over obtaining fewer correct targets.''}\roselyne{The text is correct}
+(We use recall, or retrieving a maximum of targets, as a measure of performance, because we want to favor
+extracting a higher number of targets, potentially requiring additional curation, over obtaining fewer correct targets.)
 
-%\ian{I suspect that I have not got my rounds quite right in the preceding sentence.}\roselyne{that's right, we train with labels selected from the previous round}
 %\ian{text from Kyle: Probably I will confuse things here further. At each phase of the AL cycle (200 labels) we train many classifiers (KNN, RF, other ones that I forget). We then take the best performing one (by recall I gather above) and use that to select the candidates for the next round. That process continues in each round. So in some rounds we might have KNN being used, in others it might be RF. I understand that it somewhat converges on KNN in the later rounds.}
 %As we have no prior knowledge of the distribution of target entities in the vector space, 
 %we use multiple classifiers at each round of the active learning process. 
