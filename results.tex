@@ -427,7 +427,9 @@ In this attempt to improve performance, while efficiently using experts' time, w
 However, we do not observe an increase of precision over the 5\% fraction of polymers until the third round of active learning with NLP-filtered words (800 labels). 
 This suggests that our label batch size is lower than the minimum number of labels necessary to start the learning process.
 More detailed study of performance vs. label batch size will help pinpoint the appropriate number of labels and level of bootstrapping required for learning.
-We can also ask the following questions: Could we achieve CDE performance classifying only context-based (not character enhanced) representation? If so, how many more iterations would it take? If not, how much do we need to increase and improve our current corpus of \num{1690} documents?
+We can also ask the following questions: Could we achieve CDE performance classifying only context-based (not character enhanced) representation? If so, how many more iterations would it take? If not, how much do we need to increase the size and/or improve our current corpus of \num{1690} documents?
+Corpora for NER tasks are curated and typically include sentences with one or more entities.
+We could investigate other semi-supervised method to eliminate negative sentences from our corpus (e.g. labeling sentences and classification of sentence vectors for example).
 
 PolyNER achieves CDE performance using labels obtained via active learning (UBS sampling strategy) and FastText vectors.
 We attribute the increased performance to the character embedding enhancement, which not only recognizes ``poly'' (and yields more names based on this n-gram comparison), 
