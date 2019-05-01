@@ -66,12 +66,11 @@ Another selection criterion addresses representativeness, which measures how wel
 We introduce briefly ChemDataExtractor (CDE), 
 a state-of-the-art chemical NLP tool that combines a dictionary, expert-created
 rules, and machine learning algorithms.
+CDE was trained on the CHEMDNER corpus:
+a collection of \num{10000} PubMed abstracts with \num{84355} chemical entity mentions labeled manually by expert chemistry literature curators, following annotation guidelines specifically defined for this task~\cite{krallinger2015chemdner}.
 In previous work, we modified CDE with
 manually defined polymer identification rules~\cite{tchoua2017towards}, creating what we term here CDE+.
-CDE was trained on the CHEMDNER corpus:
-a collection of \num{10000} PubMed abstracts with \num{84355} chemical entity mentions labeled manually by expert chemistry literature curators, following annotation guidelines specifically defined for this task~\cite{krallinger2015chemdner}. %\ian{i took the preceding from the conclusion because I feel that we should
-%stick all info about CDE and CDE+ in one place. I want to confirm, though, that you trained CDE+ on the CHEMDNER corpus, as written here? Or is this actually a statement about CDE?}\roselyne{This statement is about CDE, we benefit indirectly by using CDE+dictionary+rules}
-We compare our methods against both CDE and CDE+ in Section~\ref{sec:results}.
+We compare our methods against both CDE and CDE+ in Section~\ref{sect:apner_results}.
 
 \subsection{Placing polyNER in Context}
 %\ian{I feel that it is clearer to have a subsection here. Also: I think the goal is to put polyNER in context, but I am not sure that it does so clearly, yet. It seems to me to be currently a rather hard-to-follow statement of the polyNER approach, which I would expect to find elsewhere.}

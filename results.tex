@@ -12,7 +12,7 @@ positives that are labeled correctly and
 \emph{recall} to the fraction of actual positives that
 are labeled correctly.
 
-\subsection{Dataset}
+\subsection{Dataset}\label{sec:dataset}
 
 We work with a corpus of \num{1690} full-text publications in HTML format from \textit{Macromolecules}, 
 a relevant journal in polymer science.
@@ -25,24 +25,18 @@ of which \num{9656} pass the NLP filter.
 We engaged six experts to identify all one-word polymer names in this test set,
 a process that produced 467 unique one-word polymer names.
 We use these 467 names as a gold standard in subsequent subsections.
-%When testing against this gold standard, 
-%we evaluate using a total of \num{9656} NLP-filtered nouns from the 100 documents.
-%\ian{Seems odd to have the following text in a subsection on ``Dataset.'' Maybe move to start of this section?}
 
 %\logan{What part of this data can we release, if any?}\roselyne{Hong and I are working on a dataset following a schema we discussed for release, I think we talked about it but didn't update you guys back. However it's more like NLP datasets, where we are releasing sentences with entities and not this exact dataset}
 
 \subsection{Seed Entities}\label{sec:wes}
-%\ian{Are you exploring these issues in general, as the first sentence states, 
-%or are you trying to find good values for these settings, for use in subsequent work? I can't tell.}\roselyne{Only for this initial labeling, later in the paper I indicate that we could tune for classification}
-%\logan{Needs better topic sentence. Say why you are doing this more clearly, less about the "what"}
-Recall from Section~\ref{sec:wordembeddings} that polyNER uses
- Word2Vec word embedding tool to compute a word vector for each word.
+Recall from Section~\ref{sec:wordembeddings} that polyNER uses the
+Word2Vec word embedding tool to compute a word vector for each word.
 In order to maximize the number of actual entities in the dataset\textemdash and the ratio of target to non-target entities\textemdash in the initial set of labels,
 we explore how the choice of seed entities
-% and the Word2Vec parameters (vector) \texttt{size} and \texttt{window_size} 
-impact the number of target entities retrieved. %  using distance measures.
+impact the number of target entities retrieved.
 %XXX_IAN don't understand next sentence
-While we cannot expect meaningful classification using only positive examples, given the imbalance in the whole dataset, we aim to select the Word2Vec parameters that yield the highest ratio of polymers in this initial batch of candidates.
+While we cannot expect meaningful classification using only positive examples, 
+given the imbalance in the whole dataset, we aim to select the Word2Vec parameters that yield the highest ratio of polymers in this initial batch of candidates.
 
 %\ian{Maybe the following would be simpler if written as follows. This seems to say what you are trying to say?: 
 %``We use the 467 gold standard polymer names identified by experts in our 100-document test set to
@@ -56,13 +50,10 @@ While we cannot expect meaningful classification using only positive examples, g
 
 In the experiments that follow,
 we use the 467 gold standard polymer names identified by experts in our 100-document test set to
-evaluate the performance of different word embedding settings.
-Specifically, for each choice of settings that we want to evaluate,
-we determine the \num{10000} distance candidate vectors that are most similar to the seed entity vectors 
+evaluate performance with different seed entities.
+Specifically, for each choice of seed entities that we want to evaluate,
+we determine the \num{10000} NLP-filtered words with vectors closest to the seed entity vectors, 
 and report what fraction of the 467 gold standard names are included in that \num{10000}.
-%XXX_IAN don't know why number is explained, so commented out next two sentences
-%We set this number based on observations that in our test set, there are $\sim$5 polymers per document.
-%Therefore, we assume that considering our entire corpus,  the \num{10000} most similar to the representative entity vectors should contain a significant portion of polymers, including some from our test set.
 We use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.
 %To estimate the entity-richness of our large pool of distance candidates and since we do not have manually extracted data for the entire corpus, we create a list of \num{10000} distance candidate vectors most similar to our representative entity vectors and report the fraction of gold standard polymers extracted. 
 %In our gold-standard of publications, there are $\sim$5 polymers per document (\num{8450} polymers for \num{1690} documents). Thus, we expect a fraction of the polymers found in the 100 gold standard documents to be extracted in the \num{10000} candidates most similar to our seed entities.
@@ -71,10 +62,8 @@ We use lower-case exact string matching between the gold standard polymer names 
 %We evaluate the entity-richness of polymers in this pool of candidates by measuring the percentage of the 467 manually extracted polymer names that it yields;
 %we use lower-case exact string matching between the gold standard polymer names and the proposed distance candidate strings to determine if a candidate is a polymer.
 
-
-
 %\subsubsection{Seed entities}
-We investigate how the choice of seed entities affects performance.
+%We investigate how the choice of seed entities affects performance.
 In previous work using the same corpus~\cite{tchoua2016hybrid,tchoua2016hybridi}, 
 we built a dictionary of polymer names by using a rule-based approach and aggregating synonyms across ChemDataExtractor records. (A record consists of all information found about a chemical entity in a document.)  
 Here we use this dictionary to identify the 10 most frequently occurring polymers in our corpus and their acronyms.
@@ -88,7 +77,8 @@ We also experiment with including and excluding their acronyms as additional see
 (Note that this modest set of 1, 3 and 10 seed entities could also be suggested by an expert.)
 
 Rows 1--6 of Table~\ref{tab:candidate_generation} shows the results for these experiments.
-When using \textit{polystyrene} (the most frequently used name) as a seed entity, the pool of candidates contained 33.6\% of the 467 gold standard polymers.
+When using \textit{polystyrene} (the most frequently used name) as a seed entity, 
+the candidates contained 33.6\% of the 467 gold standard polymers.
 %\logan{Another potential criticism: Would I need a gold standard to build the NER method? I thought your method is supposed to help me avoid having to do the work for generating a gold standard?}\roselyne{There is no way to evaluate if you don't have a gold standard is there?}
 We note a 2\% increase in the fraction of polymers retrieved when using both \textit{polystyrene} and \textit{PS}, 
 when compared to using \textit{polystyrene} alone. % (37.69\%).
@@ -101,8 +91,8 @@ These results suggest that there is little value to using more than a few seed e
 
 \begin{table}[ht!]
 \centering
-\caption{Fraction of gold standard polymer names extracted from pool of \num{10000} \textit{distance} candidates with different choices of seed entities.\label{tab:candidate_generation}
-}
+\caption{Fraction of gold standard polymer names in the \num{10000} entities that are closest,
+by word vector distance, to various sets of seed entities.\label{tab:candidate_generation}}
 \vspace{2ex}
 %[35.55, 37.69, 46.9, 47.97, 46.47, 48.39, 46.68, 36.4]
 \setlength\tabcolsep{3pt}
@@ -211,11 +201,14 @@ Thus, in all subsequent experiments, we use the three most frequent polymers and
 \subsection{The Initial Classifier}
 Recall from Section~\ref{sec:bootstrap} that we use an initial set of 200 NLP-filtered entities that are close
 to seed entities to bootstrap our labeling process.
-Once those data are labeled by our experts, we train our initial KNN classifier using 80\% of the candidates and validate on the 20\% hold out data. 
-We then test the classifier against all NLP-filtered candidates from the 100-documents test set.
-%\ian{I am not sure what Figure~\ref{fig:knn_init} is showing. Is this the results evaluated on the 20\% of hold out data from the bootstrap set? On the 467 polymers in the test set?}
-We observe a better-than-random behavior on the Receiver Operating Characteristic (ROC) curve with an AUC of 0.62, as shown in 
-Figure~\ref{fig:knn_init}. %shows the Receiver Operating Characteristic (ROC) curve for the initial classifier with highest recall when evaluating on the test corpus.
+Once those data are labeled by our experts, 
+we use 80\% to train a KNN classifier, validating on the remaining 20\%. 
+We then test this \textit{initial classifier} against all \num{9656} NLP-filtered candidates in the 100-document test set,
+which as noted in Section~\ref{sec:dataset} contain \num{467} polymers.
+Results are shown in Figure~\ref{fig:knn_init}.
+Its Receiver Operating Characteristic (ROC) curve
+shows better-than-random behavior, with an area under curve (AUC) of 0.62. 
+ %shows the Receiver Operating Characteristic (ROC) curve for the initial classifier with highest recall when evaluating on the test corpus.
 %\logan{I do not like this as a topic sentence because it doesn't offer any indication of what to draw from the figure. I prefer ones that are "We found that X, as shown in Figure Y." Topic sentences with some editorial comments worked in help keep the narrative of the purpose of your study alive.}
 %The ROC plot is an evaluation measure that is based on two basic evaluation measures: specificity (true positive rate) and sensitivity (true negative rate).
 %Sensitivity is the same as recall. Specificity is a measure of the true negative rate (the proportion of actual negatives that are correctly identified as such).
@@ -232,34 +225,30 @@ For example, if a dataset contains 90\% of class A and 10\% of class B,
 a classifier that predicts every sample as belonging to class A has an accuracy of 90\%, 
 but is not useful in practice.
 %Since AUC takes into account true negatives or correctly predicted non-polymers and our dataset is imbalanced containing more non-polymers than polymers, 
-Therefore, we also plot the Precision Recall (PR) curve to show the tradeoff between precision and recall. %\logan{A little wordy, can you streamline this sentence?}
-%\logan{This paragraph contains no conclusions, it just explains the ROC. Add something about the results.}\roselyne{I explain below? will elaborate}
-While the AUC for the initial base KNN classifier is above random performance (0.5) in Figure~\ref{fig:knn_init}, 
-the initial PR curve shows poor precision regardless of recall.
-We have obtained better performance with more labels (897) in our previous implementation~\cite{tchoua2019polyner}, suggesting that the classifier begins to learn with more data. 
+Therefore, we also plot the Precision Recall (PR) curve to show the tradeoff between precision and recall.
+While the AUC for the initial classifier is above random performance (0.5) 
+its PR curve shows poor precision, regardless of recall.
+In previous work~\cite{tchoua2019polyner}, we found that we could 
+achieve better performance with more labels (897), suggesting that a KNN classifier begins to learn with more data. 
 However, 160 labels (80\% of 200) is not yet enough. % training data to perform well in practice.
 %\logan{Better topic sentence. It provides a hit of what to look for. But, you do not follow it up with any details supporting this claim}\roselyne{yes this is where i was doing some explaining for the paragraph, will elabotate}
 %\logan{This is a long section for just describing how you made the classifier and that it is pretty bad. Do we need this section?}\roselyne{I will shorten and improve next, the main reason for poor performance is small sample data, because we know this works better with 800 data points, from previous polyNER paper.}
 
-%\ian{Presumably you will fix the layout and figure labels for Figs~\ref{fig:prc_init} etc.}
-
-%\ian{You refer in different places to ``Receiver Operating Characteristic Curve," ``Receiver Operating Curve,''
-%and Receiver Operation Curve.'' I changed all to ROC curve to be consistent.}
+\ian{What do you think about adding the initial classifier lines to Figure~\ref{fig:rocs_prcs_round5}?
+It will be more crowded, but the comparison will be clearer.} 
 
 \begin{figure*}
 \centering
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/roc_init.png}
-%\caption{ROC curve for KNN model for initial round of labels.}\label{fig:roc_init}
 \end{minipage}\qquad
 \hspace{2ex}
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prc_init.png}
-%\caption{PR curve for KNN model for initial round of labels.}
-%\label{fig:prc_init}
 \end{minipage}
-\caption{ROC (left) and PR (right) curves for KNN model for initial round of labels. The PR curve shows that precision is low regardless of recall, indicating that we need more data.%\ian{expand caption.}\label{fig:knn_init}
-}
+\caption{ROC (left) and PR (right) curves for KNN model for the initial classifier. 
+The PR curve shows that precision is low regardless of recall, 
+indicating that we need more data.\label{fig:knn_init}}
 \end{figure*}
 
 \begin{figure*}
@@ -267,31 +256,26 @@ However, 160 labels (80\% of 200) is not yet enough. % training data to perform 
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/rocs_round5_new.png}
 \captionsetup{labelformat=empty}
-%\caption{ROC curve for last round of active learning. 
-%\logan{I think we could benefit from easier-to-remember labels than AL1 and AL2. I don't remember which is which. Also why does the file say Round 5 and the text iterating curves? If we say ROC is a worse plot, why even show it?}\roselyne{ROC is not worse but perhaps incomplete}
-%\roselyne{There are 5 rounds of labeling but 4 rounds of active learning, it's confusing, with the table this is less confusing, I used to say, round, but changed to round, will use last. Agreed about the names, but hard to compress these names. I've tried and changed them but they haven't changed in the figure yet.}
-%}
 \label{fig:rocs_round5}
 \end{minipage}\qquad
 \hspace{2ex}
 \begin{minipage}[b]{.4\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prcs_round5_rule.png}
 \captionsetup{labelformat=empty}
-%\caption{PR curves for last round of active learning.}
-\label{fig:prcs_round5}
 \end{minipage}
-%\setcounter{figure}{8}  
-\caption{ROC (left) and PR (right) curves after four rounds of active learning. 
-AUCs for active learning are 0.74 and 0.7 for UBS and Distance UBS compared to 0.62 AUC for the initial classifier.
-%\ian{you mean after one round?}\roselyne{compared to the graph above, initial labeling}
-The classifier based on random sampling has a similar AUC than the initial classifier (0.59).
+\caption{ROC (left) and PR (right) curves after four rounds. 
+The ROC curves for two active learning strategies, UBS and Distance UBS, show significant improvements,
+achieving AUCs of 0.74 and 0.70, respectively: significantly better than the 0.62 achieved by the initial
+classifier in Figure~\ref{fig:knn_init}. 
+Random, in contrast, performs poorly, with an AUC of just 0.59.
 %\ian{I don't understand what you mean here. It is doing better than random. It seems to me that, in general, you are using this graph to make a number of assertions about improvement over initial performance that are not supported by the graph, because you do not show the lines for ``initial performance." All the graph shows is that they all do better than random, with UBS better than Distance UBS, which is in turn better than Random.} 
-PR curves also show improvement over initial poor performance,
-the random strategy has only shows two probabilities for target and non-target predictions; 
-the other two active learning strategies are lifting away from the bottom corner, indicating discriminative capacities.
-In both types of plots, active learning using NLP-filtered candidates (AL UBS) outperforms the active learning using distance candidates (AL D-UBS) and approaches rule-based performance.
+PR curves also show improvements relative to the initial classifier, with all three strategies
+lifting away from the bottom corner, indicating discriminative capacities.
+In both types of plots, UBS outperforms Distance UBS. % and approaches rule-based performance.
 % AL-1 refers to active learning using NLP-filtered nouns. AL-2 refers to active learning using candidates deemed similar to representative entities.  %\logan{<soapbox>Is it standard practice to use such uninformativ figure captions in CS? I was taught to make the captions almost standalone from the text</soapbox>}
-}\label{fig:rocs_prcs_round5}
+\ian{I commented out the text that UBS ``approaches rule-based performance'' because the figure does not show that:
+it has no information about rule-based performance.}
+}\label{fig:rocs_prcs_round5}\label{fig:prcs_round5}
 \end{figure*}
 
 \subsection{Comparing Sampling Strategies}
@@ -323,7 +307,9 @@ while examples from Distance UBS are clustered around the seed entities that may
 
 \begin{table}[ht!]
 \centering
-\caption{Precision and recall when tested against gold standard for classifiers at each active learning round.\label{tab:pr_table}
+\caption{Precision and recall relative to the gold standard for
+the initial classifier (round 0) and the classifiers trained also with the increased data obtained in each of
+four learning rounds, 1--4.\label{tab:pr_table}
 }
 \vspace{2ex}
 %[35.55, 37.69, 46.9, 47.97, 46.47, 48.39, 46.68, 36.4]
@@ -443,11 +429,11 @@ We explain this observation as follows.
 In FastText, the portion of the word embedding vector generated by using context varies depending on how much context is available in the entire corpus. 
 For words deemed to have enough context, vectors do not include any character-level information. 
 At the other extreme, for previously unseen words, the embedding is generated based solely on character n-gram information and comparison to other words in the corpus.
-During the active learning process, candidates to be labeled by experts are selected by using maximum-entropy based uncertainty sampling: that is, words for which prediction probability is the same for both classes, target and non target.
-Such candidates are more likely to lack context,
-and thus have vectors that are generated using mostly character-level information.
-When all or most of the word embedding vector 
-As a result, the expert is often presented with nearly identical candidates (e.g., \textit{PS13k/PMMA12k}, \textit{PS214k/PMMA12k}, and \textit{PS31.6k/PMMA12k}), which hinders the learning process as these candidates are located in close vicinity in terms of the full (character and context) word embedding space.
+During the active learning process, candidates to be labeled by experts are selected by using maximum-entropy-based uncertainty sampling: that is, words for which prediction probability is similar for target and non target.
+Such candidates are more likely to lack context
+and thus have vectors that use mostly character-level information.
+%When all or most of the word embedding vector 
+As a result, the expert is often presented with nearly identical candidates (e.g., PS13k/PMMA12k, PS214k/PMMA12k, PS31.6k/PMMA12k), which hinders the learning process as these candidates are located in close vicinity in terms of the full (character and context) word embedding space.
 In other words, in this full space, while their uncertainty measure is comparable, these examples are not \textit{diverse}, where diversity is a measure of the distance of the examples to each other or previously labeled instances~\cite{brinker2003incorporating}.
 One solution to explore in future work would be to impose a diversity constraint on the candidates,
 for example by using batch active learning~\cite{settles2009active}.
@@ -473,15 +459,15 @@ for example by using batch active learning~\cite{settles2009active}.
 
 \subsection{Labeling}\label{sec:labeling}
 We conduct some experiments to estimate labeling time. 
-We ask two polymer scientists to 200 label candidates from a subset of our corpus.
-One experts reports 30 minutes, the other 45 minutes. We overestimate the time to label 200 candidates at one hour of expert time.
+We ask two polymer scientists to label 200 candidates from a subset of our corpus.
+One expert reports 30 minutes, the other 45 minutes. We overestimate the time to label 200 candidates at one hour of expert time.
 Based on user feedback, we also improve the labeling Web interface after the above mentioned test rounds to further facilitate and speed up labeling.
 For example, we increase the number of example sentences available to provide context, to decrease the number of occurences in which experts have to look up original publications for candidates.
 We also increase the size of checkmarks to make it easier to reject erroneous candidates.
 %Having performed these initial tests, and considering that expert time is expensive, we allow annotators to save their progress and come back to labeling anytime within a week's time. \roselyne{Is this only going to add confusion?}
 In the initial labeling round, we
 we perform crosschecking for 10\% of the batch of labels. 
-We confirm agreement between labels for all but 1 of the set of 20 candidates or an agreement of 95\% between our two experts.
+We confirm agreement between labels for all but one of 20: an agreement rate of 95\%.
 
 
 
