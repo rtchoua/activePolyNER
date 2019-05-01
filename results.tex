@@ -184,7 +184,6 @@ Thus, in all subsequent experiments, we use the three most frequent polymers and
 %[49.67880085653105, 49.25053533190578, 49.46466809421842, 49.46466809421842, 48.82226980728051]
 %\logan{Need a concluding sentence?}
 
-
 %\begin{figure}
 %\centering
 %%\begin{minipage}[b]{.4\textwidth}
@@ -197,6 +196,19 @@ Thus, in all subsequent experiments, we use the three most frequent polymers and
 %%\end{minipage}
 %\end{figure}
  %\kyle{Not sure this fig is worth including}\roselyne{Agreed that it's not so interesting but i think it goes with the windows one and i will combine the two figures you think should be together.}\roselyne{May remove as paper gets longer}
+
+%\roselyne{We can put labeling here, or maybe before last results, but I think it should be before the discussion and the final main result}
+\subsection{Labeling}\label{sec:labeling}
+We conduct some experiments to estimate labeling time. 
+We ask two polymer scientists to label 200 candidates from a subset of our corpus.
+One expert reports 30 minutes, the other 45 minutes. We overestimate the time to label 200 candidates at one hour of expert time.
+Based on user feedback, we also improve the labeling Web interface after the above mentioned test rounds to further facilitate and speed up labeling.
+For example, we increase the number of example sentences available to provide context, to decrease the number of occurences in which experts have to look up original publications for candidates.
+We also increase the size of checkmarks to make it easier to reject erroneous candidates.
+%Having performed these initial tests, and considering that expert time is expensive, we allow annotators to save their progress and come back to labeling anytime within a week's time. \roselyne{Is this only going to add confusion?}
+In the initial labeling round, we
+we perform crosschecking for 10\% of the batch of labels. 
+We confirm agreement between labels for all but one of 20: an agreement rate of 95\%.
 
 \subsection{The Initial Classifier}
 Recall from Section~\ref{sec:bootstrap} that we use an initial set of 200 NLP-filtered entities that are close
@@ -408,22 +420,24 @@ precision.%, with only about five hours of expert labeling.
 
 \subsection{Discussion and Future Work}
 \label{sec:discussion}
-\roselyne{Add results here, bootstrapping helps enriching dataset, but active learning with distance does not learn faster, it is still better than random. Add that 200 is not enough for a batch size to learn, maybe start with 600? Add that I wouldn't use multiple classifiers. Seed entities do help because AL2 still outperforms random.
-Also talk about cross checking here somehow since i do not have enough to have a labeling section for results
-Each expert annotates one strategy but we perform crosschecking for 10\% of the first batch of labels to get a measure of agreement between experts.} 
-%We confirm agreement between labels for all but 1 of the set of 20 candidates or an agreement of 95\%.}
-%\logan{The discussion starts out with your last part of the Results section, skipping over anything else you learned. }
+We have previously used seed entities to bootstrap classifiers of context-based word vectors. 
+Using an ensemble of classifiers, polyNER allowed users to tradeoff precision and recall.
+In this attempt to improve performance, while efficiently using experts' time, we used active learning to obtain more labels.%\roselyne{Repeating again}
+However, we do not observe an increase of precision over the 5\% fraction of polymers until the third round of active learning with NLP-filtered words (800 labels). 
+This suggests that our label batch size is lower than the minimum number of labels necessary to start the learning process.
+More detailed study of performance vs. label batch size will help pinpoint the appropriate number of labels and level of bootstrapping required for learning.
+We can also ask the following questions: Could we achieve CDE performance classifying only context-based (not character enhanced) representation? If so, how many more iterations would it take? If not, how much do we need to increase and improve our current corpus of \num{1690} documents?
+
+PolyNER achieves CDE performance using labels obtained via active learning (UBS sampling strategy) and FastText vectors.
 We attribute the increased performance to the character embedding enhancement, which not only recognizes ``poly'' (and yields more names based on this n-gram comparison), 
 but also filters out more anomalous candidates (preceding or following polymer names) generated during tokenization and missed by the filtering steps, 
 such as ``\textit{$A_mB_n$}'' and ``\textit{Mw/Mn=1.36}.'' 
 In other words, the classifiers of character and (context-based) word embedding vectors perform better than classifiers of only context-based word embedding.
-
 Given this result, one may wonder whether the active learning process itself could benefit from using this enhanced vector embedding. 
 To determine whether this is the case,
 we repeated the active learning experiment using the entire corpus of NLP-filtered candidates and classifying FastText (enhanced) vectors instead of Gensim vectors at each round. 
 However, performance was worse than random.
 %the classifier's ROC curve did not achieve CDE performance after five rounds and was below random performance.%\logan{Wasn't it also worse than the randomly-selected words?}\roselyne{yes, but doesn't it make you want to see another figure more}
-
 These results suggest that character-level information enhances classifier performance only once a certain threshold of context information has been captured by the embedding.
 We explain this observation as follows. 
 In FastText, the portion of the word embedding vector generated by using context varies depending on how much context is available in the entire corpus. 
@@ -457,17 +471,17 @@ for example by using batch active learning~\cite{settles2009active}.
 %\end{minipage}
 \end{figure}
 
-\subsection{Labeling}\label{sec:labeling}
-We conduct some experiments to estimate labeling time. 
-We ask two polymer scientists to label 200 candidates from a subset of our corpus.
-One expert reports 30 minutes, the other 45 minutes. We overestimate the time to label 200 candidates at one hour of expert time.
-Based on user feedback, we also improve the labeling Web interface after the above mentioned test rounds to further facilitate and speed up labeling.
-For example, we increase the number of example sentences available to provide context, to decrease the number of occurences in which experts have to look up original publications for candidates.
-We also increase the size of checkmarks to make it easier to reject erroneous candidates.
-%Having performed these initial tests, and considering that expert time is expensive, we allow annotators to save their progress and come back to labeling anytime within a week's time. \roselyne{Is this only going to add confusion?}
-In the initial labeling round, we
-we perform crosschecking for 10\% of the batch of labels. 
-We confirm agreement between labels for all but one of 20: an agreement rate of 95\%.
+%\subsection{Labeling}\label{sec:labeling}
+%We conduct some experiments to estimate labeling time. 
+%We ask two polymer scientists to label 200 candidates from a subset of our corpus.
+%One expert reports 30 minutes, the other 45 minutes. We overestimate the time to label 200 candidates at one hour of expert time.
+%Based on user feedback, we also improve the labeling Web interface after the above mentioned test rounds to further facilitate and speed up labeling.
+%For example, we increase the number of example sentences available to provide context, to decrease the number of occurences in which experts have to look up original publications for candidates.
+%We also increase the size of checkmarks to make it easier to reject erroneous candidates.
+%%Having performed these initial tests, and considering that expert time is expensive, we allow annotators to save their progress and come back to labeling anytime within a week's time. \roselyne{Is this only going to add confusion?}
+%In the initial labeling round, we
+%we perform crosschecking for 10\% of the batch of labels. 
+%We confirm agreement between labels for all but one of 20: an agreement rate of 95\%.
 
 
 
