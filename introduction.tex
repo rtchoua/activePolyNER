@@ -94,7 +94,7 @@ In this paper, we seek to improve polyNER's performance by improving the labelin
 %labeling, and classification.\ian{Classification is not shown as a step elsewhere. Also, I note that Figure~1 has a
 %``candidate discrimination'' step, which is a term not used much elsewhere.}\roselyne{Noted! I changed figure 1 and will check that we don't use discrimination elsewhere. Also remove any mention of the candidate generation since now we only do it at the initial labeling.}
 In the initial labeling phase, 
-we experiment with different \textit{representative} (commonly used) entities to increase the fraction of target entities in the dataset to be labeled and bootstrap the context-based word vectors classifiers.%\ian{I think that the representative/seed entity thing is mainly relevant for bootstrapping. Maybe we should say ``used in the bootstrapping phase.'''}
+we experiment with different \textit{representative} (commonly used) entities to increase the fraction of target entities in the dataset to be labeled and bootstrap the context-based word vectors classifiers. %\ian{I think that the representative/seed entity thing is mainly relevant for bootstrapping. Maybe we should say ``used in the bootstrapping phase.'''}
  % to generate candidates;
 % and tune the word embedding model parameters to increase the yield of actual scientific entities among candidates; 
 In the subsequent labeling and classification steps,
