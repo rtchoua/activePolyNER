@@ -28,7 +28,7 @@ We also describe the labeling process, and the training and testing configuratio
 
 \begin{figure*}[!t]
 {\includegraphics[width=\textwidth]{figures/architecture.pdf}}
-\caption{\label{fig:architecture} PolyNER system showing the different phases of polyNER including the NLP-filtering step, the initial sampling and the newly integrated active learning loop to classify scientific named entities. 
+\caption{\label{fig:architecture} PolyNER system showing the different phases of polyNER including the NLP-filtering step, the initial bootstrapping and labeling phase as well as the newly integrated active learning loop to classify scientific named entities. 
 %\ian{(1) It is really important to be consistent in how your refer to things. Here, the figure says ``Bootstrapping and Initial Labeling" for (1), but the caption says ``initial sampling and labeling.'' Pick one and use it consistently. (2) You are inconsistent in capitalization. (3) The caption mostly repeats the labels in the figure, which seems redundant.
 %It could be higher level.}
 	%\logan{Should we differentiate between the "initial sampling" strategy done to bootstrap our training set and the "active learning sampling" strategy used to identify the next things to label? Mixing the two up is going to confuse people}\roselyne{OK will adapt the rest of the text and section titles too.}
@@ -81,7 +81,7 @@ We refer to the set of words that results when these filtering operations are ap
 as the \emph{NLP-filtered candidates}.
 This set is the output of step 1 in Figure~\ref{fig:architecture}.
 
-\subsection{Initial Labeling}\label{sec:initial}
+\subsection{Initial Bootstrapping and Labeling}\label{sec:initial}
 NLP filtering reduces the number of entities to be considered, and increases the target vs.\ non-target entity ratio.
 However, there still remain a large pool of potential candidates from which entities are to be selected,
 of which, in our experience, only 5\% are polymer names.
@@ -94,10 +94,28 @@ in a subset of publications, or that are suggested by experts.
 We discuss this distance metric in more detail below.
 Based on preliminary experiments, we set the size of each batch of strings to be labeled to 200, 
 or about an hour of expert time.
-\ian{I will come back and look at this later, but I want to make a note for now.
-Section~\ref{sec:initial} and Section~\ref{sec:bootstrap} are basically duplicates: they both describe
-the bootstrap process. We need to work out whether this is better stated before or after the sampling
-strategy material.}
+We then train the initial classifier on this bootstrap set, using 80\% of the data for training and 20\% for testing.
+We subsequently used three different sampling strategies for following classifications.
+
+
+%\subsection{Bootstrapping}\label{sec:bootstrap}
+%%Having explored the parameters for distance candidate generation, we generate a pool of \num{10000} candidates most similar to the three most frequent polymers and their acronyms from a test corpus of \num{1690}, excluding any token found in our test documents. 
+%%\logan{Is the 10k entries mentioned in the previous section this set? If so, we need to revise the order of these sections?}
+%The UBS and Distance UBS sampling methods use a classifier to 
+%determine which NLP-filtered entities should be chosen next for expert labeling.
+%This classifier must be trained, and thus we need an initial set of entities to bootstrap this process.
+%We could choose NLP-filtered entities at random for initial labeling, 
+%but that choice is unlikely to perform well due to the low proportion of polymers (just 5\%) in the NLP-filtered corpus.
+%Instead, therefore, we create an initial bootstrap set comprising the 200 NLP-filtered entities 
+%that are closest, in word distance vectors, to a set of seed entities.
+%%\ian{I assert that there is no need to mention the \num{10000} number here: you just take the 200 with the lowest score, as the 10000 is just the ones with the lowest distance scores, yes?}\roselyne{yes, or highest similarity, I wonder if I should change my preference for distance, because distance implies, minimal distance but Word2Vec and FastText give similarity values, discuss.}
+%(Recall that we use a batch size of 200 based on an estimate of 60 minutes of expert time required for labeling.)
+%We then train the initial classifier on this bootstrap set, using 80\% of the data for training and 20\% for testing.
+
+%\ian{I will come back and look at this later, but I want to make a note for now.
+%Section~\ref{sec:initial} and Section~\ref{sec:bootstrap} are basically duplicates: they both describe
+%the bootstrap process. We need to work out whether this is better stated before or after the sampling
+%strategy material.}\roselyne{You are right, changing the figure to say initial bootstrapping and labeling, it is the same step}
 
 \subsection{Sampling Strategies}\label{sec:sampling}
 %While the previous steps reduces the numbers of candidates and the imbalance of the dataset (target vs. non-target entity ration), there still remains a relatively large pool of potential candidates to select entities from.
