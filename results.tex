@@ -365,7 +365,7 @@ while examples from Distance UBS are clustered around the seed entities that may
 We selected seed entities based on their frequency in our corpus. %and the yield of target entities during sampling.%\ian{I thought that you said above that you picked the most frequent words?}\roselyne{Yes, but we also experimented with them, top, vs, top3, vs top10, but it is not necessary.}
 This observation suggests that we could also study how the choice of seed entities impact of the performance of the classifier during the active learning process. 
 We revisit this concept of \textit{diversity} of labels in the Section~\ref{sec:discussion}. 
-Note that with limited training data and based solely on context, the classifier retrieves 45.6\% (more than one third) of the gold standard polymers with a precision of 18.2\%, after about five hours of expert labeling. 
+Note that with limited training data and based solely on context, the classifier retrieves 45.6\% (more than one third) of the gold standard polymers with a precision of 18.2\%, after five hours of expert labeling. 
 For comparison, an attempt to extract polymer names using the rule: 
 \textit{if the name contains ``poly'' extract it as a polymer}, gets recall of 41\% and precision of 34\% on the same dataset.
 We conclude that with our relatively small dataset, we are able to achieve close to rule-based performance, 
@@ -374,7 +374,8 @@ using active learning and little labeling.
 
 %\subsection{Using Active Learning Labels with Character-Level Enhanced Embeddings}
 \subsection{Active Learning Labels + Character-Level Embeddings}
-After just 1000 labels, or five hours of expert labeling, the context-based classifier using active learning applied to NLP-filtered candidates achieved performance comparable to rule-based performance, 
+\label{sec:results}
+After just 1000 labels, the context-based classifier using active learning applied to NLP-filtered candidates achieved performance comparable to rule-based performance, 
 but not quite to the polymer-enhanced CDE+.
 With the goal of further improving polyNER performance,
 we experiment with the use of an alternative word embedding model, FastText, which 
@@ -417,7 +418,7 @@ which achieve 42.2\% precision and 68.3\% recall on the same test set.%\ian{rewo
 We achieve higher recall than CDE and CDE+ using labels from UBS and FastText vectors 
 and in-between (higher than CDE and lower than CDE+)
 %\ian{I don't know how to interpret this word.}\roselyne{I thought that would be better "than in-between" precision}
-precision, with only about five hours of expert labeling.
+precision.%, with only about five hours of expert labeling.
 
 \subsection{Discussion and Future Work}
 \label{sec:discussion}
