@@ -267,24 +267,25 @@ indicating that we need more data.\label{fig:knn_init}}
 \begin{figure*}
 \centering
 \begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/rocs_round5_new.png}
+\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/rocs_lastround.png}
 \captionsetup{labelformat=empty}
 \label{fig:rocs_round5}
 \end{minipage}\qquad
 \hspace{2ex}
 \begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prcs_round5_rule.png}
+\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prcs_lastround.png}
 \captionsetup{labelformat=empty}
 \end{minipage}
 \caption{ROC (left) and PR (right) curves after four rounds. 
 The ROC curves for two active learning strategies, UBS and Distance UBS, show significant improvements,
 achieving AUCs of 0.74 and 0.70, respectively: significantly better than the 0.62 achieved by the initial
 classifier in Figure~\ref{fig:knn_init}. 
-Random, in contrast, performs poorly, with an AUC of just 0.59.
+Random achieves an AUC of 0.68.
+%Random, in contrast, performs poorly, with an AUC of just 0.59.
 %\ian{I don't understand what you mean here. It is doing better than random. It seems to me that, in general, you are using this graph to make a number of assertions about improvement over initial performance that are not supported by the graph, because you do not show the lines for ``initial performance." All the graph shows is that they all do better than random, with UBS better than Distance UBS, which is in turn better than Random.} 
 PR curves also show improvements relative to the initial classifier, with all three strategies
 lifting away from the bottom corner, indicating discriminative capacities.
-In both types of plots, UBS outperforms Distance UBS. % and approaches rule-based performance.
+In both types of plots, UBS outperforms Distance UBS and approaches rule-based performance.
 % AL-1 refers to active learning using NLP-filtered nouns. AL-2 refers to active learning using candidates deemed similar to representative entities.  %\logan{<soapbox>Is it standard practice to use such uninformativ figure captions in CS? I was taught to make the captions almost standalone from the text</soapbox>}
 %\ian{I commented out the text that UBS ``approaches rule-based performance'' because the figure does not show that:
 %it has no information about rule-based performance.}\roselyne{right! If I add the point, I'll put it back}
@@ -308,6 +309,7 @@ with active learning performing better with UBS than with Distance UBS.
 %We also determine that the classifier, which uses UBS is performing better than with the two other strategies.
 When tested against our gold standard of 467 one-word polymer names, 
 the KNN classifier achieves 18.2\% precision and  45.6\% recall. 
+We notice that even the random strategy PR curve is improved (away from the initial PR curve and close to the Distance UBS curve), indicating that the NLP-filtering alone is enough to enable the learning process after 1000 labels.
 
 We conclude that while the sampling step
 helps insure that the classes are balanced in the initial batch of labels, 
@@ -335,31 +337,34 @@ four learning rounds, 1--4.\label{tab:pr_table}
 %\hline
 %Round 0\ \ & \multicolumn{3}{c|}{} \\
 \hline
-\multirow{2}{*}{0} & Precision &        \multicolumn{3}{c|}{6.53\%} \\
- & Recall\ \ \ \ \ &               \multicolumn{3}{c|}{19.10\%} \\
+\multirow{2}{*}{0} & Precision &        \multicolumn{3}{c|}{6.5\%} \\
+ & Recall\ \ \ \ \ &               \multicolumn{3}{c|}{19.1\%} \\
 %\hline
 %Round 1\ \  & \multicolumn{3}{c|}{} \\
 \hline
-\multirow{2}{*}{1}  & Precision     & 3.75\%       &      3.18\%      &  \textbf{5.28\%} \\
- & Recall\ \ \ \ \ & 0.29\%      &   \textbf{93.62\%}     &  56.81\% \\
+\multirow{2}{*}{1}  & Precision     & 3.8\%       &      3.2\%      &  \textbf{5.3\%} \\
+ & Recall\ \ \ \ \ & 0.29\%      &   \textbf{93.6\%}     &  56.8\% \\
 %\hline
 %Round 2\ \  & \multicolumn{3}{c|}{} \\
 \hline
-\multirow{2}{*}{2} & Precision      & 1.49\%           &      3.79\%      &  \textbf{5.35\%} \\
-& Recall\ \ \ \ \ & 1.45\%           &    \textbf{46.38\%}      &  10.14\% \\
+\multirow{2}{*}{2} & Precision      & 1.5\%           &      3.8\%      &  \textbf{5.4\%} \\
+& Recall\ \ \ \ \ & 1.5\%           &    \textbf{46.4\%}      &  10.1\% \\
 %\hline
 %Round 3\ \  & \multicolumn{3}{c|}{} \\
 \hline
-\multirow{2}{*}{3}  & Precision      & 6.02\%              &    \textbf{21.23\%}      &  3.93\% \\
- & Recall\ \ \ \ \ & 44.64\%            &    40.00\%      &  \textbf{84.35\%}  \\
+\multirow{2}{*}{3}  & Precision      & 6.0\%              &    \textbf{21.2\%}      &  3.9\% \\
+ & Recall\ \ \ \ \ & 44.6\%            &    40.0\%      &  \textbf{84.3\%}  \\
 %\hline
 %Round 4\ \  & \multicolumn{3}{c|}{} \\
 \hline
-\multirow{2}{*}{4} & Precision     & 7.06\%          &    \textbf{18.21\%}      &  7.20\% \\
-& Recall\ \ \ \ \ & 40.70\%         &     45.64\%     &  \textbf{51.88\%} \\
+\multirow{2}{*}{4} & Precision     & 12.3\%          &    \textbf{18.2\%}      &  7.2\% \\
+& Recall\ \ \ \ \ & 33.3\%         &     45.6\%     &  \textbf{51.9\%} \\
 \hline
 \end{tabular}
 \end{table}
+
+% Forced last classifier to be also KNN for all random
+%0.333333 	0.12297
 
 We selected seed entities based on their frequency in our corpus. %and the yield of target entities during sampling.%\ian{I thought that you said above that you picked the most frequent words?}\roselyne{Yes, but we also experimented with them, top, vs, top3, vs top10, but it is not necessary.}
 This observation suggests that we could also study how the choice of seed entities impact of the performance of the classifier during the active learning process. 
