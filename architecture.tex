@@ -222,7 +222,7 @@ in order to compare their performance.
 Not specified in Section~\ref{sec:sampling} is the nature of the classifier that the UBS and Distance UBS strategies
 use to estimate the probability of each entity in the NLP-filtered corpus (or, for Distance UBS,
 the \num{10000}-entity subset of the NLP-filtered corpus) being a polymer.
-(The Random strategy does not use a classifier, as it selects candidates at random.)
+(The Random strategy does not use a classifier for sampling, as it selects candidates at random.)
 As we have no prior knowledge of the distribution of target entities in the vector space, 
 we consider seven distinct classifiers in each round of the active learning process:
 the scikit-Learn~\cite{scikit-learn} implementations of Decision Tree,
