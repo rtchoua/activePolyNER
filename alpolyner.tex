@@ -19,6 +19,7 @@
 \definecolor{backcolour}{rgb}{0.95,0.95,0.92}
 \usepackage{siunitx}
 \usepackage{array}
+\usepackage{multirow}
 \newcolumntype{P}[1]{>{\centering\arraybackslash}p{#1}}
 
 \usepackage[font={small,bf}]{caption}
@@ -98,15 +99,8 @@
   \newcommand{\loganfussingaboutrecallandprecision}{}
 \fi
 
-\newif\ifnist
-\nistfalse
-%\nisttrue
-
-\ifnist
-  \newcommand\nistnum[1]{\num[group-separator={},mode=text]{#1}}
-\else
-  \newcommand\nistnum[1]{\num[group-minimum-digits=4,group-separator={,},mode=text]{#1}} 
-\fi
+\usepackage{siunitx}
+\sisetup{detect-all}
 
 % correct bad hyphenation here
 \hyphenation{op-tical net-works semi-conduc-tor}
@@ -116,7 +110,7 @@
 \bstctlcite{IEEEexample:BSTcontrol}
 
 %\title{PolyNER: A \textit{word2vec} Approach to Scientific NER}
-\title{Active polyNER: Training Data for Scientific Named Entity Recognition with Active Learning}
+\title{Active Learning Yields Better Training Data for Scientific Named Entity Recognition}
 
 
 \author{\IEEEauthorblockN{Roselyne B. Tchoua\IEEEauthorrefmark{1},
@@ -141,26 +135,27 @@ Email: roselyne@uchicago.edu}
 \begin{abstract}
 
 Despite significant progress in natural language processing, 
-machine learning models require substantial expert-annotated data for training to perform well in tasks such as named entity recognition and entity relations extraction.
-Scientific Named Entity Referent Extraction is often more complicated than traditional Named Entity Recognition (NER). 
-\logan{Perhaps move the characteristics you mention for polymers to this sentence, make them sound more general, and then say polymers is a perfect case for exploring these challenges. This will make your paper seem less polymer-y from the start}
+machine learning models require substantial expert-annotated training data to perform well in tasks such as named entity recognition (NER) and entity relations extraction.
+Furthermore, NER is often more complicated when working with scientific text. 
+%\logan{Perhaps move the characteristics you mention for polymers to this sentence, make them sound more general, and then say polymers is a perfect case for exploring these challenges. This will make your paper seem less polymer-y from the start}\roselyne{Making a note to ask which sentence, but have tried to add that the challenges are not usnique to polymer science}
 For example, in polymer science, 
 chemical structure may be encoded using nonstandard
 naming conventions,
 the same concept can be expressed using many different terms (synonymy),
-and authors may refer to polymers with ad-hoc labels (in lieu of longer names).
-These challenges make it difficult to generate training data as specialized skills are needed to correctly label text.
-%\kyle{We've proposed polyner a few times now.. I think likely better to focus on what is new this paper}\roselyne{only once was accepted, except the short paper at BNL and I didn't know it yet for sure when I was writing but I see your point. I'll rephrase and I think we can cite an accepted paper.}.
-We have previously designed polyNER: a semi-automated system for efficient identification of scientific entities in text.
+and authors may refer to polymers with ad-hoc labels. % (in lieu of longer names).
+These challenges, which are not unique to polymer science, make it difficult to generate training data, as specialized skills are needed to label text correctly.
+We have previously designed polyNER, a semi-automated system for efficient identification of scientific entities in text.
 PolyNER applies word embedding models
 to generate entity-rich corpora for productive expert labeling,
 and then uses the resulting labeled data to 
-bootstrap a context-based word vector classifier.%~\roselyne{cite in intro}.
-Here, we use approximately labeled candidates and active learning to efficiently obtain more annotations from experts and improve performance.
-This process that is otherwise tedious and expensive.\logan{Not sure what "This" refers too}
-With under five hours of expert time, polyNER demonstrates discrimination capacity comparable to state-of-the-art chemical NLP toolkit and
-highlights the potential for human-computer partnership for 
-constructing domain-specific scientific NER systems.
+bootstrap a context-based word vector classifier. %~\roselyne{cite in intro}.
+PolyNER facilitates a labeling process that is otherwise tedious and expensive.
+Here, we use active learning to efficiently obtain more annotations from experts and improve performance.
+PolyNER requires just five hours of expert time to achieve discrimination capacity comparable to that
+of a state-of-the-art chemical natural language processing toolkit,
+highlighting the potential for human-computer partnership in
+%for constructing 
+domain-specific scientific NER. % systems.
 
 \end{abstract}
 
