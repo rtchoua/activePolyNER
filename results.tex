@@ -295,9 +295,9 @@ In both types of plots, UBS outperforms Distance UBS and approaches rule-based p
 \subsection{Comparing Sampling Strategies}
 After the initial round of labeling, we experiment with the three sampling strategies described in Section~\ref{sect:apner_architecture}: Random, UBS, and Distance UBS,
 performing four rounds of active learning for each.
-Results, in Table~\ref{tab:pr_table}, show
-no improvement in the first two rounds for any strategy: % of active learning or the first three rounds of labeling. 
-precision remains under 5\% for all.
+Results, in Table~\ref{tab:pr_table}, show a significant amount of fluctuation and
+no notable improvement in the first two rounds for any strategy: % of active learning or the first three rounds of labeling. 
+precision remains under the initial precision of 6.5\% for all.
 However, in the third round, we observe increases in precision,
 an improvement that  
 is sustained in the fourth round for UBS.
@@ -342,23 +342,23 @@ four learning rounds, 1--4.\label{tab:pr_table}
 %\hline
 %Round 1\ \  & \multicolumn{3}{c|}{} \\
 \hline
-\multirow{2}{*}{1}  & Precision     & 3.8\%       &      3.2\%      &  \textbf{5.3\%} \\
- & Recall\ \ \ \ \ & 0.29\%      &   \textbf{93.6\%}     &  56.8\% \\
+\multirow{2}{*}{1}  & Precision     & 3.8\%       &      3.2\%      &  5.3\% \\
+ & Recall\ \ \ \ \ & 0.29\%      &   93.6\%     &  56.8\% \\
 %\hline
 %Round 2\ \  & \multicolumn{3}{c|}{} \\
 \hline
-\multirow{2}{*}{2} & Precision      & 1.5\%           &      3.8\%      &  \textbf{5.4\%} \\
-& Recall\ \ \ \ \ & 1.5\%           &    \textbf{46.4\%}      &  10.1\% \\
+\multirow{2}{*}{2} & Precision      & 1.5\%           &      3.8\%      &  5.4\% \\
+& Recall\ \ \ \ \ & 1.5\%           &    46.4\%      &  10.1\% \\
 %\hline
 %Round 3\ \  & \multicolumn{3}{c|}{} \\
 \hline
 \multirow{2}{*}{3}  & Precision      & 6.0\%              &    \textbf{21.2\%}      &  3.9\% \\
- & Recall\ \ \ \ \ & 44.6\%            &    40.0\%      &  \textbf{84.3\%}  \\
+ & Recall\ \ \ \ \ & 44.6\%            &    \textbf{40.0\%}     &  84.3\%  \\
 %\hline
 %Round 4\ \  & \multicolumn{3}{c|}{} \\
 \hline
 \multirow{2}{*}{4} & Precision     & 12.3\%          &    \textbf{18.2\%}      &  7.2\% \\
-& Recall\ \ \ \ \ & 33.3\%         &     45.6\%     &  \textbf{51.9\%} \\
+& Recall\ \ \ \ \ & 33.3\%         &     \textbf{45.6\%}     &  51.9\% \\
 \hline
 \end{tabular}
 \end{table}
@@ -380,7 +380,7 @@ using active learning and little labeling.
 \subsection{Active Learning Labels + Character-Level Embeddings}
 \label{sec:results}
 After just 1000 labels, the context-based classifier using active learning applied to NLP-filtered candidates achieved performance comparable to rule-based performance, 
-but not quite to the polymer-enhanced CDE+.
+but not quite as good as the polymer-enhanced CDE+.
 With the goal of further improving polyNER performance,
 we experiment with the use of an alternative word embedding model, FastText, which 
 %Next, we train a word embedding model enhanced with sub-word information using polyNER labels. 
@@ -415,7 +415,7 @@ CDE's recall is high
 at 74.5\%, but its precision for polymers is, as expected, low at 8.7\%, as it does not incorporate polymer knowledge. 
 %\loganfussingaboutrecallandprecision \roselyne{comes with PRC so should be good here}
 In Figure~\ref{fig:UBS_prcs_fasttext}, we show the PR curve for the FastText vector classifier
-and also results for the polymer-enhanced CDE+
+and also results for the polymer-enhanced CDE+,
 which achieve 42.2\% precision and 68.3\% recall on the same test set.
 %\ian{rewording ok here?}\roselyne{yes}
 %We show the PR curve for the FastText vector classifier and the CDE+ performance in Figure
@@ -445,7 +445,7 @@ In other words, the classifiers of character and (context-based) word embedding 
 Given this result, one may wonder whether the active learning process itself could benefit from using this enhanced vector embedding. 
 To determine whether this is the case,
 we repeated the active learning experiment using the entire corpus of NLP-filtered candidates and classifying FastText (enhanced) vectors instead of Gensim vectors at each round. 
-However, performance was worse than random.
+However, the classifier's ROC did not achieve CDE performance after five rounds of learning.
 %the classifier's ROC curve did not achieve CDE performance after five rounds and was below random performance.%\logan{Wasn't it also worse than the randomly-selected words?}\roselyne{yes, but doesn't it make you want to see another figure more}
 
 These results suggest that character-level information enhances classifier performance only once a certain threshold of context information has been captured by the embedding.
@@ -461,6 +461,7 @@ As a result, the expert is often presented with nearly identical candidates (e.g
 In other words, in this full space, while their uncertainty measure is comparable, these examples are not \textit{diverse}, where diversity is a measure of the distance of the examples to each other or previously labeled instances~\cite{brinker2003incorporating}.
 One solution to explore in future work would be to impose a diversity constraint on the candidates,
 for example by using batch active learning~\cite{settles2009active}.
+This will be part of broader plan to study the effect of quantity (more documents) and quality (select paragraphs or sentences) of data on the word embedding model and the final results.
 %\logan{There are batch active learning papers, and surely a review. Cite one so that people do not think you're planning to reinvent such methods.}\roselyne{Definitely planned on adding citation but hadn't reread that part, thanks}
 %\logan{This seem more like a "Future Work/Can we do even better!?" section than an actual discussion. Should we rename the section accordingly}
 
@@ -473,10 +474,11 @@ for example by using batch active learning~\cite{settles2009active}.
 %\caption{ROC curve for KNN model trained using active learning labels and word representations enriched with character-level information.}\label{fig:UBS_rocs_fasttext}
 %\end{minipage}\qquad
 %\begin{minipage}[b]{.4\textwidth}
-\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3.5in]{figures/fasttext_prc_al_corpus_round5_100}
+\includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=3in]{figures/fasttext_prc_al_corpus_round5_CDE_rule}
 \caption{PR curve for KNN model trained with active learning labels and word representations enriched with character-level information. Results for CDE+ are also shown. 
-\ian{I'd be interested in Kyle's views, but I feel that we need some explanation of why the line is straight for recall from 0 to 0.4.}
-\roselyne{(PR curves, like ROC curves are generated by varying the threshold of probability that separates classes, straight lines indicate that many points have the same probability values, and varying the threshold yield identical precision to recall ratio.) Not sure if this is clear enough.}
+Note: PR curves are obtained by varying the threshold of probability that separates classes; straight lines occur when several points have similar probabilities and changing the threshold yields identical precision to recall ratio.
+%\ian{I'd be interested in Kyle's views, but I feel that we need some explanation of why the line is straight for recall from 0 to 0.4.}
+%\roselyne{(PR curves, like ROC curves are generated by varying the threshold of probability that separates classes, straight lines indicate that many points have the same probability values, and varying the threshold yield identical precision to recall ratio.) Not sure if this is clear enough.}
 }
 \label{fig:UBS_prcs_fasttext}
 %\end{minipage}

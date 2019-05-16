@@ -41,8 +41,8 @@ Section~\ref{active_learning_loop}
 \subsection{Computing Word Embeddings}\label{sec:wordembeddings}
 A word embedding method maps each word
 in a document to a vector in an n-dimensional real vector space that
-represents the linguistic context in which the word appears. (This mapping may
-be based, for example, on co-occurrence frequencies of words.) 
+represents the linguistic context in which the word appears. This mapping may
+be based, for example, on co-occurrence frequencies of words. 
 We can then determine the similarity between two words by computing the distance between
 their corresponding vectors in the feature space.
 
@@ -70,11 +70,11 @@ First, we remove
 unwanted characters (e.g. `:', `.', `,', `:', `-') from the beginning and the end of each
 candidate, and eliminate numbers (including numbers followed by common units).
 This step allows us to recognize, for example, ``polyethylene;'' (with the extraneous `;') 
-as a duplicate of ``polyethylene.'' 
+as a duplicate of ``polyethylene''. 
 Hypothesizing that names of scientific entities will not, in general, be English
 vocabulary words, we also remove words found in the SpaCy dictionaries
-of commonly used English words~\cite{choi2015depends}. (We manually remove common polymer
-names, such as polystyrene and polyethylene, from the dictionaries.) 
+of commonly used English words~\cite{choi2015depends}. We manually remove common polymer
+names, such as polystyrene and polyethylene, from the dictionaries.
 We also use
 SpaCy's part-of-speech tagging functionality to remove non-nouns.  
 Finally, we remove plurals (e.g.,
@@ -87,7 +87,7 @@ This set is the output of step 1 in Figure~\ref{fig:architecture}.
 \subsection{Initial Bootstrapping and Labeling}\label{sec:initial}
 NLP filtering reduces the number of entities to be considered, and increases the target vs.\ non-target entity ratio.
 However, there still remain a large pool of potential candidates from which entities are to be selected,
-of which, in our experience, only 5\% are polymer names.
+of which, in our experience, roughly 5\% are polymer names.
 In order to avoid presenting experts with mostly negative examples, hindering meaningful classification,
 we boost the number of polymer entities in the first batch of candidates to be annotated by
 selecting strings with low word vector distance (see Section~\ref{sec:wordembeddings}) from
@@ -170,7 +170,7 @@ sentence ``The melting point of X is ...''.
 We use the word embeddings introduced in Section~\ref{sec:wordembeddings} to capture this notion of context,
 and vector distance between word vectors as a measure of similarity.
 Whether or not this approach works in practice will depend on whether 
-polymer names are in fact used in consistent contexts that is captured by our 
+polymer names are in fact used in consistent contexts as captured by our 
 word embedding  vectors. 
 
 We can then determine, for each NLP-filtered word, the extent to which it occurs
@@ -181,17 +181,7 @@ when dealing with multiple seed entities,
 we use the lowest distance score for ranking candidates.
 %Here too, we exclude terms that exist in our test set of documents.
 
-\begin{figure}
-\centering
-%\scalebox{0.4}{\includegraphics{figures/al_setup.pdf}}
-\includegraphics[trim=0.15in 0.1in 0in 0.in,clip,width=3.5in]{figures/al_setup.pdf}
-\caption{\label{fig:current} Active learning experiment set up. 1) We generate an unsupervised word embedding model using our entire corpus. 2) We propose NLP-filtered candidate entities to untrained and expert annotators before classifying their word vectors. 3) We select the best-performing classifier for uncertainty-based sampling of labels for the next round of active learning. 4) We evaluate this word vector classifier on all NLP-filtered words from a set of test documents. 
-%\ian{1) Maybe the ``save'' part in lower left should say ``Classifier for use in next round''?
-%2) There are many other things I don't understand in the figure. Why does it look like the Word Embedding model %produces NLP-filtered candidates? Why are NLP-filtered candidates in two places? What does \#4 show? Where is %the flow for the whol thing? It seems that we start at top and then end up stopping, via different routes, at \#3 and %\#4?}
-%\logan{What are the blue docs? Why don't they have an arrow? Where do the NLP candidates for 2 come from?}
-%\roselyne{They come from the entire pool of NLP-filtered candidates (excluding the test set, will make sure this is clear}
-}
-\end{figure}
+
 
 %\subsubsection{Initial Classifier}
 \subsection{Bootstrapping}\label{sec:bootstrap}
@@ -268,7 +258,7 @@ with results reported in Section~\ref{sec:labeling}.
 Experts use a web interface (see Figure~\ref{fig:polyner}) to approve or reject candidates,
 a task that is far more efficient than reading and annotating words in text.
 The interface
-provides example sentences as context for ambiguous candidates,
+provides example sentences as context for ambiguous candidates
 and allows the expert to access the publication(s) in which a particular candidate
 appears. % when desired.
 
