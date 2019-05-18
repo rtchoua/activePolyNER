@@ -1,6 +1,6 @@
 \section{Related Work}
 \label{sect:apner_related}
-NER and other information extraction tasks rely on large amount of training data, which are expensive to obtain.
+NER and other information extraction tasks rely on a large amount of training data, which are expensive to obtain.
 Weakly supervised learning methods work with much less training data and aim to address this challenge.
 They generally fall under two categories: semi-supervised learning and active learning~\cite{zhou2017brief}.
 The key difference between the two is that the former relies on approximately labeled data (as opposed to correctly labeled data for supervised learning) and the latter starts off with unlabeled data.
@@ -18,7 +18,7 @@ Snowball~\cite{agichtein2000snowball} which improved the DIPRE system~\cite{brin
 In the DIPRE system, the intuitive assumption is that, given a few seed entity relations, the text between two known target entities in close proximity of each other describes and constitutes a \textit{pattern} of the relation between the two. 
 Since that is not the case in practice, the system uses a limited set of regular expressions to limit useful patterns, hence decreasing the number of false positives.
 A key improvement of Snowball
-is that its patterns include named-entity tags (PERSON, LOCATION, ORGANIZATION, etc.).
+is that its patterns include named entity tags (PERSON, LOCATION, ORGANIZATION, etc.).
 Given a handful of seed tuples of ORGANIZATION and LOCATION, Snowball attempts to learn the relation \textit{HeadquarteredIn} by assuming that each time the tuples appear in close proximity to each other, 
 the text in between illustrates the desired relation.
 This text can then be used to discover new tuples, which can in turn be used as seeds for the next discovery round.
@@ -39,11 +39,12 @@ paleontological data from text, tables, and figures in scientific publications.
 For good performance, such approaches often rely on and extend large databases: for example,
 PaleoDeepDive uses PaleoDB~\cite{PaleoDB}. 
 The system labels any entity pair that appears in the database as \textit{True}.
+\kyle{Following sentence is broken (and missing a bracket}
 The user defines features (e.g. if a specific keyword appears between two entities, that pair a certain attribute is labeled \textit{True}, but if the entity pairs are too far apart, another attribute is marked \textit{False}, 
 %\kyle{I don't get how this is an example feature. Seems like its more labels.}), \roselyne{Hope it's clarified, they're more like user defined functions and rules - this is Snorkel's ancestor}
 the system then uses statistical inference to determine the probability that each newly discovered pair of interest is \textit{True}.
 
-\textit{Data programming}, as used in the Snorkel system, has users define 
+\textit{Data programming}, as used in the Snorkel system\kyle{citation?}, has users define 
 \textit{labeling functions} to provide labels for data subsets~\cite{ratner2016data}. 
 Errors due to differences in accuracy and conflicts between labeling functions are 
 addressed by learning and modeling the accuracies of the labeling functions. 
@@ -59,11 +60,11 @@ The goal of active learning is to decrease labeling costs by requesting a limite
 Uncertainty sampling approaches define ``valuable'' data by measuring uncertainty in the predictions.
 For example, in the case of a single learner, querying predictions with maximum entropy in which the learner assigns all classes with equal probability~\cite{lewis1994heterogeneous} or predictions closest to the decision boundary in the case of support vector machine classifiers~\cite{campbell2000query}.
 In the case of multiple learners, query-by-committee requests labels for unlabeled instances on which the learners disagree the most~\cite{seung1992query}.
-Uncertainty sampling and query-by-committee are representative approaches based on informativeness, where informativeness measure show well an unlabeled instance helps reduce the uncertainty. 
+Uncertainty sampling and query-by-committee are representative approaches based on informativeness, where informativeness measures how well an unlabeled instance helps reduce the uncertainty. 
 Another selection criterion addresses representativeness, which measures how well an instance helps represent the structure of input patterns; in this case selection is made by querying data from unlabeled clusters of data~\cite{nguyen2004active,dasgupta2008hierarchical}.
 
 \subsection{CDE and CDE+}\label{sec:cde}
-We introduce briefly ChemDataExtractor (CDE), 
+We introduce briefly ChemDataExtractor (CDE),
 a state-of-the-art chemical NLP tool that combines a dictionary, expert-created
 rules, and machine learning algorithms.
 CDE was trained on the CHEMDNER corpus:

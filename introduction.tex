@@ -31,7 +31,7 @@ is substantial, and cannot feasibly be performed for
 %has to be repeated for 
 every field of science.
 %\logan{Are you sure you want to use materials science as the opening line? Maybe add a general sentence up top "data-intensive science is awesome, but requires accessible data. The development of new materials is a great example for such opportunities and needs in domain science. [I'm making these comments under the context that this will be a thesis chapter]}\roselyne{point taken!}
-As a consequence, annotated datasets do no exist in most fields,
+As a consequence, annotated datasets do not exist in most fields,
 %In many fields, such as material science, no such annotated datasets exist.
 preventing the application of state-of-the-art NER and fact extraction methods.
 
@@ -46,8 +46,8 @@ This problem is apparent in materials science, where materials informatics
 seeks to combine large datasets and computational models to 
 replace current trial-and-error materials design processes with targeted materials design, 
 thus reducing time-to-market and development costs of new materials~\cite{MGI2014}.
-A lack of annotated training data has hindered progress,
-preventing large-scale application of methods pioneered in, for example,
+Unfortunately, the lack of annotated training data has hindered progress,
+preventing large-scale application of NER methods pioneered in, for example,
 biomedicine.
 Those methods, which often use hybrid rule-based, machine learning, and statistical techniques to extract entity names and relations from the literature~\cite{leaman2008banner,zeng2015survey}, require much training data.
 %the process of designing new materials is still one of trial and error.
@@ -57,10 +57,10 @@ Those methods, which often use hybrid rule-based, machine learning, and statisti
 %\logan{Good intro paragraph. "Opportunity -> problem you are solving" in an inch of text}\roselyne{Thanks!|}
 %There is a considerable amount of prior work in scientific facts extraction, notably in biomedicine. 
 %State-of-the-art methods often use hybrid rule-based, machine learning, and statistical techniques to extract entity names and relations from the literature~\cite{leaman2008banner,zeng2015survey}. 
-While similar efforts have begun in materials science~\cite{hawizy2011chemicaltagger,rocktaschel2012chemspot,leaman2015tmchem,swain2016chemdataextractor,young2018data}, the lack of available training data for new materials impedes rapid progress. 
-Instead, each new research project targeting a new type of materials must first undertake considerable
+While similar efforts have begun in materials science~\cite{hawizy2011chemicaltagger,rocktaschel2012chemspot,leaman2015tmchem,swain2016chemdataextractor,young2018data}, the lack of available training data impedes rapid progress. 
+Instead, each new research project targeting a new type of material, property, or relation must first undertake considerable
 effort to create a large, carefully annotated training
-data tailored for this new target, a task that often requires considerable in-depth domain knowledge.
+set tailored for this new target, a task that often requires considerable in-depth domain knowledge.
 
 The subfield of polymer science puts these problems in particularly stark relief.
 Polymers have their own unique nomenclature, as we explain below, and thus annotated datasets created for general
@@ -99,7 +99,7 @@ Specifically, we address two challenges:
 %labeling, and classification.\ian{Classification is not shown as a step elsewhere. Also, I note that Figure~1 has a
 %``candidate discrimination'' step, which is a term not used much elsewhere.}\roselyne{Noted! I changed figure 1 and will check that we don't use discrimination elsewhere. Also remove any mention of the candidate generation since now we only do it at the initial labeling.}
 In the initial labeling phase, 
-we experiment with different \textit{representative} (commonly used) entities to increase the fraction of target entities in the dataset to be labeled and bootstrap the context-based word vectors classifiers. %\ian{I think that the representative/seed entity thing is mainly relevant for bootstrapping. Maybe we should say ``used in the bootstrapping phase.'''}
+we experiment with different \textit{representative} (commonly used) entities to increase the fraction of target entities in the dataset to be labeled and bootstrap the context-based word vector classifiers. %\ian{I think that the representative/seed entity thing is mainly relevant for bootstrapping. Maybe we should say ``used in the bootstrapping phase.'''}
  % to generate candidates;
 % and tune the word embedding model parameters to increase the yield of actual scientific entities among candidates; 
 In the subsequent labeling and classification steps,
@@ -121,8 +121,8 @@ In Section~\ref{sect:background}, we motivate the need for identifying polymer n
 text. 
 We review semi-supervised methods for NLP systems in
 Section~\ref{sect:apner_related}. 
-We describe the design and implementation in Section~\ref{sect:apner_architecture} and evaluate polyNER
-in Section~\ref{sect:apner_results}. We summarize and discuss future work in Section~\ref{sect:apner_conclusion}.
+We describe the design and implementation of our active learning-based approach in Section~\ref{sect:apner_architecture}. 
+We evaluate our approach in Section~\ref{sect:apner_results}. We summarize and discuss future work in Section~\ref{sect:apner_conclusion}.
 %\logan{<soapbox>I only see CS have this "table of contents" paragraph. Is it explicitly required, or just an idiosyncrasy of the CS community? Also, does everyone skip over them while reading anyway?</soapbox>}\roselyne{Very common in computer science paper I think, I'll let Ian and Kyle confirm.}
 
 
