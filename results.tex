@@ -445,7 +445,7 @@ In other words, the classifiers of character and (context-based) word embedding 
 Given this result, one may wonder whether the active learning process itself could benefit from using this enhanced vector embedding. 
 To determine whether this is the case,
 we repeated the active learning experiment using the entire corpus of NLP-filtered candidates and classifying FastText (enhanced) vectors instead of Gensim vectors at each round. 
-However, the classifier's ROC did not achieve CDE performance after five rounds of learning.
+However, the performance was worse than random.
 %the classifier's ROC curve did not achieve CDE performance after five rounds and was below random performance.%\logan{Wasn't it also worse than the randomly-selected words?}\roselyne{yes, but doesn't it make you want to see another figure more}
 
 These results suggest that character-level information enhances classifier performance only once a certain threshold of context information has been captured by the embedding.
