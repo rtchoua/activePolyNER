@@ -312,7 +312,7 @@ the KNN classifier achieves 18.2\% precision and  45.6\% recall.
 We notice that even the random strategy PR curve is improved (away from the initial PR curve and close to the Distance UBS curve), indicating that the NLP-filtering alone is enough to enable the learning process after 1000 labels.
 
 We conclude that while the sampling step
-helps insure that the classes are balanced in the initial batch of labels, 
+helps ensure that the classes are balanced in the initial batch of labels, 
 restricting ourselves to just distance candidates, as is done by Distance UBS, does not yield better results than using active learning with all NLP-filtered candidates (UBS).
 Intuitively, basic UBS can find \textit{useful} instances (target and non-targets) to be labeled from the entire word embedding space, 
 while examples from Distance UBS are clustered around the seed entities that may be collocated in that space.
