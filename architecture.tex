@@ -195,7 +195,8 @@ but that choice is unlikely to perform well due to the low proportion of polymer
 Instead, therefore, we create an initial bootstrap set comprising the 200 NLP-filtered entities 
 that are closest, in word distance vectors, to a set of seed entities.
 %\ian{I assert that there is no need to mention the \num{10000} number here: you just take the 200 with the lowest score, as the 10000 is just the ones with the lowest distance scores, yes?}\roselyne{yes, or highest similarity, I wonder if I should change my preference for distance, because distance implies, minimal distance but Word2Vec and FastText give similarity values, discuss.}
-(Recall that we use a batch size of 200 based on an estimate of 60 minutes of expert time required for labeling.)
+% KC - we said this less than a page ago.
+%(Recall that we use a batch size of 200 based on an estimate of 60 minutes of expert time required for labeling.)
 We then train the initial classifier on this bootstrap set, using 80\% of the data for training and 20\% for testing.
 % in the previously discussed list of \num{10000} candidates.
 %\logan{Maybe we can be specific here about how much time it took. "We found that a batch of 200 required ..."}\roselyne{this is an average based on your estimate, but I don't have an exact number from the first test}
