@@ -68,13 +68,14 @@ is an adjustable window of surrounding context word used to compute each embeddi
 The NLP filtering preprocessing step removes strings that are unlikely to be polymer referents. 
 First, we remove
 unwanted characters (e.g. `:', `.', `,', `:', `-') from the beginning and the end of each
-candidate, and eliminate numbers (including numbers followed by common units).
+candidate.  
 This step allows us to recognize, for example, ``polyethylene;'' (with the extraneous `;') 
 as a duplicate of ``polyethylene''. 
 Hypothesizing that names of scientific entities will not, in general, be English
 vocabulary words, we also remove words found in the SpaCy dictionaries
 of commonly used English words~\cite{choi2015depends}. We manually remove common polymer
 names, such as polystyrene and polyethylene, from the dictionaries.
+We eliminate strings that represent numbers (including numbers followed by common units).
 We also use
 SpaCy's part-of-speech tagging functionality to remove non-nouns.  
 Finally, we remove plurals (e.g.,
