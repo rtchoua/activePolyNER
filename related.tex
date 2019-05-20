@@ -39,13 +39,13 @@ paleontological data from text, tables, and figures in scientific publications.
 For good performance, such approaches often rely on and extend large databases: for example,
 PaleoDeepDive uses PaleoDB~\cite{PaleoDB}. 
 The system labels any entity pair that appears in the database as \textit{True}.
-\kyle{Following sentence is broken (and missing a bracket}
-The user defines features (e.g. if a specific keyword appears between two entities, that pair a certain attribute is labeled \textit{True}, but if the entity pairs are too far apart, another attribute is marked \textit{False}, 
+%\kyle{Following sentence is broken (and missing a bracket}
+The user defines features (e.g. if a specific keyword appears between two entities, that pair a certain attribute is labeled \textit{True}, but if the entity pairs are too far apart, another attribute is marked \textit{False}), 
 %\kyle{I don't get how this is an example feature. Seems like its more labels.}), \roselyne{Hope it's clarified, they're more like user defined functions and rules - this is Snorkel's ancestor}
 the system then uses statistical inference to determine the probability that each newly discovered pair of interest is \textit{True}.
 
-\textit{Data programming}, as used in the Snorkel system\kyle{citation?}, has users define 
-\textit{labeling functions} to provide labels for data subsets~\cite{ratner2016data}. 
+\textit{Data programming}, as used in the Snorkel system~\cite{ratner2016data}, has users define 
+\textit{labeling functions} to provide labels for data subsets. 
 Errors due to differences in accuracy and conflicts between labeling functions are 
 addressed by learning and modeling the accuracies of the labeling functions. 
 Under certain conditions, data programming achieves results on par with those of supervised learning methods.
@@ -74,8 +74,8 @@ manually defined polymer identification rules~\cite{tchoua2017towards}, creating
 We compare our methods against both CDE and CDE+ in Section~\ref{sect:apner_results}.
 
 \subsection{Placing polyNER in Context}
-\kyle{Much of this text is repeated in the following section. I wonder if we should delete here and move
-anything that is here now, but not in the next section, into the next section.}
+%\kyle{Much of this text is repeated in the following section. I wonder if we should delete here and move
+%anything that is here now, but not in the next section, into the next section.}\roselyne{I think I like that we are spelling out how polyNER compares to what has been said in related work, I will see if I can shorten it so that it's not a lot of repetition but just comparing to previous work.}
 %\ian{I feel that it is clearer to have a subsection here. Also: I think the goal is to put polyNER in context, but I am not sure that it does so clearly, yet. It seems to me to be currently a rather hard-to-follow statement of the polyNER approach, which I would expect to find elsewhere.}
 %\roselyne{This was a subsection, but was removed as some found it strange here, but the purpose was indeed to relate polyNER to the previous paragraphs, giving it a second read.}
 %\roselyne{The main purpose also was to indicate that there was already work on polyNER and we are extending the work here}
@@ -102,7 +102,7 @@ As this approach is approximate and is likely to include errors
 Subsequent batches of labels are obtained via active learning and used 
 %To address noise in the output, expert label small batches of candidates, 
 %which can be used\ian{the term ``can be used'' confuses me. Is the training that is defined here part of your system?}
- to train a context-aware word vector classifier in the last phrase.
+ to train a context-aware word vector classifier in the last phase.
 %\ian{what does ``final'' mean?}\roselyne{the idea here is that candidates from the candidate generation phase are loosely labeled polymers, but subsequently corrected by experts, the real assignments are done at the classification. Will rephrase.}
 %scientific named entities.
 %\kyle{Somewhat hesitant to include the next sentences. Doesnt feel like it belongs here}\roselyne{I think it's ok here if we're trying to emphasize how it is different, but I guess you want to phrase it as a contribution and it may need to be repeated in the intro/conclusion. Making a note for tomorrow}
