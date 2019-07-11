@@ -66,18 +66,19 @@ is an adjustable window of surrounding context word used to compute each embeddi
 %Finally, in step 4, we test our classifiers against all the NLP-filtered words from the test corpus, as shown on Figure~\ref{fig:current}.
 
 The NLP filtering preprocessing step removes strings that are unlikely to be polymer referents. 
-First, we remove
-unwanted characters (e.g. `:', `.', `,', `:', `-') from the beginning and the end of each
-candidate.  
-This step allows us to recognize, for example, ``polyethylene;'' (with the extraneous `;') 
-as a duplicate of ``polyethylene''. 
+%First, we remove
+%unwanted characters (e.g. `:', `.', `,', `:', `-') from the beginning and the end of each
+%candidate.  
+%This step allows us to recognize, for example, ``polyethylene;'' (with the extraneous `;') 
+%as a duplicate of ``polyethylene''. 
 Hypothesizing that names of scientific entities will not, in general, be English
 vocabulary words, we also remove words found in the SpaCy dictionaries
 of commonly used English words~\cite{choi2015depends}. We manually remove common polymer
 names, such as polystyrene and polyethylene, from the dictionaries.
-We eliminate strings that represent numbers (including numbers followed by common units).
-We also use
+%We eliminate strings that represent numbers (including numbers followed by common units).
+We use
 SpaCy's part-of-speech tagging functionality to remove non-nouns.  
+We also eliminate strings that represent numbers (including numbers followed by common units) and remove extraneous characters from the beginning and end of each candidates to filter out mispellings.
 Finally, we remove plurals (e.g.,
 polyamides, polynorbornenes), as they can represent polymer family names.
 Note that these steps are generalizable and applicable to multiple science fields.
