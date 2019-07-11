@@ -14,15 +14,14 @@ are labeled correctly.
 
 \subsection{Dataset}\label{sec:dataset}
 
-We work with a corpus of \num{1690} full-text publications in HTML format from \textit{Macromolecules}, 
-a relevant journal in polymer science.
+We reuse a corpus of \num{1690} full-text publications in HTML format from \textit{Macromolecules}, 
+a relevant journal in polymer science~\cite{tchoua2019polyner}.
 These documents comprise \num{381947} sentences and \num{9229417} (\num{253195} unique) words or ``tokens,''
 of which \num{23205} pass the NLP filter of Section~\ref{sec:filter}.
-
 From this corpus, 
 we set aside a test set of 100 documents with  \num{22664} sentences and \num{508391} (\num{36293} unique) tokens,
 of which \num{9656} pass the NLP filter.
-We engaged six experts to identify all one-word polymer names in this test set,
+Six experts identified all one-word polymer names in this test set,
 a process that produced 467 unique one-word polymer names.
 We use these 467 names as a gold standard in subsequent subsections; we automatically label all NLP-filtered strings from the 100-document test set using these manually extracted names.
 
@@ -253,11 +252,11 @@ However, 160 labels (80\% of 200) is not yet enough. % training data to perform 
 
 \begin{figure*}
 \centering
-\begin{minipage}[b]{.4\textwidth}
+\begin{minipage}[b]{.38\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/roc_init.png}
 \end{minipage}\qquad
 \hspace{2ex}
-\begin{minipage}[b]{.4\textwidth}
+\begin{minipage}[b]{.38\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prc_init.png}
 \end{minipage}
 \caption{ROC (left) and PR (right) curves for KNN model for the initial classifier. 
@@ -267,13 +266,13 @@ indicating that we need more data.\label{fig:knn_init}}
 
 \begin{figure*}
 \centering
-\begin{minipage}[b]{.4\textwidth}
+\begin{minipage}[b]{.38\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/rocs_lastround.png}
 \captionsetup{labelformat=empty}
 \label{fig:rocs_round5}
 \end{minipage}\qquad
 \hspace{2ex}
-\begin{minipage}[b]{.4\textwidth}
+\begin{minipage}[b]{.38\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prcs_lastround.png}
 \captionsetup{labelformat=empty}
 \end{minipage}
