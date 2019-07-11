@@ -232,13 +232,14 @@ shows better-than-random behavior, with an area under curve (AUC) of 0.62.
 %\logan{Also not quite correct. All classifiers with better-than-random performance lie between random and perfect. Maybe just skip the notion of betweenness and talk about the AUC}\roselyne{this is what I tried to say, you don't like the word meaningful? I meant if it's below it's usually bad.}
 %The area under the curve (AUC) measures the area under the ROC.
 %Ideally the AUC of a learning algorithm is above 0.5. 
-AUC can be misleading for imbalanced datasets, 
-as it considers true negatives or correctly predicted non-polymers (inverse ratio).
-For example, if a dataset contains 90\% of class A and 10\% of class B, 
-a classifier that predicts every sample as belonging to class A has an accuracy of 90\%, 
-but is not useful in practice.
+However, in our application, correctly predicting non-polymers is not as important as correctly identifying our targets.
+%AUC can be misleading for imbalanced datasets, 
+%as it considers true negatives or correctly predicted non-polymers (inverse ratio).
+%For example, if a dataset contains 90\% of class A and 10\% of class B, 
+%a classifier that predicts every sample as belonging to class A has an accuracy of 90\%, 
+%but is not useful in practice.
 %Since AUC takes into account true negatives or correctly predicted non-polymers and our dataset is imbalanced containing more non-polymers than polymers, 
-Therefore, we also plot the Precision Recall (PR) curve to show the tradeoff between precision and recall.
+Therefore, we also plot in the Precision Recall (PR) curve to show the tradeoff between precision and recall.
 While the AUC for the initial classifier is above random performance (0.5) 
 its PR curve shows poor precision, regardless of recall.
 In previous work~\cite{tchoua2019polyner}, we found that we could 
