@@ -87,7 +87,7 @@ The fraction of polymers increases by 10\% when we use three representative enti
 %(from 33.55\% to 46.9\% and 47.97\% with acronyms); 
 (the three most frequent polymers in our datasets are \textit{polystyrene}, \textit{poly(methyl methacrylate)}, and \textit{polyethylene}), % and their acronyms (\textit{PS}, \textit{PMMA} and \textit{PE})
 but by less than 1\% when using 10 instead of three entities. %, from 47.97\% for three frequent polymers with acronyms to 48.39\% for ten frequent polymers with acronyms.
-These results suggest that there is little value to using more than a few seed entities.
+These results suggest that there is little value to using more than a few seed entities.\\
 
 \begin{table}[ht!]
 \centering
@@ -252,11 +252,11 @@ However, 160 labels (80\% of 200) is not yet enough. % training data to perform 
 
 \begin{figure*}
 \centering
-\begin{minipage}[b]{.36\textwidth}
+\begin{minipage}[b]{.34\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/roc_init.png}
 \end{minipage}\qquad
 \hspace{2ex}
-\begin{minipage}[b]{.36\textwidth}
+\begin{minipage}[b]{.34\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prc_init.png}
 \end{minipage}
 \caption{ROC (left) and PR (right) curves for KNN model for the initial classifier. 
@@ -266,13 +266,13 @@ indicating that we need more data.\label{fig:knn_init}}
 
 \begin{figure*}
 \centering
-\begin{minipage}[b]{.36\textwidth}
+\begin{minipage}[b]{.34\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/rocs_lastround.png}
 \captionsetup{labelformat=empty}
 \label{fig:rocs_round5}
 \end{minipage}\qquad
 \hspace{2ex}
-\begin{minipage}[b]{.36\textwidth}
+\begin{minipage}[b]{.34\textwidth}
 \includegraphics[trim=0in 0.1in 0.1in 0.in,clip,width=1.0\textwidth]{figures/prcs_lastround.png}
 \captionsetup{labelformat=empty}
 \end{minipage}
@@ -309,13 +309,15 @@ with active learning performing better with UBS than with Distance UBS.
 %We also determine that the classifier, which uses UBS is performing better than with the two other strategies.
 When tested against our gold standard of 467 one-word polymer names, 
 the KNN classifier achieves 18.2\% precision and  45.6\% recall. 
-We notice that even the random strategy PR curve is improved (away from the initial PR curve and close to the Distance UBS curve), indicating that the NLP-filtering alone is enough to enable the learning process after 1000 labels.
+We notice that even the random strategy PR curve is improved (away from the initial PR curve and close to the Distance UBS curve), indicating that the NLP-filtering alone is enough to enable the learning process after 1000 labels. We also note that KNN was most-often selected across strategies and iterations, likely due to its inherent nature to optimize locally and our direct focus on finding similarities between observations. 
+
+
 
 We conclude that while the sampling step
 helps ensure that the classes are balanced in the initial batch of labels, 
 restricting ourselves to just distance candidates, as is done by Distance UBS, does not yield better results than using active learning with all NLP-filtered candidates (UBS).
 Intuitively, basic UBS can find \textit{useful} instances (target and non-targets) to be labeled from the entire word embedding space, 
-while examples from Distance UBS are clustered around the seed entities that may be collocated in that space.
+while examples from Distance UBS are clustered around the seed entities that may be collocated in that space.\\
 
 %\logan{I think the table would be better suited as a plot}\roselyne{I am tempted to remove it, and just indicate that there was not much learning in the first 3 rounds, but Kyle had a comment that people like to see it for themselves and suggested a table. I don't think the plots would look good either has it will bring attention to the problem of using multiple classifiers as previously discussed. I can go back to ommitting this or displaying the last two rounds.}
 %\loganfussingaboutrecallandprecision \roselyne{I actually read that this is what people use many times for imbalanced datasets, but I get the point and we have ROCS to got with the last two rounds}
@@ -372,7 +374,7 @@ We revisit this concept of \textit{diversity} of labels in the Section~\ref{sec:
 Note that with limited training data and based solely on context, the classifier retrieves 45.6\% (more than one third) of the gold standard polymers with a precision of 18.2\%, after five hours of expert labeling. 
 For comparison, an attempt to extract polymer names using the rule: 
 \textit{if the name contains ``poly'' extract it as a polymer}, gets recall of 41\% and precision of 34\% on the same dataset.
-We conclude that with our relatively small and noisy dataset (entire documents of unstructured and uncurated text), we are able to achieve close to rule-based performance, 
+We conclude that with our relatively small and noisy dataset (based on context-only information from entire documents of unstructured and uncurated text), we are able to achieve close to rule-based performance, 
 using active learning and little labeling.
 %\logan{I think we should show this point on the plot for context. Also, state what you conclude from the comparison. Don't leave it up to the reader to state the conclusion.}
 

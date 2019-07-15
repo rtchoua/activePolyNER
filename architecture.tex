@@ -37,6 +37,7 @@ Section~\ref{active_learning_loop}
 	%\logan{Should we differentiate between the "initial sampling" strategy done to bootstrap our training set and the "active learning sampling" strategy used to identify the next things to label? Mixing the two up is going to confuse people}\roselyne{OK will adapt the rest of the text and section titles too.}
 }
 \end{figure*}
+\setlength{\belowcaptionskip}{-10pt}
 
 \subsection{Computing Word Embeddings}\label{sec:wordembeddings}
 A word embedding method maps each word
@@ -46,11 +47,15 @@ be based, for example, on co-occurrence frequencies of words.
 We can then determine the similarity between two words by computing the distance between
 their corresponding vectors in the feature space.
 
+
 We use Word2Vec, a recent, light-weight and easy-to-use implementation of context-based vector representations~\cite{mikolov2013efficient,mikolov2013distributed}.
 Specifically, we use the Gensim continuous bag-of-words
 (CBOW) implementation of the Word2Vec
 algorithm~\cite{rehurek2010software} to generate vectors.
-Based on prior parameter tuning we set the 
+Prior parameter tuning indicated that window size and vector size did not have a significant impact on the yield of polymers (less than 5\%) on initial bootstrapping (see Section~\ref{sec:initial} below).
+Nevertheless, for slightly higher yields,
+%Based on prior parameter tuning, 
+we set the 
 %We describe in Section~\ref{sec:wes} how we select appropriate values for the
 Word2Vec \texttt{size} parameter to 100 and the \texttt{window_size} to 2; 
 where \texttt{size}  is the size of the vector, and \texttt{window_size}
